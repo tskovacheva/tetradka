@@ -91,8 +91,9 @@ const skillName=k=>{const p=Object.keys(SKILL).filter(s=>k.startsWith(s)).sort((
 
 let sample=null,S={sessions:[],results:{},review:{}},loaded=false,loadErr=false,view='home',run=null;
 const LS='tetradka.v1';
-function loadStore(){try{const x=JSON.parse(localStorage.getItem(LS)||'{}');S.results=x.results||{};S.review=x.review||{}}catch(e){}}
-function persist(){try{localStorage.setItem(LS,JSON.stringify({results:S.results,review:S.review,savedAt:new Date().toISOString()}))}catch(e){}}
+function loadStore(){try{const x=JSON.parse(localStorage.getItem(LS)||'{}');S.results=x.results||{};S.review=x.review||{};S.backupAt=x.backupAt||''}catch(e){}}
+function persist(){try{localStorage.setItem(LS,JSON.stringify({results:S.results,review:S.review,savedAt:new Date().toISOString(),backupAt:S.backupAt||''}))}catch(e){}}
+try{navigator.storage?.persist?.()}catch(e){}
 const db={doc:p=>({set:async d=>{const[c,id]=p.split('/');if(c==='results'||c==='review'){S[c][id]=d;persist()}}})};
 
 function seededOrder(id,n){let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){h=(h*1103515245+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -132,11 +133,14 @@ function renderHome(){
  const foc=focusList(),fb=(S.feedback||[]).slice(-3).reverse();
  const focHTML=foc.length?`<section class="page"><h3>На какво да внимаваш</h3>${foc.map(([n,a])=>`<div class="q"><p>${esc(n)} <span class="pen" style="font-size:22px">${Math.round(100*a.p/a.m)}%</span></p><div>${esc(TIPS[n]||'Прочети внимателно обясненията към грешките в тази тема.')}</div></div>`).join('')}</section>`:'';
  const fbHTML=fb.length?`<section class="page"><h3>Бележки от проверката</h3>${fb.map(f=>`<div class="q"><p><span class="muted">${esc(f.date||'')}</span> ${esc(f.title||'')}</p><div style="white-space:pre-line">${esc(f.text||'')}</div></div>`).join('')}</section>`:'';
- app.innerHTML=`<section class="page today">${card}</section>${fbHTML}${focHTML}
+ const nDone=Object.values(S.results).filter(r=>r.done).length,lastB=S.backupAt?Math.floor((Date.now()-Date.parse(S.backupAt))/864e5):999;
+ const bHTML=nDone>=3&&lastB>=7?`<section class="page"><h3>Време е за резервно копие</h3><p class="muted">Резултатите ти се пазят само на това устройство. Изтегли копие веднъж седмично, за да не се изгубят.</p><button id="bk">Изтегли копие</button></section>`:'';
+ app.innerHTML=`<section class="page today">${card}</section>${bHTML}${fbHTML}${focHTML}
  <section class="page"><div class="top"><h3>Тази седмица</h3><div class="dots">${[0,1,2,3,4].map(i=>`<span class="dot ${i<week?'on':''}"></span>`).join('')}</div></div>
  <p class="muted">${done} решени сесии общо · целта е 4–5 на седмица</p></section>
  <section class="page"><h3>Всички сесии</h3><ul class="list">${list.map(s=>{const r=S.results[s.id];return `<li><span><span class="muted">${esc(fmtDate(s.date))}</span> · ${esc(s.title)}</span>${r?.done?`<span class="row"><span class="pen">${esc(r.score)}/${esc(r.max)}</span><button data-rev="${esc(s.id)}">Виж</button></span>`:r?`<span class="muted">започната</span>`:`<span class="muted">предстои</span>`}</li>`}).join('')||'<li class="muted">Още няма сесии.</li>'}</ul></section>`;
  document.getElementById('start')?.addEventListener('click',()=>startRun(next));
+ document.getElementById('bk')?.addEventListener('click',()=>{downloadBackup();renderHome()});
  app.querySelectorAll('[data-rev]').forEach(b=>b.addEventListener('click',()=>showReviewOf(b.dataset.rev)));
 }
 
@@ -251,6 +255,7 @@ function showReviewOf(sid){
 }
 
 /* ---------- parent view ---------- */
+function downloadBackup(){S.backupAt=new Date().toISOString();persist();const b=new Blob([JSON.stringify({results:S.results,review:S.review,savedAt:S.backupAt},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tetradka-kopie-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
 function stats(){const agg={};for(const r of Object.values(S.results))for(const x of Object.values(r.items||{})){const n=skillName(x.skill||'');(agg[n]??={p:0,m:0,c:0});agg[n].p+=x.pts;agg[n].m+=x.max;agg[n].c++}return Object.entries(agg).sort((a,b)=>a[1].p/a[1].m-b[1].p/b[1].m)}
 function opensList(){return Object.values(S.results).flatMap(r=>Object.entries(r.items||{}).filter(([,x])=>x.type==='open').map(([iid,x])=>({r,iid,x,f:findItem(r.sid,iid)}))).filter(o=>o.f)}
 function reportText(){
@@ -277,7 +282,8 @@ function renderParent(){
  const msg=document.getElementById('msg');
  document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(reportText());msg.textContent='Копирано — постави го в съобщение до мама.'}catch(e){msg.textContent='Не успях да копирам.'}};
  document.getElementById('share').onclick=async()=>{const text=reportText();if(navigator.share){try{await navigator.share({title:'Тетрадката — отчет',text});return}catch(e){if(e&&e.name==='AbortError')return}}try{await navigator.clipboard.writeText(text);msg.textContent='Копирано — постави го в съобщение до мама.'}catch(e){msg.textContent='Не успях — използвай „Копирай“.'}};
- document.getElementById('backup').onclick=()=>{const b=new Blob([JSON.stringify({results:S.results,review:S.review,savedAt:new Date().toISOString()},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tetradka-kopie-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+ document.getElementById('backup').onclick=()=>{downloadBackup();document.getElementById('bmsg').textContent='Копието е изтеглено.'};
+ const _old=()=>{const b=new Blob([JSON.stringify({results:S.results,review:S.review,savedAt:new Date().toISOString()},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tetradka-kopie-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
  document.getElementById('restore').onchange=async e=>{const f=e.target.files[0];if(!f)return;const bm=document.getElementById('bmsg');try{const x=JSON.parse(await f.text());if(typeof x!=='object'||!x.results)throw 0;S.results={...S.results,...x.results};S.review={...S.review,...(x.review||{})};persist();bm.textContent='Копието е заредено.';renderParent()}catch(err){bm.textContent='Този файл не е копие от тетрадката.'}};
 }
 
