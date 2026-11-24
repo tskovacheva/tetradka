@@ -3,298 +3,415 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Тетрадка на Калина</title>
+<meta name="theme-color" content="#1b2233">
+<title>Тетрадката</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <style>
-/* VOICE: calm, encouraging, grown-up enough for a 12-year-old — no stickers, no cartoon.
-   IDEA: a squared school exercise book; the teacher's red pen marks the corrections.
-   PICTURE: the open notebook page itself — today's session card on ruled paper with a margin line.
-   COLOUR and TYPE: paper white, ink blue-black, faint blue rules, red-pen accent; Rubik + Caveat for pen notes.
-   LAYOUT: one column up to 860px; text passage beside questions on wide screens, above them on narrow. */
+/* VOICE: a 12-year-old's own notebook – calm, a bit rock, never babyish.
+   IDEA: the school exercise book; its cover is hers, red-pen stamps mark progress.
+   PICTURE: cover band with her drawing, then the day's page; lessons with maps and timelines.
+   COLOUR/TYPE: paper white, ink, faint rules, one accent she picks; Rubik + Caveat pen notes.
+   LAYOUT: one column on phones, two-column cards from 760px; content max 980px. */
 :root{color-scheme:light dark;
- --bg:light-dark(#fbfaf6,#14161c);--paper:light-dark(#ffffff,#1b1e26);--ink:light-dark(#1b2233,#e6e8ef);
+ --bg:light-dark(#f6f4ee,#121419);--paper:light-dark(#ffffff,#1b1e26);--ink:light-dark(#1b2233,#e6e8ef);
  --soft:light-dark(#5a6478,#9aa3b5);--rule:light-dark(#dbe5f5,#2a3140);--margin:light-dark(#f2b8b0,#6b3a35);
- --pen:light-dark(#c8321f,#ff7a66);--ok:light-dark(#1f6f4a,#6fd1a1);--blue:light-dark(#2348a8,#8fb0ff);--chip:light-dark(#eef2fa,#252b38)}
+ --pen:light-dark(#c8321f,#ff7a66);--ok:light-dark(#1f6f4a,#6fd1a1);--chip:light-dark(#eef2fa,#252b38);
+ --acc:#2348a8;--cover:#1b2233;--coverInk:#fff}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Rubik,system-ui,sans-serif;overflow-x:clip}
-.wrap{max-width:900px;margin:0 auto;padding:clamp(16px,3vw,36px) max(4vw,14px) 64px}
-header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-h1{font-size:clamp(30px,5vw,44px);line-height:1.05;margin:0;font-weight:700;text-wrap:balance}
-h2{font-size:24px;line-height:1.15;margin:0 0 8px}
-h3{font-size:18px;margin:0 0 6px}
+.wrap{max-width:980px;margin:0 auto;padding:0 max(3.5vw,12px) 72px}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.05;margin:0;text-wrap:balance}
+h2{font-size:22px;line-height:1.2;margin:0 0 8px}h3{font-size:17px;margin:0 0 6px}
+p{margin:0 0 10px}
 .pen{font-family:Caveat,cursive;color:var(--pen);font-size:26px;line-height:1}
 .muted{color:var(--soft);font-size:14px}
-.page{background:var(--paper);border-radius:6px;box-shadow:0 1px 0 var(--rule),0 8px 30px -18px #0004;
+.page{background:var(--paper);border-radius:8px;box-shadow:0 1px 0 var(--rule),0 8px 30px -20px #0005;
  background-image:linear-gradient(var(--rule) 1px,transparent 1px);background-size:100% 32px;background-position:0 20px;
- padding:24px 22px 24px 56px;position:relative;margin-bottom:22px}
-.page::before{content:"";position:absolute;top:0;bottom:0;left:38px;width:2px;background:var(--margin)}
-.today{min-height:260px;display:grid;gap:14px;align-content:start}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{background:var(--chip);border-radius:99px;padding:3px 12px;font-size:14px}
-button{font:inherit;cursor:pointer;border-radius:10px;min-height:44px;padding:8px 18px;border:2px solid var(--ink);background:var(--paper);color:var(--ink)}
-button.go{background:var(--ink);color:var(--paper);font-weight:500;font-size:17px}
-button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-button:disabled{opacity:.5;cursor:default}.opt:disabled{opacity:1;color:var(--ink)}
-.link{border:0;background:none;text-decoration:underline;padding:8px 4px;min-height:44px;color:var(--blue)}
+ padding:20px 18px 20px 50px;position:relative;margin-bottom:18px}
+.page::before{content:"";position:absolute;top:0;bottom:0;left:34px;width:2px;background:var(--margin)}
+.plain{background-image:none}
+.grid{display:grid;gap:18px}@media(min-width:760px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.grid>.page{margin-bottom:0}
+.cover{margin:0 calc(-1*max(3.5vw,12px)) 18px;padding:26px max(3.5vw,12px) 22px;background:var(--cover);color:var(--coverInk);position:relative;overflow:hidden;min-height:170px;display:flex;align-items:flex-end}
+.cover .art{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.55}
+.cover .art.pattern{opacity:.18;background-image:repeating-linear-gradient(135deg,currentColor 0 2px,transparent 2px 18px)}
+.cover .in{position:relative;width:100%;max-width:980px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.cover .label{background:color-mix(in srgb,var(--paper) 92%,transparent);color:var(--ink);padding:10px 16px;border-radius:6px;box-shadow:0 4px 14px #0003}
+.cover .label .muted{font-size:13px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;margin:-6px 0 16px;padding-bottom:2px}
+nav.tabs a{flex:none;padding:8px 14px;border-radius:99px;color:var(--ink);text-decoration:none;font-size:15px;min-height:40px;display:inline-flex;align-items:center}
+nav.tabs a.on{background:var(--ink);color:var(--paper)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:var(--chip);border-radius:99px;padding:3px 11px;font-size:14px;white-space:nowrap}
+.chip.hot{background:var(--acc);color:#fff}
+button,.btn{font:inherit;cursor:pointer;border-radius:10px;min-height:44px;padding:8px 18px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+button.go,.btn.go{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:500;font-size:17px}
+button:focus-visible,a:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+button:disabled{opacity:.5;cursor:default}
+.link{border:0;background:none;text-decoration:underline;padding:8px 4px;min-height:44px;color:var(--acc)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .list{list-style:none;margin:0;padding:0}
-.list li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule);flex-wrap:wrap}
-.list li button{min-height:40px;padding:4px 14px}
+.list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--rule);flex-wrap:wrap}
 .dots{display:flex;gap:6px}.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink)}.dot.on{background:var(--pen);border-color:var(--pen)}
-.bar{height:8px;border-radius:9px;background:var(--rule);overflow:hidden}.bar>i{display:block;height:100%;background:var(--blue)}
+.bar{height:8px;border-radius:9px;background:var(--rule);overflow:hidden}.bar>i{display:block;height:100%;background:var(--acc)}
+.big{font-size:clamp(44px,9vw,72px);font-family:Caveat,cursive;color:var(--pen);line-height:1}
+/* subjects */
+.subj{display:flex;justify-content:flex-start;gap:14px;align-items:center;cursor:pointer;text-align:left;width:100%;border:0;background:none;padding:0;min-height:0;color:inherit}
+.ring{flex:none;width:58px;height:58px}
+.lv{display:inline-flex;gap:3px}.lv i{width:10px;height:10px;border-radius:2px;background:var(--rule)}.lv i.on{background:var(--acc)}
+/* stamps */
+.stamps{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,118px));gap:14px}
+.stamp{aspect-ratio:1;border:3px double var(--pen);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--pen);transform:rotate(-8deg);padding:8px;font-family:Caveat,cursive;font-size:19px;line-height:1.05}
+.stamp small{font-family:Rubik;font-size:10.5px;color:var(--soft);margin-top:4px;line-height:1.2}
+.stamp.off{opacity:.28;filter:grayscale(1)}
+/* runner */
 .sec{display:grid;gap:18px}
 @media(min-width:820px){.sec.withtext{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}.sec.withtext .text{position:sticky;top:12px;max-height:92vh;overflow:auto}}
 .text{white-space:pre-line;background:var(--chip);border-radius:8px;padding:16px 18px;font-size:16.5px;line-height:1.7}
 .q{padding:14px 0;border-bottom:1px dashed var(--rule)}
-.q p{margin:0 0 10px;font-weight:500}
+.q p{font-weight:500}
 .opts{display:grid;gap:8px}
-.opt{text-align:left;border:2px solid var(--rule);background:var(--paper);font-weight:400}
-.opt.sel{border-color:var(--blue);background:var(--chip)}
+.opt{text-align:left;justify-content:flex-start;border:2px solid var(--rule);background:var(--paper);font-weight:400}
+.opt.sel{border-color:var(--acc);background:var(--chip)}
 .opt.right{border-color:var(--ok)}.opt.wrong{border-color:var(--pen);text-decoration:line-through}
+.opt:disabled{opacity:1;color:var(--ink)}
 input[type=text],textarea{font:inherit;font-size:16px;width:100%;padding:10px 12px;border-radius:8px;border:2px solid var(--rule);background:var(--paper);color:var(--ink)}
-input[type=text]{max-width:260px}
-textarea{min-height:110px;resize:vertical}
+input[type=text]{max-width:260px}textarea{min-height:110px;resize:vertical}
 .unit{margin-left:8px;color:var(--soft)}
 .fb{margin-top:10px;padding:10px 12px;border-left:3px solid var(--pen);background:light-dark(#fff5f3,#2a1d1d);border-radius:0 8px 8px 0;font-size:15px}
 .fb.ok{border-color:var(--ok);background:light-dark(#f1faf5,#16271f)}
 .fb b{font-family:Caveat,cursive;font-size:24px;font-weight:600}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.big{font-size:clamp(44px,9vw,72px);font-family:Caveat,cursive;color:var(--pen);line-height:1}
-label{display:block;font-weight:500;margin:12px 0 4px}
-table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:8px 6px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
-td.n{text-align:right;white-space:nowrap}
-.note{padding:12px 14px;border-radius:8px;background:var(--chip);font-size:15px}
-details summary{cursor:pointer;color:var(--blue);min-height:32px}
-@media(max-width:600px){.page{padding:18px 14px 18px 34px}.page::before{left:22px}}
-@media(prefers-reduced-motion:no-preference){.fb{animation:in .35s ease-out}@keyframes in{from{opacity:0;transform:translateY(-4px)}}}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:8px 6px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}td.n{text-align:right;white-space:nowrap}
+details summary{cursor:pointer;color:var(--acc);min-height:32px}
+/* lesson */
+.lesson .blk{margin:0 0 22px}
+.hook{font-size:19px;line-height:1.55;border-left:4px solid var(--acc);padding:4px 0 4px 16px}
+figure{margin:0}figure img{width:100%;max-height:420px;object-fit:contain;background:var(--chip);border-radius:8px}
+figcaption{font-size:14px;color:var(--soft);margin-top:6px}
+.mapbox{position:relative;background:light-dark(#f3efe4,#22252c);border-radius:10px;overflow:hidden}
+.mapbox svg{display:block;width:100%;height:auto}
+.mpt{cursor:pointer}.mpt:focus{outline:none}.mpt:focus circle{stroke:var(--acc);stroke-width:4}
+.mapinfo{min-height:56px;padding:10px 12px;font-size:15px;background:var(--chip);border-radius:0 0 10px 10px}
+.tl{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 12px}
+.tl button{flex:none;scroll-snap-align:start;width:150px;min-height:110px;flex-direction:column;align-items:flex-start;justify-content:flex-start;text-align:left;border:2px solid var(--rule);padding:10px}
+.tl button b{font-family:Caveat,cursive;font-size:28px;color:var(--pen);line-height:1}
+.tl button.on{border-color:var(--acc);background:var(--chip)}
+.flip{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.flip button{min-height:96px;border:2px solid var(--rule);flex-direction:column;font-weight:500}
+.flip button.on{background:var(--chip);font-weight:400;font-size:14.5px;border-color:var(--acc)}
+.ord{display:grid;gap:8px}.ord button{justify-content:flex-start;border:2px solid var(--rule);text-align:left}
+.ord button.done{border-color:var(--ok)}.ord button.bad{border-color:var(--pen)}
+.callout{background:var(--chip);border-radius:10px;padding:14px 16px}
+.links{display:grid;gap:10px}@media(min-width:700px){.links{grid-template-columns:1fr 1fr}}
+.links .callout b{display:block;margin-bottom:4px;color:var(--acc)}
+.sum li{margin-bottom:6px}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}.swatches button{width:56px;height:56px;padding:0;border-radius:50%;border:3px solid var(--paper);box-shadow:0 0 0 2px var(--rule)}
+.swatches button.on{box-shadow:0 0 0 3px var(--ink)}
+@media(max-width:600px){.page{padding:16px 12px 16px 32px}.page::before{left:20px}}
+@media(prefers-reduced-motion:no-preference){.fb{animation:fin .35s ease-out}.stamp.new{animation:sin .6s ease-out}@keyframes fin{from{opacity:0;transform:translateY(-4px)}}@keyframes sin{from{opacity:0;transform:scale(1.6) rotate(-20deg)}to{opacity:1;transform:rotate(-8deg)}}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header>
- <div><h1>Тетрадката на Калина</h1><div class="muted">БЕЛ и математика · 6. клас · по 20 минути</div></div>
- <div class="row"><button class="link" id="navHome">Начало</button><button class="link" id="navParent">Отчет</button></div>
-</header>
-<main id="app"><div class="page today"><p class="muted">Зареждам тетрадката…</p></div></main>
-</div>
+<div class="wrap" id="root"><p class="muted" style="padding:24px 0">Зареждам тетрадката…</p></div>
 <script>
 {
-const app=document.getElementById('app');
+const root=document.getElementById('root');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const today=()=>new Date().toLocaleDateString('sv-SE');
 const addDays=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toLocaleDateString('sv-SE')};
-const fmtDate=d=>{try{return new Date(d+'T12:00:00').toLocaleDateString('bg-BG',{weekday:'short',day:'numeric',month:'short'})}catch(e){return d}};
-const SKILL={'bel.mest':'Местоимения','bel.pravopis':'Правопис','bel.tekst':'Непознат текст','lit.razbirane':'Литература: разбиране','lit.tulkuvane':'Литература: тълкуване','lit.sredstva':'Худ. средства','lit.emocii':'Чувства в текста','lit.leksika':'Значение на думи','lit.sravnenie':'Сравнение на творби','lit.ideia':'Идея','mat.okr':'Окръжност','mat.krug':'Кръг','mat.nvo':'Преговор НВО','bel.izrechenie':'Изречение','bel.leksika':'Лексика','mat.rotacionni':'Ротационни тела','mat.racionalni':'Рационални числа','mat.uravnenia':'Уравнения','mat.procent':'Процент','mat.stepeni':'Степени','mat.koord':'Координатна система','mat.paralelepiped':'Паралелепипед и куб','ist':'История','chp':'Човек и природа','geo':'География','eng':'Английски'};
-const skillName=k=>{const p=Object.keys(SKILL).filter(s=>k.startsWith(s)).sort((a,b)=>b.length-a.length)[0];return p?SKILL[p]:k};
+const fmtDate=d=>{try{return new Date(String(d).slice(0,10)+'T12:00:00').toLocaleDateString('bg-BG',{weekday:'short',day:'numeric',month:'short'})}catch(e){return d}};
+const DAYS=['Неделя','Понеделник','Вторник','Сряда','Четвъртък','Петък','Събота'];
+const THEMES={ink:{n:'Мастило',a:'#2348a8',c:'#1b2233',t:'#fff'},rock:{n:'Рок',a:'#d7262e',c:'#111111',t:'#fff'},sakura:{n:'Сакура',a:'#c93a6e',c:'#f4cfdc',t:'#1b2233'},forest:{n:'Гора',a:'#2f7d5b',c:'#1f3a2e',t:'#fff'},night:{n:'Нощ',a:'#7c6cf0',c:'#171a2e',t:'#fff'}};
+const SKILL={'bel.mest':'Местоимения','bel.pravopis':'Правопис','bel.tekst':'Непознат текст','bel.izrechenie':'Изречение','bel.leksika':'Лексика','lit.razbirane':'Литература: разбиране','lit.tulkuvane':'Литература: тълкуване','lit.sredstva':'Худ. средства','lit.emocii':'Чувства в текста','lit.leksika':'Значение на думи','lit.sravnenie':'Сравнение на творби','lit.ideia':'Идея','mat.okr':'Окръжност','mat.krug':'Кръг','mat.nvo':'Преговор НВО','mat.stepeni':'Степени','mat.racionalni':'Рационални числа','mat.koord':'Координатна система','mat.paralelepiped':'Паралелепипед и куб','mat.uravnenia':'Уравнения','mat.procent':'Процент','mat.rotacionni':'Ротационни тела','ist':'История','chp':'Човек и природа','geo':'География','eng':'Английски'};
+const TIPS={'Местоимения':'Провери с „той/него“: ако отговорът е „него“ – пиши „кого/когото“. Когато притежателят е подлогът – „свой“.','Правопис':'Пълен член, когато думата е подлог – провери като я замениш с „той“.','Непознат текст':'Отговаряй с пълно изречение и посочи дума или израз от текста като доказателство.','Литература: тълкуване':'Не преразказвай. Кажи какво означава образът и какво чувство стои зад него, после цитирай.','Литература: разбиране':'Прочети текста два пъти – за сюжета и за чувствата.','Худ. средства':'Епитет = художествено определение; сравнение = „като“; реторичен въпрос = въпрос без нужда от отговор.','Чувства в текста':'Търси думите, които подсказват чувство, и как то се променя.','Значение на думи':'Замени думата с друга в изречението – смисълът трябва да остане.','Сравнение на творби':'Едно общо и една разлика – това носи пълните точки.','Степени':'Първо степените, после умножение и деление, накрая събиране. −3² = −9, а (−3)² = 9.','Рационални числа':'Първо знакът, после модулите. Модулът никога не е отрицателен.','Координатна система':'Първо x (наляво–надясно), после y (нагоре–надолу). Начертай си точките.','Паралелепипед и куб':'Обем = a·b·c; околна = 2(a + b)·c; пълна = 2(ab + bc + ac). Напиши формулата преди сметката.','История':'Разказвай по план: кога, кой, какво направи, какъв е резултатът. Запомни 3–4 ключови години.','Преговор НВО':'Пиши решението по стъпки – дават се точки и за хода.'};
+const LEVELS=['Незапочната','Запозната','Упражнява','Знае','Овладяна'];
+const ICON={bel:'<path d="M6 5h9a3 3 0 0 1 3 3v11H9a3 3 0 0 1-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 9h6M9 12h5" stroke="currentColor" stroke-width="2"/>',mat:'<path d="M5 6h14M5 6l6 6-6 6h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',ist:'<path d="M4 20h16M6 20V10M10 20V10M14 20V10M18 20V10M3 10l9-6 9 6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',chp:'<path d="M5 19c0-8 6-13 14-14-1 8-6 14-14 14zM5 19l7-7" fill="none" stroke="currentColor" stroke-width="2"/>',geo:'<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 12h16M12 4c3 3 3 13 0 16M12 4c-3 3-3 13 0 16" fill="none" stroke="currentColor" stroke-width="2"/>',eng:'<path d="M4 6h16v10H10l-4 4v-4H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>'};
+const icon=id=>`<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">${ICON[id]||''}</svg>`;
 
-let sample=null,S={sessions:[],results:{},review:{}},loaded=false,loadErr=false,view='home',run=null;
-const LS='tetradka.v1';
-function loadStore(){try{const x=JSON.parse(localStorage.getItem(LS)||'{}');S.results=x.results||{};S.review=x.review||{};S.backupAt=x.backupAt||''}catch(e){}}
-function persist(){try{localStorage.setItem(LS,JSON.stringify({results:S.results,review:S.review,savedAt:new Date().toISOString(),backupAt:S.backupAt||''}))}catch(e){}}
+let S={P:null,sessions:[],lessons:{},results:{},review:{},prog:{lessons:{}},settings:{theme:'ink'},feedback:[],backupAt:'',seen:[]},loaded=false,loadErr=false,run=null;
+const LS='tetradka.v1',LSC='tetradka.cover';
+function loadStore(){try{const x=JSON.parse(localStorage.getItem(LS)||'{}');S.results=x.results||{};S.review=x.review||{};S.backupAt=x.backupAt||'';S.prog=x.prog||{lessons:{}};S.prog.lessons??={};S.settings=x.settings||{theme:'ink'};S.seen=x.seen||[]}catch(e){}}
+function persist(){try{localStorage.setItem(LS,JSON.stringify({results:S.results,review:S.review,prog:S.prog,settings:S.settings,seen:S.seen,backupAt:S.backupAt,savedAt:new Date().toISOString()}))}catch(e){}}
 try{navigator.storage?.persist?.()}catch(e){}
-const db={doc:p=>({set:async d=>{const[c,id]=p.split('/');if(c==='results'||c==='review'){S[c][id]=d;persist()}}})};
+function cover(){try{return localStorage.getItem(LSC)||''}catch(e){return ''}}
+function applyTheme(){const t=THEMES[S.settings.theme]||THEMES.ink,r=document.documentElement.style;r.setProperty('--acc',t.a);r.setProperty('--cover',t.c);r.setProperty('--coverInk',t.t);document.querySelector('meta[name=theme-color]').content=t.c}
 
-function seededOrder(id,n){let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){h=(h*1103515245+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
-const norm=s=>String(s||'').toLowerCase().replace(/[„“"'.!?;:]/g,'').replace(/\s+/g,' ').trim();
-function parseNum(s){s=String(s||'').replace(/\s/g,'').replace(',','.').replace(/[^0-9.\/-]/g,'');if(s.includes('/')){const[a,b]=s.split('/').map(Number);return b?a/b:NaN}return s===''?NaN:Number(s)}
-function maxPts(it){return it.type==='open'?2:1}
-
+/* ---------- derived data ---------- */
+const skillName=k=>{const p=Object.keys(SKILL).filter(s=>k.startsWith(s)).sort((a,b)=>b.length-a.length)[0];return p?SKILL[p]:k};
+const maxPts=it=>it.type==='open'?2:1;
+const subjects=()=>S.P?.subjects||[];
+const subjOfSkill=k=>subjects().find(s=>s.skills.some(p=>k.startsWith(p)));
+function allRecords(){const out=[];for(const r of Object.values(S.results))for(const [iid,x] of Object.entries(r.items||{}))out.push({...x,iid,sid:r.sid,date:String(r.finishedAt||'').slice(0,10)});return out}
+function topicStats(t){const rec=allRecords().filter(x=>t.skills.some(p=>(x.skill||'').startsWith(p)));const p=rec.reduce((a,x)=>a+x.pts,0),m=rec.reduce((a,x)=>a+x.max,0);const days=[...new Set(rec.map(x=>x.date))].sort();const last=rec.filter(x=>x.date===days[days.length-1]);const lp=last.reduce((a,x)=>a+x.pts,0),lm=last.reduce((a,x)=>a+x.max,0);return{n:rec.length,acc:m?p/m:0,days:days.length,lastAcc:lm?lp/lm:0}}
+function topicLevel(t){const st=topicStats(t),opened=!!S.prog.lessons[t.id];if(!st.n)return opened?1:0;if(st.acc<.5)return 1;if(st.acc<.8||st.n<4)return 2;if(st.days>=2&&st.lastAcc>=.85)return 4;return 3}
+function subjProgress(s){const ts=(s.topics||[]).filter(t=>!t.soon);if(!ts.length)return null;return ts.reduce((a,t)=>a+topicLevel(t),0)/(ts.length*4)}
+function stats(){const agg={};for(const x of allRecords()){const n=skillName(x.skill||'');(agg[n]??={p:0,m:0,c:0});agg[n].p+=x.pts;agg[n].m+=x.max;agg[n].c++}return Object.entries(agg).sort((a,b)=>a[1].p/a[1].m-b[1].p/b[1].m)}
+const focusList=()=>stats().filter(([,a])=>a.c>=2&&a.p/a.m<.8).slice(0,3);
 function sessionsSorted(){return [...S.sessions].sort((a,b)=>(a.order??0)-(b.order??0)||String(a.date).localeCompare(String(b.date)))}
-function dueReview(){const t=today();return Object.values(S.review).filter(r=>!r.done&&r.due<=t)}
-function findItem(sid,iid){const s=S.sessions.find(x=>x.id===sid);if(!s)return null;for(const sec of s.sections||[])for(const it of sec.items||[])if(it.id===iid)return{it,sec,s};return null}
+function dueReview(){const t=today();return Object.values(S.review).filter(r=>!r.done&&r.due<=t&&findItem(r.sid,r.iid))}
+function lessonAsSession(L){return{id:'L-'+L.id,title:'Самопроверка: '+L.title,kind:'lesson',sections:[{subject:subjects().find(s=>s.id===L.subject)?.short||'',title:'Самопроверка: '+L.title,text:'',items:L.quiz}]}}
+function findItem(sid,iid){let s;if(String(sid).startsWith('L-')){const L=S.lessons[sid.slice(2)];if(!L)return null;s=lessonAsSession(L)}else s=S.sessions.find(x=>x.id===sid);if(!s)return null;for(const sec of s.sections||[])for(const it of sec.items||[])if(it.id===iid)return{it,sec,s};return null}
+function sessSubjects(s){return [...new Set((s.sections||[]).map(x=>x.subject))]}
+function weekStart(){const d=new Date();return addDays(today(),-((d.getDay()+6)%7))}
+function doneDays(){return [...new Set(Object.values(S.results).filter(r=>r.done).map(r=>String(r.finishedAt||'').slice(0,10)))]}
+function weekCount(){const ws=weekStart();return doneDays().filter(d=>d>=ws).length}
+function weekStreak(){let n=0,ws=weekStart();const days=doneDays();for(let k=1;k<52;k++){const a=addDays(ws,-7*k),b=addDays(ws,-7*(k-1));if(days.filter(d=>d>=a&&d<b).length>=4)n++;else break}if(weekCount()>=4)n++;return n}
+function todaySchool(){const d=new Date().getDay();return S.P?.schedule?.[d]||[]}
+function tomorrowSchool(){const d=(new Date().getDay()+1)%7;return S.P?.schedule?.[d]||[]}
+function matchSubj(lessonName){return subjects().find(s=>s.match.some(m=>lessonName.startsWith(m)))}
 
-/* ---------- views ---------- */
-function render(){
- if(view==='parent')return renderParent();
- if(view==='run'&&run)return renderRun();
- renderHome();
+/* ---------- stamps ---------- */
+function stampList(){const R=Object.values(S.results).filter(r=>r.done),recs=allRecords(),acc=recs.reduce((a,x)=>a+x.pts,0)/Math.max(1,recs.reduce((a,x)=>a+x.max,0));
+ const lv=subjects().flatMap(s=>(s.topics||[]).filter(t=>!t.soon).map(t=>topicLevel(t)));
+ const perfect=R.some(r=>r.max&&r.score===r.max),reviewed=Object.values(S.review).filter(r=>r.done).length;
+ const subjDone=new Set(R.map(r=>r.kind==='lesson'?'L':'S')).size;
+ return[
+  {id:'first',t:'Първа сесия',d:'Решена първата сесия',ok:R.length>=1},
+  {id:'five',t:'Пет!',d:'5 решени сесии',ok:R.length>=5},
+  {id:'ten',t:'Десет',d:'10 решени сесии',ok:R.length>=10},
+  {id:'week',t:'Пълна седмица',d:'4 дни с упражнения в една седмица',ok:weekStreak()>=1},
+  {id:'perfect',t:'Без грешка',d:'Сесия с всички точки',ok:perfect},
+  {id:'lesson',t:'Първи урок',d:'Завършен урок със самопроверка',ok:Object.values(S.prog.lessons).some(x=>x.done)},
+  {id:'fix',t:'Поправено',d:'5 грешки преговорени докрай',ok:reviewed>=5},
+  {id:'know',t:'Знам го',d:'Тема на ниво „Знае“',ok:lv.some(x=>x>=3)},
+  {id:'master',t:'Овладяно',d:'Тема на ниво „Овладяна“',ok:lv.some(x=>x>=4)},
+  {id:'hundred',t:'100 задачи',d:'100 решени задачи',ok:recs.length>=100},
+  {id:'sharp',t:'Точна',d:'Над 85% точност след 50 задачи',ok:recs.length>=50&&acc>=.85},
+  {id:'both',t:'Учи и упражнява',d:'И урок, и сесия упражнения',ok:subjDone>=2}
+ ]}
+function newStamps(){const got=stampList().filter(s=>s.ok).map(s=>s.id),fresh=got.filter(id=>!S.seen.includes(id));if(fresh.length){S.seen=[...S.seen,...fresh];persist()}return fresh}
+const stampHTML=(s,isNew)=>`<div class="stamp ${s.ok?'':'off'} ${isNew?'new':''}" title="${esc(s.d)}">${esc(s.t)}<small>${esc(s.d)}</small></div>`;
+
+/* ---------- shell ---------- */
+function nav(cur){const L=[['#home','Днес'],['#subjects','Предмети'],['#journal','Дневник'],['#stamps','Печати'],['#report','Отчет']];return `<nav class="tabs">${L.map(([h,t])=>`<a href="${h}" class="${cur===h?'on':''}">${t}</a>`).join('')}</nav>`}
+function coverHTML(){const c=cover();const d=new Date();return `<header class="cover"><div class="art ${c?'':'pattern'}" ${c?`style="background-image:url('${c}')"`:''}></div><div class="in"><div class="label"><div class="muted">${esc(S.P?.grade||'')} · ${esc(DAYS[d.getDay()])}, ${esc(d.toLocaleDateString('bg-BG',{day:'numeric',month:'long'}))}</div><h1>Тетрадката на ${esc(S.P?.student||'')}</h1></div><a class="btn" href="#cover" style="background:color-mix(in srgb,var(--paper) 92%,transparent);border-color:transparent">Корица</a></div></header>`}
+function frame(cur,body){root.innerHTML=coverHTML()+nav(cur)+body}
+function route(){const h=location.hash||'#home';if(run&&h!=='#run'){run=null}
+ if(loadErr)return root.innerHTML=`<div class="page" style="margin-top:24px"><h2>Тетрадката не се зареди</h2><p>Провери интернет връзката.</p><button class="go" onclick="location.reload()">Опитай пак</button></div>`;
+ if(!loaded)return;
+ if(h==='#run'&&run)return renderRun();
+ if(h.startsWith('#subj-'))return renderSubject(h.slice(6));
+ if(h.startsWith('#lesson-'))return renderLesson(h.slice(8));
+ if(h.startsWith('#view-'))return renderView(h.slice(6));
+ ({'#subjects':renderSubjects,'#journal':renderJournal,'#stamps':renderStamps,'#report':renderReport,'#cover':renderCover}[h]||renderHome)();
+ scrollTo(0,0);
 }
-const TIPS={'Местоимения':'Провери с „той/него“: ако отговорът е „него“ – пиши „кого/когото“. Когато притежателят е подлогът – „свой“.','Правопис':'Пълен член (-ът/-ят), когато думата е подлог – провери като я замениш с „той“.','Непознат текст':'Отговаряй с пълно изречение и винаги посочи дума или израз от текста като доказателство.','Литература: тълкуване':'Не преразказвай. Кажи какво означава образът и какво чувство или мисъл стои зад него, после цитирай.','Литература: разбиране':'Прочети текста два пъти – веднъж за сюжета, веднъж за чувствата.','Худ. средства':'Запомни: епитет = художествено определение; сравнение = „като“; реторичен въпрос = въпрос без нужда от отговор.','Чувства в текста':'Търси думите, които назовават или подсказват чувство, и как се променят от началото към края.','Значение на думи':'Опитай да замениш думата с друга в изречението – смисълът трябва да остане същият.','Сравнение на творби':'Напиши поне едно общо и поне една разлика – това носи пълните точки.','Степени':'Първо степените, после умножение и деление, накрая събиране. Внимавай: −3² = −9, а (−3)² = 9.','Рационални числа':'Определи знака първо, после смятай модулите. Модулът никога не е отрицателен.','Координатна система':'Първо x (наляво–надясно), после y (нагоре–надолу). Начертай си точките на чернова.','Паралелепипед и куб':'Обем = a·b·c; околна повърхнина = 2(a + b)·c; пълна = 2(ab + bc + ac). Напиши формулата, преди да смяташ.','История':'Разказвай по план: кога, кой, какво направи, какъв е резултатът. Запомни 3–4 ключови години.','Преговор НВО':'Пиши решението по стъпки – на НВО се дават точки и за хода на решението.'};
-function focusList(){return stats().filter(([n,a])=>a.c>=2&&a.p/a.m<.8).slice(0,3)}
+window.addEventListener('hashchange',route);
+const go=h=>{if(location.hash===h)route();else location.hash=h};
+
+/* ---------- home (dashboard) ---------- */
 function renderHome(){
- if(loadErr){app.innerHTML=`<div class="page today"><h2>Упражненията не се заредиха</h2><p>Провери интернет връзката и опитай отново.</p><div><button class="go" onclick="location.reload()">Опитай пак</button></div></div>`;return}
  const list=sessionsSorted(),next=list.find(s=>!S.results[s.id]?.done),due=dueReview();
- const done=list.filter(s=>S.results[s.id]?.done).length;
- const weekStart=addDays(today(),-((new Date().getDay()+6)%7));
- const week=list.filter(s=>S.results[s.id]?.done&&(S.results[s.id].finishedAt||'').slice(0,10)>=weekStart).length;
- let card;
- if(!loaded)card=`<p class="muted">Зареждам…</p>`;
- else if(!next&&!due.length)card=`<h2>Всичко е решено</h2><p>Новите упражнения се появяват тук автоматично. Междувременно — браво!</p>`;
- else{
-  const subj=next?[...new Set(next.sections.map(x=>x.subject))]:[];
-  card=`<div class="pen">${next?'Днешното упражнение':'Преговор'}</div>
-  <h2>${next?esc(next.title):'Грешки от предишни сесии'}</h2>
-  <div class="chips">${subj.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}<span class="chip">~${esc(next?.minutes||10)} мин</span>${due.length?`<span class="chip">+ ${Math.min(due.length,4)} за преговор</span>`:''}</div>
-  <p class="muted">${next?'Работи спокойно. Отговаряй с пълни изречения там, където има поле за писане — точно така е и на контролното.':''}</p>
-  <div><button class="go" id="start">Започни</button></div>`;
- }
- const foc=focusList(),fb=(S.feedback||[]).slice(-3).reverse();
- const focHTML=foc.length?`<section class="page"><h3>На какво да внимаваш</h3>${foc.map(([n,a])=>`<div class="q"><p>${esc(n)} <span class="pen" style="font-size:22px">${Math.round(100*a.p/a.m)}%</span></p><div>${esc(TIPS[n]||'Прочети внимателно обясненията към грешките в тази тема.')}</div></div>`).join('')}</section>`:'';
- const fbHTML=fb.length?`<section class="page"><h3>Бележки от проверката</h3>${fb.map(f=>`<div class="q"><p><span class="muted">${esc(f.date||'')}</span> ${esc(f.title||'')}</p><div style="white-space:pre-line">${esc(f.text||'')}</div></div>`).join('')}</section>`:'';
+ const hr=new Date().getHours(),beforeSchool=hr<13,school=beforeSchool?todaySchool():tomorrowSchool(),when=beforeSchool?'Днес в училище':'Утре в училище';
+ const schoolSubj=[...new Set(school.map(matchSubj).filter(Boolean))];
+ const fresh=newStamps(),stamps=stampList();
+ // suggestions: lessons/topics of subjects in school today/tomorrow that are below "Знае"
+ const sugg=schoolSubj.flatMap(s=>(s.topics||[]).filter(t=>!t.soon&&t.lesson&&topicLevel(t)<3).map(t=>({s,t}))).slice(0,2);
+ let main;
+ if(next)main=`<div class="pen">Днешното упражнение</div><h2>${esc(next.title)}</h2><div class="chips">${sessSubjects(next).map(x=>`<span class="chip">${esc(x)}</span>`).join('')}<span class="chip">~${esc(next.minutes||20)} мин</span>${due.length?`<span class="chip">+ ${Math.min(due.length,4)} за преговор</span>`:''}</div><div class="row" style="margin-top:12px"><button class="go" id="start">Започни</button></div>`;
+ else if(due.length)main=`<div class="pen">Преговор</div><h2>Грешки от предишни дни</h2><p>${due.length} задачи чакат да ги решиш отново.</p><button class="go" id="start">Започни</button>`;
+ else main=`<div class="pen">Всичко е решено</div><h2>Браво!</h2><p>Новите упражнения идват сами. Можеш да отвориш урок или да преговориш тема.</p>`;
+ const tests=(S.P?.tests||[]).map(t=>{const s=subjects().find(x=>x.id===t.subject),ts=(s?.topics||[]).filter(x=>t.topics.includes(x.id)&&!x.soon),ready=ts.length?Math.round(100*ts.reduce((a,x)=>a+topicLevel(x),0)/(ts.length*4)):0,days=t.date?Math.round((new Date(t.date+'T12:00:00')-new Date(today()+'T12:00:00'))/864e5):null;return{t,s,ready,days}}).filter(x=>x.days===null||x.days>=0);
+ const fb=(S.feedback||[]).slice(-2).reverse(),foc=focusList(),wc=weekCount(),streak=weekStreak();
  const nDone=Object.values(S.results).filter(r=>r.done).length,lastB=S.backupAt?Math.floor((Date.now()-Date.parse(S.backupAt))/864e5):999;
- const bHTML=nDone>=3&&lastB>=7?`<section class="page"><h3>Време е за резервно копие</h3><p class="muted">Резултатите ти се пазят само на това устройство. Изтегли копие веднъж седмично, за да не се изгубят.</p><button id="bk">Изтегли копие</button></section>`:'';
- app.innerHTML=`<section class="page today">${card}</section>${bHTML}${fbHTML}${focHTML}
- <section class="page"><div class="top"><h3>Тази седмица</h3><div class="dots">${[0,1,2,3,4].map(i=>`<span class="dot ${i<week?'on':''}"></span>`).join('')}</div></div>
- <p class="muted">${done} решени сесии общо · целта е 4–5 на седмица</p></section>
- <section class="page"><h3>Всички сесии</h3><ul class="list">${list.map(s=>{const r=S.results[s.id];return `<li><span><span class="muted">${esc(fmtDate(s.date))}</span> · ${esc(s.title)}</span>${r?.done?`<span class="row"><span class="pen">${esc(r.score)}/${esc(r.max)}</span><button data-rev="${esc(s.id)}">Виж</button></span>`:r?`<span class="muted">започната</span>`:`<span class="muted">предстои</span>`}</li>`}).join('')||'<li class="muted">Още няма сесии.</li>'}</ul></section>`;
- document.getElementById('start')?.addEventListener('click',()=>startRun(next));
+ frame('#home',`
+ <section class="page">${main}</section>
+ <div class="grid two">
+  <section class="page"><h3>${when}</h3>${school.length?`<div class="chips">${school.map(l=>{const s=matchSubj(l);return `<span class="chip ${s?'hot':''}">${esc(l)}</span>`}).join('')}</div>`:'<p class="muted">Почивен ден.</p>'}
+  ${sugg.length?`<p class="muted" style="margin-top:12px">Подготви се за часа:</p>${sugg.map(({s,t})=>`<p><a href="#lesson-${esc(t.id)}">${esc(s.short)}: урок „${esc(t.title)}“</a></p>`).join('')}`:''}</section>
+  <section class="page"><div class="top"><h3>Тази седмица</h3><div class="dots">${[0,1,2,3,4].map(i=>`<span class="dot ${i<wc?'on':''}"></span>`).join('')}</div></div>
+  <p>${wc>=4?'Целта за седмицата е изпълнена!':`Още ${4-wc} ${4-wc===1?'ден':'дни'} до целта (4 на седмица).`}</p>
+  <p class="muted">${streak?`Серия: ${streak} ${streak===1?'седмица':'седмици'} подред с изпълнена цел`:'Изпълни целта 4 седмици подред за серия.'}</p></section>
+ </div>
+ ${tests.length?`<section class="page" style="margin-top:18px"><h3>Предстои</h3>${tests.map(({t,s,ready,days})=>`<div class="q"><div class="top"><p style="margin:0"><b>${esc(s?.short||'')}</b> · ${esc(t.title)}</p><span class="pen" style="font-size:22px">${days===null?'скоро':days===0?'днес':`след ${days} ${days===1?'ден':'дни'}`}</span></div><div class="bar"><i style="width:${ready}%"></i></div><p class="muted" style="margin-top:6px">Готова си на ${ready}% · ${(s?.topics||[]).filter(x=>t.topics.includes(x.id)).map(x=>esc(x.title)).join(', ')}</p></div>`).join('')}</section>`:'<div style="height:18px"></div>'}
+ <section class="page"><div class="top"><h3>Моите предмети</h3><a href="#subjects">всички</a></div><div class="grid three">${subjects().map(subjCard).join('')}</div></section>
+ ${fb.length?`<section class="page"><h3>Бележки от проверката</h3>${fb.map(f=>`<div class="q"><p><span class="muted">${esc(f.date||'')}</span> ${esc(f.title||'')}</p><div style="white-space:pre-line">${esc(f.text||'')}</div></div>`).join('')}</section>`:''}
+ ${foc.length?`<section class="page"><h3>На какво да внимаваш</h3>${foc.map(([n,a])=>`<div class="q"><p>${esc(n)} <span class="pen" style="font-size:22px">${Math.round(100*a.p/a.m)}%</span></p><div>${esc(TIPS[n]||'Прочети внимателно обясненията към грешките.')}</div></div>`).join('')}</section>`:''}
+ <section class="page"><div class="top"><h3>Печати</h3><a href="#stamps">всички ${stamps.filter(s=>s.ok).length}/${stamps.length}</a></div><div class="stamps">${stamps.filter(s=>s.ok).slice(-4).map(s=>stampHTML(s,fresh.includes(s.id))).join('')||stamps.slice(0,3).map(s=>stampHTML(s)).join('')}</div>${fresh.length?`<p class="pen" style="margin-top:10px">Нов печат!</p>`:''}</section>
+ ${nDone>=3&&lastB>=7?`<section class="page"><h3>Време е за резервно копие</h3><p class="muted">Резултатите ти са само на това устройство. Изтегли копие веднъж седмично.</p><button id="bk">Изтегли копие</button></section>`:''}`);
+ document.getElementById('start')?.addEventListener('click',()=>startRun(next||null));
  document.getElementById('bk')?.addEventListener('click',()=>{downloadBackup();renderHome()});
- app.querySelectorAll('[data-rev]').forEach(b=>b.addEventListener('click',()=>showReviewOf(b.dataset.rev)));
+}
+function ringSVG(p){const r=24,c=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 58 58"><circle cx="29" cy="29" r="${r}" fill="none" stroke="var(--rule)" stroke-width="6"/><circle cx="29" cy="29" r="${r}" fill="none" stroke="var(--acc)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(c*(p||0)).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 29 29)"/></svg>`}
+function subjCard(s){const p=subjProgress(s),ts=(s.topics||[]).filter(t=>!t.soon);return `<button class="subj" onclick="location.hash='#subj-${esc(s.id)}'">${p===null?`<span class="ring" style="display:grid;place-items:center;color:var(--soft)">${icon(s.id)}</span>`:ringSVG(p)}<span><b>${esc(s.short)}</b><br><span class="muted">${p===null?'скоро':`${ts.filter(t=>topicLevel(t)>=3).length} от ${ts.length} теми усвоени`}</span></span></button>`}
+const lvHTML=l=>`<span class="lv" title="${LEVELS[l]}">${[1,2,3,4].map(i=>`<i class="${i<=l?'on':''}"></i>`).join('')}</span>`;
+
+/* ---------- subjects ---------- */
+function renderSubjects(){frame('#subjects',`<div class="grid two">${subjects().map(s=>`<section class="page">${subjCard(s)}<p class="muted" style="margin-top:10px">${esc(s.textbook||'')}</p></section>`).join('')}</div>`)}
+function renderSubject(id){const s=subjects().find(x=>x.id===id);if(!s)return renderSubjects();
+ const days=Object.entries(S.P.schedule).filter(([,l])=>l.some(x=>s.match.some(m=>x.startsWith(m)))).map(([d])=>DAYS[d].slice(0,3));
+ const sess=sessionsSorted().filter(x=>sessSubjects(x).some(n=>n===s.short||s.match.some(m=>n.startsWith(m))||(s.id==='bel'&&n==='Литература')||(s.id==='mat'&&n==='МАТ')));
+ frame('#subjects',`<section class="page"><div class="row">${icon(s.id)}<h2 style="margin:0">${esc(s.name)}</h2></div><p class="muted" style="margin-top:6px">${s.textbook?'Учебник: '+esc(s.textbook)+' · ':''}${days.length?'Часове: '+days.join(', '):''}</p></section>
+ <section class="page"><h3>Теми</h3>${(s.topics||[]).length?`<ul class="list">${s.topics.map(t=>{const l=topicLevel(t),st=topicStats(t);return `<li><span><b>${esc(t.title)}</b><br><span class="muted">${t.soon?'скоро':`${LEVELS[l]}${st.n?` · ${Math.round(st.acc*100)}% от ${st.n} задачи`:''}`}</span></span><span class="row">${t.soon?'':lvHTML(l)}${t.lesson?`<a class="btn" href="#lesson-${esc(t.id)}">Урок</a>`:''}</span></li>`}).join('')}</ul>`:`<p>Темите по този предмет идват скоро – по учебника и по това, което учите в момента.</p>`}
+ <p class="muted" style="margin-top:10px">Нива: ${LEVELS.slice(1).map((n,i)=>`${i+1} – ${n}`).join(' · ')}</p></section>
+ ${sess.length?`<section class="page"><h3>Упражнения</h3><ul class="list">${sess.map(x=>{const r=S.results[x.id];return `<li><span><span class="muted">${esc(fmtDate(x.date))}</span> · ${esc(x.title)}</span>${r?.done?`<span class="row"><span class="pen">${esc(r.score)}/${esc(r.max)}</span><a class="btn" href="#view-${esc(x.id)}">Виж</a></span>`:`<button data-run="${esc(x.id)}">Реши</button>`}</li>`}).join('')}</ul></section>`:''}`);
+ root.querySelectorAll('[data-run]').forEach(b=>b.onclick=()=>startRun(S.sessions.find(x=>x.id===b.dataset.run)));
 }
 
-/* ---------- running a session ---------- */
+/* ---------- lesson player ---------- */
+function renderLesson(id){
+ const t=subjects().flatMap(s=>(s.topics||[]).map(x=>({...x,subj:s}))).find(x=>x.id===id);const L=S.lessons[id];
+ if(!t||!L)return frame('#subjects',`<section class="page"><h2>Урокът още не е готов</h2><a href="#subjects">Към предметите</a></section>`);
+ S.prog.lessons[id]??={opened:today()};persist();
+ const r=S.results['L-'+id];
+ const B=L.blocks.map((b,i)=>blockHTML(b,i)).join('');
+ frame('#subjects',`<div class="top"><a href="#subj-${esc(t.subj.id)}">← ${esc(t.subj.short)}</a><span class="muted">~${esc(L.minutes||20)} мин</span></div>
+ <article class="page lesson"><div class="pen">${esc(t.subj.short)} · урок</div><h1 style="font-size:clamp(28px,5vw,40px)">${esc(L.title)}</h1><p class="muted">${esc(L.subtitle||'')}</p><div style="height:10px"></div>${B}
+ <div class="blk callout"><h3>Самопроверка</h3><p>${L.quiz.length} въпроса. Резултатът отива в нивото на темата, а грешките – в преговора.</p>${r?.done?`<p>Последно: <span class="pen">${esc(r.score)}/${esc(r.max)}</span></p>`:''}<div class="row"><button class="go" id="quiz">${r?.done?'Пробвай пак':'Започни самопроверката'}</button>${r?.done?`<a class="btn" href="#view-L-${esc(id)}">Виж отговорите си</a>`:''}</div></div></article>`);
+ document.getElementById('quiz').onclick=()=>startRun(lessonAsSession(L));
+ wireLesson(L);
+}
+function blockHTML(b,i){
+ const T=b.title?`<h2>${esc(b.title)}</h2>`:'';
+ switch(b.type){
+  case 'hook':return `<div class="blk hook">${esc(b.text)}</div>`;
+  case 'goals':return `<div class="blk"><h3>В този урок</h3><div class="chips">${b.items.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div></div>`;
+  case 'text':return `<div class="blk">${T}<p>${esc(b.text)}</p></div>`;
+  case 'image':return `<figure class="blk"><img src="${esc(b.src)}" alt="${esc(b.caption)}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${esc(b.caption)} <span>(${esc(b.credit||'')})</span></figcaption></figure>`;
+  case 'check':return `<div class="blk callout" data-check="${i}"><p><b>Провери се:</b> ${esc(b.q)}</p><div class="opts">${b.options.map((o,j)=>`<button class="opt" data-j="${j}">${esc(o)}</button>`).join('')}</div><div class="out"></div></div>`;
+  case 'map':return `<div class="blk">${T}<div class="mapbox"><svg viewBox="0 0 600 400" role="img" aria-label="${esc(b.title)}">
+   <path d="${esc(b.paths.sea)}" fill="light-dark(#cfe0f2,#1d3247)"/><path d="${esc(b.paths.marmara)}" fill="light-dark(#cfe0f2,#1d3247)"/>
+   <path d="${esc(b.paths.danube)}" fill="none" stroke="light-dark(#5b8fd0,#5b8fd0)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+   <path d="${esc(b.paths.balkan)}" fill="none" stroke="light-dark(#b58a5a,#8c6a45)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+   ${b.labels.map(l=>`<text x="${l.xy[0]}" y="${l.xy[1]}" font-size="15" fill="var(--soft)" font-family="Rubik">${esc(l.t)}</text>`).join('')}
+   ${b.points.map((p,k)=>`<g class="mpt" tabindex="0" data-k="${k}" transform="translate(${p.xy[0]},${p.xy[1]})"><circle r="9" fill="${p.kind==='battle'?'var(--pen)':p.kind==='bz'?'#7a5cc0':'var(--acc)'}" stroke="#fff" stroke-width="2"/>${p.kind==='battle'?'<path d="M-4,-4 L4,4 M4,-4 L-4,4" stroke="#fff" stroke-width="2"/>':''}<text x="${p.anchor==='end'?-12:12}" y="5" text-anchor="${p.anchor==='end'?'end':'start'}" font-size="14" font-weight="500" fill="var(--ink)" font-family="Rubik" paint-order="stroke" stroke="light-dark(#f3efe4,#22252c)" stroke-width="4">${esc(p.label)}</text></g>`).join('')}
+  </svg><div class="mapinfo" data-mapinfo="${i}">${esc(b.note)}</div></div><p class="muted" style="margin-top:6px"><span style="color:var(--acc)">●</span> България · <span style="color:#7a5cc0">●</span> Византия · <span style="color:var(--pen)">●</span> битка</p></div>`;
+  case 'timeline':return `<div class="blk">${T}<div class="tl" data-tl="${i}">${b.events.map((e,k)=>`<button data-k="${k}"><b>${esc(e.y)}</b><span>${esc(e.t)}</span></button>`).join('')}</div><div class="callout" data-tlout="${i}">Докосни година.</div></div>`;
+  case 'order':return `<div class="blk callout" data-order="${i}"><p><b>Подреди:</b> ${esc(b.q)}</p><div class="ord"></div><div class="out muted" style="margin-top:8px"></div></div>`;
+  case 'cards':return `<div class="blk">${T}<div class="flip">${b.cards.map((c,k)=>`<button data-f="${esc(c.f)}" data-b="${esc(c.b)}">${esc(c.f)}</button>`).join('')}</div></div>`;
+  case 'debate':return `<div class="blk callout" style="border-left:4px solid var(--pen)"><h3>${esc(b.title)}</h3><p>${esc(b.text)}</p><p><b>А ти?</b> ${esc(b.q)}</p><details><summary>Една възможна мисъл</summary>Византийците са врагове на Крум и са загубили – описвайки го като жесток, те обясняват поражението си и показват себе си като жертви.</details></div>`;
+  case 'links':return `<div class="blk">${T}<div class="links">${b.items.map(x=>`<div class="callout"><b>${esc(x.s)}</b>${esc(x.t)}${x.answer?`<details><summary>Отговор</summary>${esc(x.answer)}</details>`:''}</div>`).join('')}</div></div>`;
+  case 'summary':return `<div class="blk"><h2>Накратко</h2><ul class="sum">${b.points.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>`;
+ }return ''}
+function wireLesson(L){
+ root.querySelectorAll('[data-check]').forEach(box=>{const b=L.blocks[box.dataset.check];box.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{const j=+o.dataset.j;box.querySelectorAll('.opt').forEach(x=>{x.disabled=true;const k=+x.dataset.j;if(k===b.answer)x.classList.add('right');if(k===j&&j!==b.answer)x.classList.add('wrong')});box.querySelector('.out').innerHTML=`<div class="fb ${j===b.answer?'ok':''}"><b>${j===b.answer?'Точно така':'Не съвсем'}</b> ${esc(b.explain)}</div>`})});
+ root.querySelectorAll('.mpt').forEach(g=>{const show=()=>{const box=g.closest('.blk'),i=box.querySelector('[data-mapinfo]').dataset.mapinfo,p=L.blocks[i].points[g.dataset.k];box.querySelector('[data-mapinfo]').innerHTML=`<b>${esc(p.label)}</b> – ${esc(p.info)}`};g.onclick=show;g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show()}}});
+ root.querySelectorAll('[data-tl]').forEach(tl=>{const b=L.blocks[tl.dataset.tl],out=root.querySelector(`[data-tlout="${tl.dataset.tl}"]`);tl.querySelectorAll('button').forEach(x=>x.onclick=()=>{tl.querySelectorAll('button').forEach(y=>y.classList.remove('on'));x.classList.add('on');const e=b.events[x.dataset.k];out.innerHTML=`<b>${esc(e.y)} – ${esc(e.t)}.</b> ${esc(e.d)}`})});
+ root.querySelectorAll('.flip button').forEach(x=>x.onclick=()=>{const on=x.classList.toggle('on');x.textContent=on?x.dataset.b:x.dataset.f});
+ root.querySelectorAll('[data-order]').forEach(box=>{const b=L.blocks[box.dataset.order],ord=box.querySelector('.ord'),out=box.querySelector('.out');let picked=[];const shuffled=b.items.map((x,k)=>k).sort((a,c)=>((a*7+3)%5)-((c*7+3)%5));
+  const draw=()=>{ord.innerHTML=shuffled.map(k=>{const pos=picked.indexOf(k);return `<button data-k="${k}" class="${pos>=0?(pos===k?'done':'bad'):''}" ${pos>=0?'disabled':''}>${pos>=0?(pos+1)+'. ':''}${esc(b.items[k])}</button>`}).join('');ord.querySelectorAll('button').forEach(x=>x.onclick=()=>{picked.push(+x.dataset.k);draw()});
+   if(picked.length===b.items.length){const ok=picked.every((k,p)=>k===p);out.innerHTML=ok?'<span style="color:var(--ok)">Вярно подредено!</span>':`Има разместване. Правилно: ${b.items.map(esc).join(' → ')} <button class="link" id="ordre">Опитай пак</button>`;out.querySelector('#ordre')?.addEventListener('click',()=>{picked=[];out.textContent='';draw()})}else out.textContent='Докосни събитията поред – първо най-ранното.'};draw()});
+}
+
+/* ---------- runner (exercises & self-tests) ---------- */
+function seededOrder(id,n){let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){h=(h*1103515245+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+const norm=s=>String(s||'').toLowerCase().replace(/−/g,'-').replace(/[„“"'.!?;:]/g,'').replace(/\s+/g,' ').trim();
+function parseNum(s){s=String(s||'').replace(/−/g,'-').replace(/\s/g,'').replace(',','.').replace(/[^0-9.\/-]/g,'');if(s.includes('/')){const[a,b]=s.split('/').map(Number);return b?a/b:NaN}return s===''?NaN:Number(s)}
 function startRun(sess){
  const secs=[];
- const due=dueReview().slice(0,4).map(r=>({r,f:findItem(r.sid,r.iid)})).filter(x=>x.f);
- if(due.length)secs.push({review:true,subject:'Преговор',title:'Преговор: задачи, в които имаше грешка',text:'',items:due.map(x=>({...x.f.it,_ref:x.r,_text:x.f.sec.text,_key:x.r.sid+'__'+x.r.iid}))});
+ const due=dueReview().slice(0,4).map(r=>({r,f:findItem(r.sid,r.iid)})).filter(x=>x.f&&(!sess||x.r.sid!==sess.id));
+ if(due.length&&sess?.kind!=='lesson')secs.push({review:true,subject:'Преговор',title:'Преговор: задачи, в които имаше грешка',text:'',items:due.map(x=>({...x.f.it,_ref:x.r,_text:x.f.sec.text,_key:x.r.sid+'__'+x.r.iid}))});
  if(sess)for(const sec of sess.sections)secs.push({...sec,items:sec.items.map(it=>({...it,_key:it.id}))});
- const prev=sess?S.results[sess.id]:null;
- run={sess,secs,si:0,ans:{},pts:{},fb:{},graded:false,busy:false,items:{...(prev?.items||{})}};
- if(prev?.lastSection!=null&&!prev.done)run.si=Math.min(prev.lastSection+1+(due.length?1:0),secs.length-1);
- view='run';render();scrollTo(0,0);
+ if(!secs.length)return;
+ const prev=sess?S.results[sess.id]:null,fresh=!prev||prev.done;
+ run={sess,secs,si:0,ans:{},pts:{},fb:{},graded:false,busy:false,items:fresh?{}:{...(prev.items||{})}};
+ if(prev&&!prev.done&&prev.lastSection!=null)run.si=Math.min(prev.lastSection+1+(secs[0].review?1:0),secs.length-1);
+ go('#run');
 }
 function qHTML(it,sec){
- const k=it._key,a=run.ans[k],g=run.graded,p=run.pts[k];
- let body='';
- if(it.type==='mc'){
-  const ord=seededOrder(k,it.options.length);
-  body=`<div class="opts">${ord.map(i=>{let c='opt';if(a===i)c+=' sel';if(g&&i===it.answer)c+=' right';if(g&&a===i&&i!==it.answer)c+=' wrong';return `<button class="${c}" data-k="${esc(k)}" data-i="${i}" ${g?'disabled':''}>${esc(it.options[i])}</button>`}).join('')}</div>`;
- }else if(it.type==='open'){
-  body=`<textarea data-k="${esc(k)}" ${g?'readonly':''} placeholder="Напиши отговора си с пълни изречения…">${esc(a||'')}</textarea>`;
- }else{
-  body=`<div class="row"><input type="text" inputmode="${it.type==='num'?'decimal':'text'}" data-k="${esc(k)}" value="${esc(a||'')}" ${g?'readonly':''} autocomplete="off">${it.unit?`<span class="unit">${esc(it.unit)}</span>`:''}</div>`;
- }
+ const k=it._key,a=run.ans[k],g=run.graded,p=run.pts[k];let body='';
+ if(it.type==='mc'){const ord=seededOrder(k,it.options.length);body=`<div class="opts">${ord.map(i=>{let c='opt';if(a===i)c+=' sel';if(g&&i===it.answer)c+=' right';if(g&&a===i&&i!==it.answer)c+=' wrong';return `<button class="${c}" data-k="${esc(k)}" data-i="${i}" ${g?'disabled':''}>${esc(it.options[i])}</button>`}).join('')}</div>`}
+ else if(it.type==='open')body=`<textarea data-k="${esc(k)}" ${g?'readonly':''} placeholder="Напиши отговора си с пълни изречения…">${esc(a||'')}</textarea>`;
+ else body=`<div class="row"><input type="text" inputmode="${it.type==='num'?'decimal':'text'}" data-k="${esc(k)}" value="${esc(a||'')}" ${g?'readonly':''} autocomplete="off">${it.unit?`<span class="unit">${esc(it.unit)}</span>`:''}</div>`;
  let fb='';
- if(g){
-  const ok=p>=maxPts(it);
-  if(it.type==='open'){
-   const f=run.fb[k];
-   if(f?.self)fb=`<div class="fb"><b>Сравни отговора си с примерния</b><br>${esc(it.model)}<div class="row" style="margin-top:8px"><span>Колко точки си даваш по критериите отдолу? Бъди честна — така ще се върнат точно нещата за преговор.</span>${[0,1,2].map(n=>`<button data-self="${esc(k)}" data-n="${n}" ${p===n?'class="go"':''}>${n}</button>`).join('')}</div><div class="muted" style="margin-top:6px">${esc(it.rubric)}</div></div>`;
-   else fb=`<div class="fb ${ok?'ok':''}"><b>${esc(p)} от 2 т.</b> ${esc(f?.text||'')}<details><summary>Примерен отговор</summary>${esc(it.model)}</details></div>`;
-  }else fb=`<div class="fb ${ok?'ok':''}"><b>${ok?'Вярно':'Не съвсем'}</b> ${ok?'':`Верен отговор: ${esc(String(it.type==='mc'?it.options[it.answer]:it.type==='num'?String(it.answer).replace('.',','):it.accept[0]).replace(/[.]$/,''))}${it.unit?' '+esc(it.unit):''}. `}${esc(it.explain)}</div>`;
- }
+ if(g){const ok=p>=maxPts(it);
+  if(it.type==='open')fb=`<div class="fb"><b>Сравни отговора си с примерния</b><br>${esc(it.model)}<div class="row" style="margin-top:8px"><span>Колко точки си даваш по критериите отдолу? Бъди честна – така ще се върнат точно нещата за преговор.</span>${[0,1,2].map(n=>`<button data-self="${esc(k)}" data-n="${n}" ${p===n?'class="go"':''}>${n}</button>`).join('')}</div><div class="muted" style="margin-top:6px">${esc(it.rubric)}</div></div>`;
+  else fb=`<div class="fb ${ok?'ok':''}"><b>${ok?'Вярно':'Не съвсем'}</b> ${ok?'':`Верен отговор: ${esc(String(it.type==='mc'?it.options[it.answer]:it.type==='num'?String(it.answer).replace('.',','):it.accept[0]).replace(/[.]$/,''))}${it.unit?' '+esc(it.unit):''}. `}${esc(it.explain)}</div>`}
  const passage=sec.review&&it._text?`<details><summary>Текстът към задачата</summary><div class="text">${esc(it._text)}</div></details>`:'';
  return `<div class="q"><p>${esc(it.q)}</p>${passage}${body}${fb}</div>`;
 }
 function renderRun(){
- const sec=run.secs[run.si],n=run.secs.length;
- const last=run.si===n-1;
- app.innerHTML=`<div class="top"><button class="link" id="back">← Към началото</button><span class="muted">Част ${run.si+1} от ${n}</span></div>
+ const sec=run.secs[run.si],n=run.secs.length,last=run.si===n-1;
+ root.innerHTML=`<div style="height:16px"></div><div class="top"><button class="link" id="back">← Излез</button><span class="muted">Част ${run.si+1} от ${n}</span></div>
  <div class="bar" style="margin-bottom:14px"><i style="width:${Math.round(100*(run.si+(run.graded?1:0))/n)}%"></i></div>
  <section class="page"><div class="pen">${esc(sec.subject)}</div><h2>${esc(sec.title)}</h2>
  <div class="sec ${sec.text?'withtext':''}">${sec.text?`<div class="text">${esc(sec.text)}</div>`:''}<div>${sec.items.map(it=>qHTML(it,sec)).join('')}</div></div>
- <div class="row" style="margin-top:16px">${run.graded?`<button class="go" id="next" ${sec.items.some(it=>run.pts[it._key]===undefined)?'disabled title="Първо си постави точки на писмените отговори"':''}>${last?'Към резултата':'Напред'}</button>`:`<button class="go" id="check" ${run.busy?'disabled':''}>${run.busy?'Проверявам…':'Провери'}</button>`}</div></section>`;
- document.getElementById('back').onclick=()=>{view='home';run=null;render()};
- app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{run.ans[b.dataset.k]=Number(b.dataset.i);renderRun()});
- app.querySelectorAll('input[data-k],textarea[data-k]').forEach(el=>el.oninput=()=>{run.ans[el.dataset.k]=el.value});
- app.querySelectorAll('[data-self]').forEach(b=>b.onclick=()=>{run.pts[b.dataset.self]=Number(b.dataset.n);renderRun()});
+ <div class="row" style="margin-top:16px">${run.graded?`<button class="go" id="next" ${sec.items.some(it=>run.pts[it._key]===undefined)?'disabled title="Първо си постави точки на писмените отговори"':''}>${last?'Към резултата':'Напред'}</button>`:`<button class="go" id="check">Провери</button>`}</div></section>`;
+ document.getElementById('back').onclick=()=>{run=null;history.back()};
+ root.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{run.ans[b.dataset.k]=Number(b.dataset.i);renderRun()});
+ root.querySelectorAll('input[data-k],textarea[data-k]').forEach(el=>el.oninput=()=>{run.ans[el.dataset.k]=el.value});
+ root.querySelectorAll('[data-self]').forEach(b=>b.onclick=()=>{run.pts[b.dataset.self]=Number(b.dataset.n);renderRun()});
  document.getElementById('check')?.addEventListener('click',checkSection);
  document.getElementById('next')?.addEventListener('click',nextSection);
 }
-async function gradeOpen(it,ans,text){
- if(!norm(ans))return{p:0,text:'Няма отговор.'};
- if(!sample)return{self:true};
- const prompt=`Ти си внимателен учител в 6. клас (България). Оцени писмения отговор на ученичка по дадените критерии. Бъди точен и насърчителен. Обръщай се към нея на „ти“.
-${text?`ТЕКСТ:\n${text}\n`:''}ВЪПРОС: ${it.q}
-ПРИМЕРЕН ОТГОВОР: ${it.model}
-КРИТЕРИИ: ${it.rubric}
-ОТГОВОР НА УЧЕНИЧКАТА: ${ans}
-Върни само JSON: {"points": 0, 1 или 2, "feedback": "1–2 изречения на български: какво е добре и какво точно липсва"}`;
- try{const r=await sample.json(prompt,{modelTier:'default'});const p=Math.max(0,Math.min(2,Math.round(Number(r?.points))));if(Number.isNaN(p))throw 0;return{p,text:String(r.feedback||'')}}
- catch(e){if(e&&e.code==='not_granted')sample=null;return{self:true}}
-}
-async function checkSection(){
- const sec=run.secs[run.si];run.busy=true;renderRun();
- for(const it of sec.items){
-  const k=it._key,a=run.ans[k];let p=0;
+function checkSection(){const sec=run.secs[run.si];
+ for(const it of sec.items){const k=it._key,a=run.ans[k];let p=0;
   if(it.type==='mc')p=a===it.answer?1:0;
   else if(it.type==='num'){const v=parseNum(a);p=Math.abs(v-it.answer)<=(it.tol??0.01)?1:0}
   else if(it.type==='short')p=it.accept.some(x=>norm(x)===norm(a))?1:0;
-  else{const g=await gradeOpen(it,a,it._text||sec.text);if(g.self){run.fb[k]={self:true};p=undefined}else{run.fb[k]={text:g.text};p=g.p}}
-  run.pts[k]=p;
- }
- run.busy=false;run.graded=true;renderRun();
-}
-async function nextSection(){
- const sec=run.secs[run.si];
- try{await saveSection(sec)}catch(e){console.log('save',e)}
- if(run.si<run.secs.length-1){run.si++;run.graded=false;renderRun();scrollTo(0,0)}else finishRun();
-}
-async function saveSection(sec){
- const t=today();
- for(const it of sec.items){
-  const k=it._key,p=run.pts[k]??0,full=p>=maxPts(it);
-  if(sec.review){const r=it._ref,box=full?(r.box||0)+1:0;
-   await db.doc('review/'+k).set({...r,box,due:addDays(t,full?3:1),done:full&&box>=2,last:t});
-  }else{
-   run.items[it.id]={pts:p,max:maxPts(it),skill:it.skill,type:it.type,given:it.type==='mc'?(it.options[run.ans[k]]??''):String(run.ans[k]??'').slice(0,1500),fb:run.fb[k]?.text||''};
-   if(!full)await db.doc('review/'+run.sess.id+'__'+it.id).set({sid:run.sess.id,iid:it.id,box:0,due:addDays(t,1),done:false,last:t});
-  }
- }
- if(run.sess&&!sec.review){
-  const items=run.items,score=Object.values(items).reduce((a,x)=>a+x.pts,0),max=Object.values(items).reduce((a,x)=>a+x.max,0);
+  else p=norm(a)?undefined:0;
+  run.pts[k]=p}
+ run.graded=true;renderRun()}
+function nextSection(){saveSection(run.secs[run.si]);if(run.si<run.secs.length-1){run.si++;run.graded=false;renderRun();scrollTo(0,0)}else finishRun()}
+function saveSection(sec){const t=today();
+ for(const it of sec.items){const k=it._key,p=run.pts[k]??0,full=p>=maxPts(it);
+  if(sec.review){const r=it._ref,box=full?(r.box||0)+1:0;S.review[k]={...r,box,due:addDays(t,full?3:1),done:full&&box>=2,last:t}}
+  else{run.items[it.id]={pts:p,max:maxPts(it),skill:it.skill,type:it.type,given:it.type==='mc'?(it.options[run.ans[k]]??''):String(run.ans[k]??'').slice(0,1500)};
+   const key=run.sess.id+'__'+it.id;if(!full)S.review[key]={sid:run.sess.id,iid:it.id,box:0,due:addDays(t,1),done:false,last:t}}}
+ if(run.sess&&!sec.review){const items=run.items,score=Object.values(items).reduce((a,x)=>a+x.pts,0),max=Object.values(items).reduce((a,x)=>a+x.max,0);
   const total=run.sess.sections.reduce((a,s)=>a+s.items.length,0),done=Object.keys(items).length>=total;
-  await db.doc('results/'+run.sess.id).set({sid:run.sess.id,title:run.sess.title,items,score,max,done,lastSection:run.sess.sections.indexOf(run.sess.sections.find(s=>s.title===sec.title)),finishedAt:new Date().toISOString()});
- }
-}
-function finishRun(){
- const r=run.sess?S.results[run.sess.id]:null;
- const items=run.items,score=Object.values(items).reduce((a,x)=>a+x.pts,0),max=Object.values(items).reduce((a,x)=>a+x.max,0);
- app.innerHTML=`<section class="page today"><div class="pen">Готово за днес</div><div class="big">${run.sess?`${score}/${max}`:'✓'}</div>
- <p>${max&&score/max>=.85?'Много добре! Задачите с грешки ще се появят отново след ден-два, за да ги затвърдиш.':'Добра работа. Задачите, в които сгреши, ще се върнат в следващите дни като преговор — така се запомня трайно.'}</p>
- ${(()=>{if(!run.sess)return'';const w=run.sess.sections.flatMap(sec=>sec.items.filter(it=>{const x=items[it.id];return x&&x.pts<x.max}));return w.length?`<h3>Запиши си в тетрадката</h3><p class="muted">Препиши тези правила на ръка – така се запомнят много по-добре.</p>${w.map(it=>`<div class="q"><p>${esc(it.q)}</p><div class="fb">${esc(it.type==='open'?'Примерен отговор: '+it.model:it.explain)}</div></div>`).join('')}`:''})()}
- <div><button class="go" id="home">Към началото</button></div></section>`;
- document.getElementById('home').onclick=()=>{view='home';run=null;render()};
-}
-function showReviewOf(sid){
- const s=S.sessions.find(x=>x.id===sid),r=S.results[sid];if(!s||!r)return;
- app.innerHTML=`<div class="top"><button class="link" id="back">← Към началото</button></div><section class="page"><div class="pen">${esc(r.score)}/${esc(r.max)}</div><h2>${esc(s.title)}</h2>${s.sections.map(sec=>`<h3 style="margin-top:14px">${esc(sec.title)}</h3>${sec.items.map(it=>{const x=r.items?.[it.id];const ok=x&&x.pts>=x.max;return `<div class="q"><p>${esc(it.q)}</p><div>Твоят отговор: ${esc(x?.given||'—')}</div><div class="fb ${ok?'ok':''}"><b>${x?esc(x.pts)+'/'+esc(x.max):'—'}</b> ${esc(x?.fb||'')} ${it.type==='open'?esc('Примерно: '+it.model):esc(it.explain)}</div></div>`}).join('')}`).join('')}</section>`;
- document.getElementById('back').onclick=()=>{view='home';render()};
-}
+  S.results[run.sess.id]={sid:run.sess.id,title:run.sess.title,kind:run.sess.kind||'session',items,score,max,done,lastSection:run.sess.sections.findIndex(s=>s.title===sec.title),finishedAt:new Date().toISOString()};
+  if(done&&run.sess.kind==='lesson'){const id=run.sess.id.slice(2);S.prog.lessons[id]={...(S.prog.lessons[id]||{}),done:t}}}
+ persist()}
+function finishRun(){const items=run.items,score=Object.values(items).reduce((a,x)=>a+x.pts,0),max=Object.values(items).reduce((a,x)=>a+x.max,0);
+ const w=run.sess?run.sess.sections.flatMap(sec=>sec.items.filter(it=>{const x=items[it.id];return x&&x.pts<x.max})):[];
+ const fresh=newStamps(),st=stampList().filter(s=>fresh.includes(s.id));
+ root.innerHTML=`<div style="height:16px"></div><section class="page"><div class="pen">Готово!</div><div class="big">${run.sess?`${score}/${max}`:'✓'}</div>
+ <p>${max&&score/max>=.85?'Много добре! Грешките ще се върнат след ден-два, за да ги затвърдиш.':'Добра работа. Задачите с грешки ще се върнат в следващите дни – така се запомня трайно.'}</p>
+ ${st.length?`<h3>Нов печат</h3><div class="stamps" style="max-width:360px">${st.map(s=>stampHTML(s,true)).join('')}</div>`:''}
+ ${w.length?`<h3 style="margin-top:16px">Запиши си в тетрадката</h3><p class="muted">Препиши тези правила на ръка – така се запомнят много по-добре.</p>${w.map(it=>`<div class="q"><p>${esc(it.q)}</p><div class="fb">${esc(it.type==='open'?'Примерен отговор: '+it.model:it.explain)}</div></div>`).join('')}`:''}
+ <div class="row" style="margin-top:14px"><button class="go" id="home">Към началото</button></div></section>`;
+ document.getElementById('home').onclick=()=>{run=null;go('#home')}}
+function renderView(sid){const r=S.results[sid];let s=sid.startsWith('L-')?(S.lessons[sid.slice(2)]&&lessonAsSession(S.lessons[sid.slice(2)])):S.sessions.find(x=>x.id===sid);if(!s||!r)return renderJournal();
+ frame('#journal',`<div class="top"><a href="#journal">← Дневник</a><span class="muted">${esc(fmtDate(r.finishedAt))}</span></div><section class="page"><div class="pen">${esc(r.score)}/${esc(r.max)}</div><h2>${esc(s.title)}</h2>${s.sections.map(sec=>`<h3 style="margin-top:14px">${esc(sec.title)}</h3>${sec.text?`<details><summary>Текстът</summary><div class="text">${esc(sec.text)}</div></details>`:''}${sec.items.map(it=>{const x=r.items?.[it.id];const ok=x&&x.pts>=x.max;return `<div class="q"><p>${esc(it.q)}</p><div>Твоят отговор: ${esc(x?.given||'—')}</div><div class="fb ${ok?'ok':''}"><b>${x?esc(x.pts)+'/'+esc(x.max):'—'}</b> ${it.type==='open'?esc('Примерно: '+it.model):esc(it.explain)}</div></div>`}).join('')}`).join('')}<div class="row" style="margin-top:12px"><button class="go" id="again">Реши отново</button></div></section>`);
+ document.getElementById('again').onclick=()=>startRun(s)}
 
-/* ---------- parent view ---------- */
-function downloadBackup(){S.backupAt=new Date().toISOString();persist();const b=new Blob([JSON.stringify({results:S.results,review:S.review,savedAt:S.backupAt},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tetradka-kopie-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
-function stats(){const agg={};for(const r of Object.values(S.results))for(const x of Object.values(r.items||{})){const n=skillName(x.skill||'');(agg[n]??={p:0,m:0,c:0});agg[n].p+=x.pts;agg[n].m+=x.max;agg[n].c++}return Object.entries(agg).sort((a,b)=>a[1].p/a[1].m-b[1].p/b[1].m)}
-function opensList(){return Object.values(S.results).flatMap(r=>Object.entries(r.items||{}).filter(([,x])=>x.type==='open').map(([iid,x])=>({r,iid,x,f:findItem(r.sid,iid)}))).filter(o=>o.f)}
-function reportText(){
- const done=Object.values(S.results).filter(r=>r.done);
- let t=`ТЕТРАДКАТА НА КАЛИНА — отчет към ${today()}\nРешени сесии: ${done.length}\n`;
- t+=done.map(r=>`- ${r.title}: ${r.score}/${r.max} (${String(r.finishedAt||'').slice(0,10)})`).join('\n')+'\n\nПО УМЕНИЯ (най-слабите първо):\n';
- t+=stats().map(([n,a])=>`- ${n}: ${Math.round(100*a.p/a.m)}% (${a.c} задачи)`).join('\n');
- t+=`\nЗадачи за преговор, които чакат: ${Object.values(S.review).filter(r=>!r.done).length}\n\nПИСМЕНИ ОТГОВОРИ (самооценка):\n`;
- t+=opensList().slice(-10).map(o=>`Въпрос: ${o.f.it.q}\nОтговор: ${o.x.given}\nСамооценка: ${o.x.pts}/2`).join('\n\n');
- const wrong=Object.values(S.results).flatMap(r=>Object.entries(r.items||{}).filter(([,x])=>x.type!=='open'&&x.pts<x.max).map(([iid])=>findItem(r.sid,iid))).filter(Boolean).slice(-12);
- t+=`\n\nГРЕШКИ В ТЕСТОВИ ЗАДАЧИ:\n`+wrong.map(f=>`- ${f.it.q}`).join('\n');
- return t;
-}
-function renderParent(){
- const rows=stats(),opens=opensList().slice(-8).reverse();
- app.innerHTML=`<section class="page"><div class="pen">Отчет за мама</div><h2>Как върви</h2>
- <p class="muted">Резултатите се пазят само на това устройство. Изпрати отчета на мама веднъж седмично — тя ще го даде на Claude, за да се съобразят следващите упражнения с трудните места.</p>
- <div class="row"><button class="go" id="share">Изпрати отчета</button><button id="copy">Копирай</button><span class="muted" id="msg"></span></div>
- <h3 style="margin-top:22px">Успеваемост по умения (най-слабите горе)</h3>${rows.length?`<table><thead><tr><th>Умение</th><th>Задачи</th><th>Точки</th><th style="width:35%"></th></tr></thead><tbody>${rows.map(([n,a])=>`<tr><td>${esc(n)}</td><td class="n">${a.c}</td><td class="n">${Math.round(100*a.p/a.m)}%</td><td><div class="bar"><i style="width:${Math.round(100*a.p/a.m)}%"></i></div></td></tr>`).join('')}</tbody></table>`:'<p class="muted">Ще се появи след първата решена сесия.</p>'}
- <p class="muted">Задачи за преговор чакат: ${Object.values(S.review).filter(r=>!r.done).length}</p></section>
- <section class="page"><h3>Последни писмени отговори</h3>${opens.length?opens.map(o=>`<div class="q"><p>${esc(o.f.it.q)}</p><div>„${esc(o.x.given)}“</div><div class="fb ${o.x.pts>=2?'ok':''}"><b>${esc(o.x.pts)}/2</b> самооценка</div></div>`).join(''):'<p class="muted">Още няма.</p>'}</section>
- <section class="page"><h3>Резервно копие</h3><p class="muted">Ако смениш устройството или браузъра, запази копие тук и го зареди на новото.</p>
- <div class="row"><button id="backup">Изтегли копие</button><label class="link" style="margin:0;display:inline-flex;align-items:center;cursor:pointer">Зареди копие<input type="file" id="restore" accept=".json,application/json" hidden></label><span class="muted" id="bmsg"></span></div></section>`;
+/* ---------- journal, stamps, report, cover ---------- */
+function renderJournal(){const R=Object.values(S.results).sort((a,b)=>String(b.finishedAt).localeCompare(String(a.finishedAt)));const by={};for(const r of R)(by[String(r.finishedAt).slice(0,10)]??=[]).push(r);
+ const recs=allRecords(),acc=recs.length?Math.round(100*recs.reduce((a,x)=>a+x.pts,0)/recs.reduce((a,x)=>a+x.max,0)):0;
+ frame('#journal',`<div class="grid three"><section class="page plain"><div class="big">${R.filter(r=>r.done).length}</div><p class="muted">решени сесии и уроци</p></section><section class="page plain"><div class="big">${recs.length}</div><p class="muted">решени задачи</p></section><section class="page plain"><div class="big">${acc}%</div><p class="muted">точност общо</p></section></div><div style="height:18px"></div>
+ <section class="page"><h2>Дневник</h2>${R.length?Object.entries(by).map(([d,rs])=>`<h3 style="margin-top:12px">${esc(fmtDate(d))}</h3><ul class="list">${rs.map(r=>`<li><span>${esc(r.title)}${r.done?'':' <span class="muted">(незавършена)</span>'}</span><span class="row"><span class="pen">${esc(r.score)}/${esc(r.max)}</span><a class="btn" href="#view-${esc(r.sid)}">Виж</a></span></li>`).join('')}</ul>`).join(''):'<p class="muted">Тук ще се пази всичко, което решиш – можеш да се върнеш към всяка сесия.</p>'}</section>
+ <section class="page"><h3>Всички упражнения</h3><ul class="list">${sessionsSorted().map(s=>{const r=S.results[s.id];return `<li><span><span class="muted">${esc(fmtDate(s.date))}</span> · ${esc(s.title)}</span>${r?.done?`<a class="btn" href="#view-${esc(s.id)}">Виж</a>`:`<button data-run="${esc(s.id)}">Реши</button>`}</li>`}).join('')}</ul></section>`);
+ root.querySelectorAll('[data-run]').forEach(b=>b.onclick=()=>startRun(S.sessions.find(x=>x.id===b.dataset.run)))}
+function renderStamps(){const L=stampList();frame('#stamps',`<section class="page"><h2>Печати</h2><p class="muted">${L.filter(s=>s.ok).length} от ${L.length}. Бледите още чакат.</p><div class="stamps" style="margin-top:12px">${L.map(s=>stampHTML(s)).join('')}</div></section>
+ <section class="page"><h3>Нива на темите</h3><p>Всяка тема минава през 4 нива: ${LEVELS.slice(1).map((n,i)=>`<b>${i+1}.</b> ${n}`).join(' → ')}.</p><p class="muted">„Овладяна“ значи, че си я решила вярно и в друг ден, не само веднъж – тогава знанието остава.</p></section>`)}
+function reportText(){const done=Object.values(S.results).filter(r=>r.done);let t=`ТЕТРАДКАТА – отчет към ${today()}\nРешени: ${done.length}\n`+done.map(r=>`- ${r.title}: ${r.score}/${r.max} (${String(r.finishedAt||'').slice(0,10)})`).join('\n');
+ t+='\n\nТЕМИ:\n'+subjects().flatMap(s=>(s.topics||[]).filter(x=>!x.soon).map(x=>{const st=topicStats(x);return `- ${s.short}: ${x.title} – ${LEVELS[topicLevel(x)]}${st.n?` (${Math.round(st.acc*100)}%, ${st.n} задачи)`:''}`})).join('\n');
+ t+='\n\nПО УМЕНИЯ (най-слабите първо):\n'+stats().map(([n,a])=>`- ${n}: ${Math.round(100*a.p/a.m)}% (${a.c})`).join('\n');
+ const opens=allRecords().filter(x=>x.type==='open').slice(-10);t+=`\n\nПИСМЕНИ ОТГОВОРИ (самооценка):\n`+opens.map(o=>{const f=findItem(o.sid,o.iid);return `Въпрос: ${f?.it.q||o.iid}\nОтговор: ${o.given}\nСамооценка: ${o.pts}/2`}).join('\n\n');
+ const wrong=allRecords().filter(x=>x.type!=='open'&&x.pts<x.max).map(x=>findItem(x.sid,x.iid)).filter(Boolean).slice(-12);t+=`\n\nГРЕШКИ:\n`+wrong.map(f=>`- ${f.it.q}`).join('\n');return t}
+function downloadBackup(){S.backupAt=new Date().toISOString();persist();const b=new Blob([JSON.stringify({results:S.results,review:S.review,prog:S.prog,savedAt:S.backupAt},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tetradka-kopie-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+function renderReport(){const rows=stats();
+ frame('#report',`<section class="page"><div class="pen">Отчет</div><h2>Как върви</h2><p class="muted">Изпрати отчета на мама веднъж седмично – Claude ще го прегледа и ще остави бележки тук, в „Днес“.</p><div class="row"><button class="go" id="share">Изпрати отчета</button><button id="copy">Копирай</button><span class="muted" id="msg"></span></div></section>
+ <section class="page"><h3>Теми по предмети</h3>${subjects().filter(s=>(s.topics||[]).some(t=>!t.soon)).map(s=>`<p style="margin-top:10px"><b>${esc(s.short)}</b></p><ul class="list">${s.topics.filter(t=>!t.soon).map(t=>`<li><span>${esc(t.title)}</span>${lvHTML(topicLevel(t))}</li>`).join('')}</ul>`).join('')}</section>
+ <section class="page"><h3>Успеваемост по умения</h3>${rows.length?`<table><thead><tr><th>Умение</th><th>Задачи</th><th>Точки</th><th style="width:30%"></th></tr></thead><tbody>${rows.map(([n,a])=>`<tr><td>${esc(n)}</td><td class="n">${a.c}</td><td class="n">${Math.round(100*a.p/a.m)}%</td><td><div class="bar"><i style="width:${Math.round(100*a.p/a.m)}%"></i></div></td></tr>`).join('')}</tbody></table>`:'<p class="muted">Ще се появи след първата сесия.</p>'}</section>
+ <section class="page"><h3>Резервно копие</h3><p class="muted">Резултатите са само на това устройство. При смяна на устройство – изтегли копие и го зареди на новото.</p><div class="row"><button id="backup">Изтегли копие</button><label class="link" style="cursor:pointer">Зареди копие<input type="file" id="restore" accept=".json,application/json" hidden></label><span class="muted" id="bmsg"></span></div></section>`);
  const msg=document.getElementById('msg');
- document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(reportText());msg.textContent='Копирано — постави го в съобщение до мама.'}catch(e){msg.textContent='Не успях да копирам.'}};
- document.getElementById('share').onclick=async()=>{const text=reportText();if(navigator.share){try{await navigator.share({title:'Тетрадката — отчет',text});return}catch(e){if(e&&e.name==='AbortError')return}}try{await navigator.clipboard.writeText(text);msg.textContent='Копирано — постави го в съобщение до мама.'}catch(e){msg.textContent='Не успях — използвай „Копирай“.'}};
- document.getElementById('backup').onclick=()=>{downloadBackup();document.getElementById('bmsg').textContent='Копието е изтеглено.'};
- const _old=()=>{const b=new Blob([JSON.stringify({results:S.results,review:S.review,savedAt:new Date().toISOString()},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tetradka-kopie-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
- document.getElementById('restore').onchange=async e=>{const f=e.target.files[0];if(!f)return;const bm=document.getElementById('bmsg');try{const x=JSON.parse(await f.text());if(typeof x!=='object'||!x.results)throw 0;S.results={...S.results,...x.results};S.review={...S.review,...(x.review||{})};persist();bm.textContent='Копието е заредено.';renderParent()}catch(err){bm.textContent='Този файл не е копие от тетрадката.'}};
-}
+ document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(reportText());msg.textContent='Копирано.'}catch(e){msg.textContent='Не успях да копирам.'}};
+ document.getElementById('share').onclick=async()=>{const text=reportText();if(navigator.share){try{await navigator.share({title:'Тетрадката – отчет',text});return}catch(e){if(e&&e.name==='AbortError')return}}try{await navigator.clipboard.writeText(text);msg.textContent='Копирано – постави го в съобщение до мама.'}catch(e){msg.textContent='Използвай „Копирай“.'}};
+ document.getElementById('backup').onclick=()=>{downloadBackup();document.getElementById('bmsg').textContent='Изтеглено.'};
+ document.getElementById('restore').onchange=async e=>{const f=e.target.files[0];if(!f)return;const bm=document.getElementById('bmsg');try{const x=JSON.parse(await f.text());if(!x||typeof x.results!=='object')throw 0;S.results={...S.results,...x.results};S.review={...S.review,...(x.review||{})};if(x.prog)S.prog.lessons={...S.prog.lessons,...(x.prog.lessons||{})};persist();bm.textContent='Копието е заредено.'}catch(err){bm.textContent='Този файл не е копие от тетрадката.'}}}
+function renderCover(){const t=S.settings.theme;frame('',`<section class="page"><h2>Моята корица</h2><p>Сложи своя рисунка или снимка на корицата и избери цвят. Само ти я виждаш – пази се на това устройство.</p>
+ <div class="row"><label class="btn go" style="cursor:pointer">Избери картинка<input type="file" id="cv" accept="image/*" hidden></label>${cover()?'<button id="cvx">Махни картинката</button>':''}<span class="muted" id="cvm"></span></div>
+ <h3 style="margin-top:20px">Цвят</h3><div class="swatches">${Object.entries(THEMES).map(([k,v])=>`<button data-th="${k}" class="${k===t?'on':''}" style="background:linear-gradient(135deg,${v.c} 50%,${v.a} 50%)" aria-label="${esc(v.n)}" title="${esc(v.n)}"></button>`).join('')}</div>
+ <div class="row" style="margin-top:20px"><a class="btn" href="#home">Готово</a></div></section>`);
+ root.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{S.settings.theme=b.dataset.th;persist();applyTheme();renderCover()});
+ document.getElementById('cvx')?.addEventListener('click',()=>{try{localStorage.removeItem(LSC)}catch(e){}renderCover()});
+ document.getElementById('cv').onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image(),u=URL.createObjectURL(f);img.onload=()=>{const W=1200,sc=Math.min(1,W/img.width),c=document.createElement('canvas');c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext('2d').drawImage(img,0,0,c.width,c.height);let d=c.toDataURL('image/jpeg',.8);try{localStorage.setItem(LSC,d);renderCover()}catch(err){document.getElementById('cvm').textContent='Картинката е твърде голяма.'}URL.revokeObjectURL(u)};img.src=u}}
 
-document.getElementById('navHome').onclick=()=>{view='home';run=null;render()};
-document.getElementById('navParent').onclick=()=>{view='parent';run=null;render()};
-
-/* ---------- data ---------- */
-loadStore();
-fetch('feedback.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(f=>{S.feedback=Array.isArray(f?.items)?f.items:[];if(view==='home')render()}).catch(()=>{});
-fetch('sessions.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(a=>{S.sessions=(Array.isArray(a)?a:[]).filter(s=>s&&Array.isArray(s.sections));loaded=true;if(view!=='run')render()}).catch(()=>{loadErr=true;loaded=true;if(view!=='run')render()});
-render();
+/* ---------- load ---------- */
+loadStore();applyTheme();
+const J=u=>fetch(u,{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()});
+Promise.all([J('platform.json'),J('sessions.json'),J('feedback.json').catch(()=>({items:[]}))]).then(async([P,sess,fb])=>{
+ S.P=P;S.sessions=(Array.isArray(sess)?sess:[]).filter(s=>s&&Array.isArray(s.sections));S.feedback=Array.isArray(fb?.items)?fb.items:[];
+ const ls=P.subjects.flatMap(s=>(s.topics||[]).filter(t=>t.lesson));
+ await Promise.all(ls.map(t=>J(t.lesson).then(L=>{S.lessons[t.id]=L}).catch(()=>{})));
+ S.seen=S.seen.length?S.seen:stampList().filter(s=>s.ok).map(s=>s.id).filter(()=>false);
+ loaded=true;route();
+}).catch(()=>{loadErr=true;loaded=true;route()});
 }
 </script>
 </body>
