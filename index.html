@@ -147,7 +147,7 @@ function mascot(mood){const I='#1b2233',G='#8fd46b',D='#5aa840';
  <path d="M31,102 l-4,-3 M34,96 l-4,-4 M89,102 l4,-3 M86,96 l4,-4" stroke="${I}" stroke-width="2" stroke-linecap="round"/>
  <path d="M16,36 Q60,14 104,36 Q98,66 60,82 Q22,66 16,36 Z" fill="${G}" stroke="${I}" stroke-width="2.5" stroke-linejoin="round"/>
  ${eyes}${mouth}<ellipse cx="30" cy="62" rx="6" ry="3.5" fill="#ff8fa3" opacity=".7"/><ellipse cx="90" cy="62" rx="6" ry="3.5" fill="#ff8fa3" opacity=".7"/></svg>`}
-const buddy=(mood,text)=>`<div class="buddy">${mascot(mood)}<div class="bubble">${esc(text)}</div></div>`;
+const buddy=(mood,text)=>`<div class="buddy"><div style="text-align:center;flex:none">${mascot(mood)}<div class="pen" style="font-size:19px;margin-top:-4px">Джонатан</div></div><div class="bubble">${esc(text)}</div></div>`;
 const fmtLong=d=>{try{return new Date(d+'T12:00:00').toLocaleDateString('bg-BG',{weekday:'short',day:'numeric',month:'long'})}catch(e){return d}};
 const icon=id=>`<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">${ICON[id]||''}</svg>`;
 
