@@ -64,6 +64,14 @@
    "textbook": "БЕЛ – БГ Учебник; Литература – Булвест 2000",
    "topics": [
     {
+     "id": "lit-darel",
+     "title": "Джералд Даръл – живот и творчество",
+     "skills": [
+      "lit.darel"
+     ],
+     "lesson": "lessons/lit-darel.json"
+    },
+    {
      "id": "bel-mest",
      "title": "Местоимения",
      "skills": [
@@ -127,10 +135,11 @@
     },
     {
      "id": "mat-stepeni",
-     "title": "Степени и числови изрази",
+     "title": "Степенуване с естествен показател",
      "skills": [
       "mat.stepeni"
-     ]
+     ],
+     "lesson": "lessons/mat-stepeni.json"
     },
     {
      "id": "mat-paralelepiped",
@@ -165,8 +174,16 @@
      ]
     },
     {
+     "id": "ist-hristianizacia",
+     "title": "Християнизацията на българската държава",
+     "skills": [
+      "ist.hrist"
+     ],
+     "lesson": "lessons/ist-hristianizacia.json"
+    },
+    {
      "id": "ist-durzhava",
-     "title": "Българската държава (уточнява се)",
+     "title": "Урок 9 (уточнява се)",
      "skills": [
       "ist.durzhava"
      ],
@@ -185,7 +202,16 @@
     "chp."
    ],
    "textbook": "Булвест 2000",
-   "topics": []
+   "topics": [
+    {
+     "id": "chp-plutnost",
+     "title": "Плътност, маса и обем",
+     "skills": [
+      "chp.plut"
+     ],
+     "lesson": "lessons/chp-plutnost.json"
+    }
+   ]
   },
   {
    "id": "geo",
@@ -198,7 +224,16 @@
     "geo."
    ],
    "textbook": "Просвета Плюс",
-   "topics": []
+   "topics": [
+    {
+     "id": "geo-yuzhna-amerika",
+     "title": "Южна Америка – население и политическа карта",
+     "skills": [
+      "geo.yam"
+     ],
+     "lesson": "lessons/geo-yuzhna-amerika.json"
+    }
+   ]
   },
   {
    "id": "eng",
@@ -230,6 +265,7 @@
    "date": "",
    "topics": [
     "ist-krum",
+    "ist-hristianizacia",
     "ist-durzhava"
    ]
   },
