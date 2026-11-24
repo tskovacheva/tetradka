@@ -180,7 +180,8 @@ function stampList(){const R=Object.values(S.results).filter(r=>r.done),recs=all
   {id:'master',t:'Овладяно',d:'Тема на ниво „Овладяна“',ok:lv.some(x=>x>=4)},
   {id:'hundred',t:'100 задачи',d:'100 решени задачи',ok:recs.length>=100},
   {id:'sharp',t:'Точна',d:'Над 85% точност след 50 задачи',ok:recs.length>=50&&acc>=.85},
-  {id:'both',t:'Учи и упражнява',d:'И урок, и сесия упражнения',ok:subjDone>=2}
+  {id:'both',t:'Учи и упражнява',d:'И урок, и сесия упражнения',ok:subjDone>=2},
+  {id:'ahead',t:'Напред!',d:'Решено упражнение преди датата му',ok:S.sessions.some(s=>S.results[s.id]?.done&&String(S.results[s.id].finishedAt).slice(0,10)<s.date)}
  ]}
 function newStamps(){const got=stampList().filter(s=>s.ok).map(s=>s.id),fresh=got.filter(id=>!S.seen.includes(id));if(fresh.length){S.seen=[...S.seen,...fresh];persist()}return fresh}
 const stampHTML=(s,isNew)=>`<div class="stamp ${s.ok?'':'off'} ${isNew?'new':''}" title="${esc(s.d)}">${esc(s.t)}<small>${esc(s.d)}</small></div>`;
@@ -211,7 +212,8 @@ function renderHome(){
  // suggestions: lessons/topics of subjects in school today/tomorrow that are below "Знае"
  const sugg=schoolSubj.flatMap(s=>(s.topics||[]).filter(t=>!t.soon&&t.lesson&&topicLevel(t)<3).map(t=>({s,t}))).slice(0,2);
  let main;
- if(next)main=`<div class="pen">Днешното упражнение</div><h2>${esc(next.title)}</h2><div class="chips">${sessSubjects(next).map(x=>`<span class="chip">${esc(x)}</span>`).join('')}<span class="chip">~${esc(next.minutes||20)} мин</span>${due.length?`<span class="chip">+ ${Math.min(due.length,4)} за преговор</span>`:''}</div><div class="row" style="margin-top:12px"><button class="go" id="start">Започни</button></div>`;
+ const ahead=next&&next.date>today();
+ if(next)main=`<div class="pen">${ahead?'Ти си напред! Следващото е за '+esc(fmtDate(next.date)):'Днешното упражнение'}</div><h2>${esc(next.title)}</h2><div class="chips">${sessSubjects(next).map(x=>`<span class="chip">${esc(x)}</span>`).join('')}<span class="chip">~${esc(next.minutes||20)} мин</span>${due.length?`<span class="chip">+ ${Math.min(due.length,4)} за преговор</span>`:''}</div><div class="row" style="margin-top:12px"><button class="go" id="start">Започни</button></div>`;
  else if(due.length)main=`<div class="pen">Преговор</div><h2>Грешки от предишни дни</h2><p>${due.length} задачи чакат да ги решиш отново.</p><button class="go" id="start">Започни</button>`;
  else main=`<div class="pen">Всичко е решено</div><h2>Браво!</h2><p>Новите упражнения идват сами. Можеш да отвориш урок или да преговориш тема.</p>`;
  const tests=(S.P?.tests||[]).map(t=>{const s=subjects().find(x=>x.id===t.subject),ts=(s?.topics||[]).filter(x=>t.topics.includes(x.id)&&!x.soon),ready=ts.length?Math.round(100*ts.reduce((a,x)=>a+topicLevel(x),0)/(ts.length*4)):0,days=t.date?Math.round((new Date(t.date+'T12:00:00')-new Date(today()+'T12:00:00'))/864e5):null;return{t,s,ready,days}}).filter(x=>x.days===null||x.days>=0);
@@ -363,8 +365,9 @@ function finishRun(){const items=run.items,score=Object.values(items).reduce((a,
  <p>${max&&score/max>=.85?'Много добре! Грешките ще се върнат след ден-два, за да ги затвърдиш.':'Добра работа. Задачите с грешки ще се върнат в следващите дни – така се запомня трайно.'}</p>
  ${st.length?`<h3>Нов печат</h3><div class="stamps" style="max-width:360px">${st.map(s=>stampHTML(s,true)).join('')}</div>`:''}
  ${w.length?`<h3 style="margin-top:16px">Запиши си в тетрадката</h3><p class="muted">Препиши тези правила на ръка – така се запомнят много по-добре.</p>${w.map(it=>`<div class="q"><p>${esc(it.q)}</p><div class="fb">${esc(it.type==='open'?'Примерен отговор: '+it.model:it.explain)}</div></div>`).join('')}`:''}
- <div class="row" style="margin-top:14px"><button class="go" id="home">Към началото</button></div></section>`;
- document.getElementById('home').onclick=()=>{run=null;go('#home')}}
+ ${(()=>{const nx=sessionsSorted().find(s=>!S.results[s.id]?.done&&s.id!==run.sess?.id);return `<div class="row" style="margin-top:14px"><button class="go" id="home">Към началото</button>${nx?`<button id="more">Още едно: ${esc(nx.title)}</button>`:''}</div>`})()}</section>`;
+ document.getElementById('home').onclick=()=>{run=null;go('#home')};
+ document.getElementById('more')?.addEventListener('click',()=>{const nx=sessionsSorted().find(s=>!S.results[s.id]?.done);run=null;if(nx)startRun(nx)})}
 function renderView(sid){const r=S.results[sid];let s=sid.startsWith('L-')?(S.lessons[sid.slice(2)]&&lessonAsSession(S.lessons[sid.slice(2)])):S.sessions.find(x=>x.id===sid);if(!s||!r)return renderJournal();
  frame('#journal',`<div class="top"><a href="#journal">← Дневник</a><span class="muted">${esc(fmtDate(r.finishedAt))}</span></div><section class="page"><div class="pen">${esc(r.score)}/${esc(r.max)}</div><h2>${esc(s.title)}</h2>${s.sections.map(sec=>`<h3 style="margin-top:14px">${esc(sec.title)}</h3>${sec.text?`<details><summary>Текстът</summary><div class="text">${esc(sec.text)}</div></details>`:''}${sec.items.map(it=>{const x=r.items?.[it.id];const ok=x&&x.pts>=x.max;return `<div class="q"><p>${esc(it.q)}</p><div>Твоят отговор: ${esc(x?.given||'—')}</div><div class="fb ${ok?'ok':''}"><b>${x?esc(x.pts)+'/'+esc(x.max):'—'}</b> ${it.type==='open'?esc('Примерно: '+it.model):esc(it.explain)}</div></div>`}).join('')}`).join('')}<div class="row" style="margin-top:12px"><button class="go" id="again">Реши отново</button></div></section>`);
  document.getElementById('again').onclick=()=>startRun(s)}
