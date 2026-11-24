@@ -2,38 +2,258 @@
  "student": "Калина",
  "grade": "6. клас",
  "schedule": {
-  "1": ["Математика", "БЕЛ", "ИИ", "ГО", "Английски (ИУЧ)", "История", "Човек и природа"],
-  "2": ["ФВС", "Човек и природа", "История", "БЕЛ", "БЕЛ", "Английски", "Математика"],
-  "3": ["Математика", "БЕЛ", "География", "ФВС", "Човек и природа", "Технологии", "Технологии"],
-  "4": ["БЕЛ", "ФВС", "Математика", "Математика", "Музика", "Английски", "КМИТ"],
-  "5": ["Математика (ИУЧ)", "Музика", "География", "Футбол", "Английски", "КМИТ", "ЧК"]
+  "1": [
+   "Математика",
+   "БЕЛ",
+   "ИИ",
+   "ГО",
+   "Английски (ИУЧ)",
+   "История",
+   "Човек и природа"
+  ],
+  "2": [
+   "ФВС",
+   "Човек и природа",
+   "История",
+   "БЕЛ",
+   "БЕЛ",
+   "Английски",
+   "Математика"
+  ],
+  "3": [
+   "Математика",
+   "БЕЛ",
+   "География",
+   "ФВС",
+   "Човек и природа",
+   "Технологии",
+   "Технологии"
+  ],
+  "4": [
+   "БЕЛ",
+   "ФВС",
+   "Математика",
+   "Математика",
+   "Музика",
+   "Английски",
+   "КМИТ"
+  ],
+  "5": [
+   "Математика (ИУЧ)",
+   "Музика",
+   "География",
+   "Футбол",
+   "Английски",
+   "КМИТ",
+   "ЧК"
+  ]
  },
  "schoolStarts": "13:10",
  "subjects": [
-  {"id": "bel", "name": "Български език и литература", "short": "БЕЛ", "match": ["БЕЛ"], "skills": ["bel.", "lit."], "textbook": "БЕЛ – БГ Учебник; Литература – Булвест 2000",
+  {
+   "id": "bel",
+   "name": "Български език и литература",
+   "short": "БЕЛ",
+   "match": [
+    "БЕЛ"
+   ],
+   "skills": [
+    "bel.",
+    "lit."
+   ],
+   "textbook": "БЕЛ – БГ Учебник; Литература – Булвест 2000",
    "topics": [
-    {"id": "bel-mest", "title": "Местоимения", "skills": ["bel.mest"]},
-    {"id": "bel-tekst", "title": "Работа с непознат текст", "skills": ["bel.tekst"]},
-    {"id": "lit-gora", "title": "„Хубава си, моя горо“ – Л. Каравелов", "skills": ["lit."], "sessions": ["s02"]},
-    {"id": "lit-otechestvo", "title": "„Отечество любезно“ – Ив. Вазов", "skills": ["lit.sravnenie"], "sessions": ["s03"]}
-   ]},
-  {"id": "mat", "name": "Математика", "short": "МАТ", "match": ["Математика"], "skills": ["mat."], "textbook": "Просвета (работна тетрадка – БГ Учебник)",
+    {
+     "id": "bel-mest",
+     "title": "Местоимения",
+     "skills": [
+      "bel.mest"
+     ]
+    },
+    {
+     "id": "bel-tekst",
+     "title": "Работа с непознат текст",
+     "skills": [
+      "bel.tekst"
+     ]
+    },
+    {
+     "id": "lit-gora",
+     "title": "„Хубава си, моя горо“ – Л. Каравелов",
+     "skills": [
+      "lit."
+     ],
+     "sessions": [
+      "s02"
+     ]
+    },
+    {
+     "id": "lit-otechestvo",
+     "title": "„Отечество любезно“ – Ив. Вазов",
+     "skills": [
+      "lit.sravnenie"
+     ],
+     "sessions": [
+      "s03"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mat",
+   "name": "Математика",
+   "short": "МАТ",
+   "match": [
+    "Математика"
+   ],
+   "skills": [
+    "mat."
+   ],
+   "textbook": "Просвета (работна тетрадка – БГ Учебник)",
    "topics": [
-    {"id": "mat-racionalni", "title": "Рационални числа", "skills": ["mat.racionalni"]},
-    {"id": "mat-koord", "title": "Координатна система", "skills": ["mat.koord"]},
-    {"id": "mat-stepeni", "title": "Степени и числови изрази", "skills": ["mat.stepeni"]},
-    {"id": "mat-paralelepiped", "title": "Паралелепипед и куб (преговор)", "skills": ["mat.paralelepiped"]}
-   ]},
-  {"id": "ist", "name": "История и цивилизации", "short": "История", "match": ["История"], "skills": ["ist."], "textbook": "Просвета",
+    {
+     "id": "mat-racionalni",
+     "title": "Рационални числа",
+     "skills": [
+      "mat.racionalni"
+     ]
+    },
+    {
+     "id": "mat-koord",
+     "title": "Координатна система",
+     "skills": [
+      "mat.koord"
+     ]
+    },
+    {
+     "id": "mat-stepeni",
+     "title": "Степени и числови изрази",
+     "skills": [
+      "mat.stepeni"
+     ]
+    },
+    {
+     "id": "mat-paralelepiped",
+     "title": "Паралелепипед и куб (преговор)",
+     "skills": [
+      "mat.paralelepiped"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ist",
+   "name": "История и цивилизации",
+   "short": "История",
+   "match": [
+    "История"
+   ],
+   "skills": [
+    "ist."
+   ],
+   "textbook": "Просвета",
    "topics": [
-    {"id": "ist-krum", "title": "Хан Крум", "skills": ["ist.krum"], "lesson": "lessons/ist-krum.json", "sessions": ["h01"]},
-    {"id": "ist-durzhava", "title": "Българската държава (уточнява се)", "skills": ["ist.durzhava"], "soon": true}
-   ]},
-  {"id": "chp", "name": "Човек и природа", "short": "ЧП", "match": ["Човек и природа"], "skills": ["chp."], "textbook": "Булвест 2000", "topics": []},
-  {"id": "geo", "name": "География и икономика", "short": "География", "match": ["География"], "skills": ["geo."], "textbook": "Просвета Плюс", "topics": []},
-  {"id": "eng", "name": "Английски език", "short": "Английски", "match": ["Английски"], "skills": ["eng."], "textbook": "", "topics": []}
+    {
+     "id": "ist-krum",
+     "title": "Хан Крум",
+     "skills": [
+      "ist.krum"
+     ],
+     "lesson": "lessons/ist-krum.json",
+     "sessions": [
+      "h01"
+     ]
+    },
+    {
+     "id": "ist-durzhava",
+     "title": "Българската държава (уточнява се)",
+     "skills": [
+      "ist.durzhava"
+     ],
+     "soon": true
+    }
+   ]
+  },
+  {
+   "id": "chp",
+   "name": "Човек и природа",
+   "short": "ЧП",
+   "match": [
+    "Човек и природа"
+   ],
+   "skills": [
+    "chp."
+   ],
+   "textbook": "Булвест 2000",
+   "topics": []
+  },
+  {
+   "id": "geo",
+   "name": "География и икономика",
+   "short": "География",
+   "match": [
+    "География"
+   ],
+   "skills": [
+    "geo."
+   ],
+   "textbook": "Просвета Плюс",
+   "topics": []
+  },
+  {
+   "id": "eng",
+   "name": "Английски език",
+   "short": "Английски",
+   "match": [
+    "Английски"
+   ],
+   "skills": [
+    "eng."
+   ],
+   "textbook": "",
+   "topics": []
+  }
  ],
  "tests": [
-  {"subject": "ist", "title": "Изпитване: последните 3 урока", "date": "", "topics": ["ist-krum", "ist-durzhava"]}
+  {
+   "subject": "bel",
+   "title": "Контролна работа по БЕЛ (тема: уточнява се)",
+   "date": "2026-11-26",
+   "topics": [
+    "bel-mest",
+    "bel-tekst"
+   ]
+  },
+  {
+   "subject": "ist",
+   "title": "Изпитване: последните 3 урока",
+   "date": "",
+   "topics": [
+    "ist-krum",
+    "ist-durzhava"
+   ]
+  },
+  {
+   "subject": "bel",
+   "title": "Класна работа по БЕЛ",
+   "date": "2026-12-21",
+   "topics": [
+    "bel-mest",
+    "bel-tekst",
+    "lit-gora",
+    "lit-otechestvo"
+   ]
+  },
+  {
+   "subject": "mat",
+   "title": "Класна работа по математика",
+   "date": "2027-01-15",
+   "topics": [
+    "mat-racionalni",
+    "mat-koord",
+    "mat-stepeni",
+    "mat-paralelepiped"
+   ]
+  }
  ]
 }
