@@ -110,6 +110,8 @@ function render(){
  if(view==='run'&&run)return renderRun();
  renderHome();
 }
+const TIPS={'Местоимения':'Провери с „той/него“: ако отговорът е „него“ – пиши „кого/когото“. Когато притежателят е подлогът – „свой“.','Правопис':'Пълен член (-ът/-ят), когато думата е подлог – провери като я замениш с „той“.','Непознат текст':'Отговаряй с пълно изречение и винаги посочи дума или израз от текста като доказателство.','Литература: тълкуване':'Не преразказвай. Кажи какво означава образът и какво чувство или мисъл стои зад него, после цитирай.','Литература: разбиране':'Прочети текста два пъти – веднъж за сюжета, веднъж за чувствата.','Худ. средства':'Запомни: епитет = художествено определение; сравнение = „като“; реторичен въпрос = въпрос без нужда от отговор.','Чувства в текста':'Търси думите, които назовават или подсказват чувство, и как се променят от началото към края.','Значение на думи':'Опитай да замениш думата с друга в изречението – смисълът трябва да остане същият.','Сравнение на творби':'Напиши поне едно общо и поне една разлика – това носи пълните точки.','Степени':'Първо степените, после умножение и деление, накрая събиране. Внимавай: −3² = −9, а (−3)² = 9.','Рационални числа':'Определи знака първо, после смятай модулите. Модулът никога не е отрицателен.','Координатна система':'Първо x (наляво–надясно), после y (нагоре–надолу). Начертай си точките на чернова.','Паралелепипед и куб':'Обем = a·b·c; околна повърхнина = 2(a + b)·c; пълна = 2(ab + bc + ac). Напиши формулата, преди да смяташ.','Преговор НВО':'Пиши решението по стъпки – на НВО се дават точки и за хода на решението.'};
+function focusList(){return stats().filter(([n,a])=>a.c>=2&&a.p/a.m<.8).slice(0,3)}
 function renderHome(){
  if(loadErr){app.innerHTML=`<div class="page today"><h2>Упражненията не се заредиха</h2><p>Провери интернет връзката и опитай отново.</p><div><button class="go" onclick="location.reload()">Опитай пак</button></div></div>`;return}
  const list=sessionsSorted(),next=list.find(s=>!S.results[s.id]?.done),due=dueReview();
@@ -127,7 +129,10 @@ function renderHome(){
   <p class="muted">${next?'Работи спокойно. Отговаряй с пълни изречения там, където има поле за писане — точно така е и на контролното.':''}</p>
   <div><button class="go" id="start">Започни</button></div>`;
  }
- app.innerHTML=`<section class="page today">${card}</section>
+ const foc=focusList(),fb=(S.feedback||[]).slice(-3).reverse();
+ const focHTML=foc.length?`<section class="page"><h3>На какво да внимаваш</h3>${foc.map(([n,a])=>`<div class="q"><p>${esc(n)} <span class="pen" style="font-size:22px">${Math.round(100*a.p/a.m)}%</span></p><div>${esc(TIPS[n]||'Прочети внимателно обясненията към грешките в тази тема.')}</div></div>`).join('')}</section>`:'';
+ const fbHTML=fb.length?`<section class="page"><h3>Бележки от проверката</h3>${fb.map(f=>`<div class="q"><p><span class="muted">${esc(f.date||'')}</span> ${esc(f.title||'')}</p><div style="white-space:pre-line">${esc(f.text||'')}</div></div>`).join('')}</section>`:'';
+ app.innerHTML=`<section class="page today">${card}</section>${fbHTML}${focHTML}
  <section class="page"><div class="top"><h3>Тази седмица</h3><div class="dots">${[0,1,2,3,4].map(i=>`<span class="dot ${i<week?'on':''}"></span>`).join('')}</div></div>
  <p class="muted">${done} решени сесии общо · целта е 4–5 на седмица</p></section>
  <section class="page"><h3>Всички сесии</h3><ul class="list">${list.map(s=>{const r=S.results[s.id];return `<li><span><span class="muted">${esc(fmtDate(s.date))}</span> · ${esc(s.title)}</span>${r?.done?`<span class="row"><span class="pen">${esc(r.score)}/${esc(r.max)}</span><button data-rev="${esc(s.id)}">Виж</button></span>`:r?`<span class="muted">започната</span>`:`<span class="muted">предстои</span>`}</li>`}).join('')||'<li class="muted">Още няма сесии.</li>'}</ul></section>`;
@@ -235,6 +240,7 @@ function finishRun(){
  const items=run.items,score=Object.values(items).reduce((a,x)=>a+x.pts,0),max=Object.values(items).reduce((a,x)=>a+x.max,0);
  app.innerHTML=`<section class="page today"><div class="pen">Готово за днес</div><div class="big">${run.sess?`${score}/${max}`:'✓'}</div>
  <p>${max&&score/max>=.85?'Много добре! Задачите с грешки ще се появят отново след ден-два, за да ги затвърдиш.':'Добра работа. Задачите, в които сгреши, ще се върнат в следващите дни като преговор — така се запомня трайно.'}</p>
+ ${(()=>{if(!run.sess)return'';const w=run.sess.sections.flatMap(sec=>sec.items.filter(it=>{const x=items[it.id];return x&&x.pts<x.max}));return w.length?`<h3>Запиши си в тетрадката</h3><p class="muted">Препиши тези правила на ръка – така се запомнят много по-добре.</p>${w.map(it=>`<div class="q"><p>${esc(it.q)}</p><div class="fb">${esc(it.type==='open'?'Примерен отговор: '+it.model:it.explain)}</div></div>`).join('')}`:''})()}
  <div><button class="go" id="home">Към началото</button></div></section>`;
  document.getElementById('home').onclick=()=>{view='home';run=null;render()};
 }
@@ -280,6 +286,7 @@ document.getElementById('navParent').onclick=()=>{view='parent';run=null;render(
 
 /* ---------- data ---------- */
 loadStore();
+fetch('feedback.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(f=>{S.feedback=Array.isArray(f?.items)?f.items:[];if(view==='home')render()}).catch(()=>{});
 fetch('sessions.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(a=>{S.sessions=(Array.isArray(a)?a:[]).filter(s=>s&&Array.isArray(s.sections));loaded=true;if(view!=='run')render()}).catch(()=>{loadErr=true;loaded=true;if(view!=='run')render()});
 render();
 }
