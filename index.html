@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тетрадка на Калина</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm, encouraging, grown-up enough for a 12-year-old — no stickers, no cartoon.
+   IDEA: a squared school exercise book; the teacher's red pen marks the corrections.
+   PICTURE: the open notebook page itself — today's session card on ruled paper with a margin line.
+   COLOUR and TYPE: paper white, ink blue-black, faint blue rules, red-pen accent; Rubik + Caveat for pen notes.
+   LAYOUT: one column up to 860px; text passage beside questions on wide screens, above them on narrow. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#fbfaf6,#14161c);--paper:light-dark(#ffffff,#1b1e26);--ink:light-dark(#1b2233,#e6e8ef);
+ --soft:light-dark(#5a6478,#9aa3b5);--rule:light-dark(#dbe5f5,#2a3140);--margin:light-dark(#f2b8b0,#6b3a35);
+ --pen:light-dark(#c8321f,#ff7a66);--ok:light-dark(#1f6f4a,#6fd1a1);--blue:light-dark(#2348a8,#8fb0ff);--chip:light-dark(#eef2fa,#252b38)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Rubik,system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:900px;margin:0 auto;padding:clamp(16px,3vw,36px) max(4vw,14px) 64px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.05;margin:0;font-weight:700;text-wrap:balance}
+h2{font-size:24px;line-height:1.15;margin:0 0 8px}
+h3{font-size:18px;margin:0 0 6px}
+.pen{font-family:Caveat,cursive;color:var(--pen);font-size:26px;line-height:1}
+.muted{color:var(--soft);font-size:14px}
+.page{background:var(--paper);border-radius:6px;box-shadow:0 1px 0 var(--rule),0 8px 30px -18px #0004;
+ background-image:linear-gradient(var(--rule) 1px,transparent 1px);background-size:100% 32px;background-position:0 20px;
+ padding:24px 22px 24px 56px;position:relative;margin-bottom:22px}
+.page::before{content:"";position:absolute;top:0;bottom:0;left:38px;width:2px;background:var(--margin)}
+.today{min-height:260px;display:grid;gap:14px;align-content:start}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--chip);border-radius:99px;padding:3px 12px;font-size:14px}
+button{font:inherit;cursor:pointer;border-radius:10px;min-height:44px;padding:8px 18px;border:2px solid var(--ink);background:var(--paper);color:var(--ink)}
+button.go{background:var(--ink);color:var(--paper);font-weight:500;font-size:17px}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+button:disabled{opacity:.5;cursor:default}.opt:disabled{opacity:1;color:var(--ink)}
+.link{border:0;background:none;text-decoration:underline;padding:8px 4px;min-height:44px;color:var(--blue)}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.list li button{min-height:40px;padding:4px 14px}
+.dots{display:flex;gap:6px}.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink)}.dot.on{background:var(--pen);border-color:var(--pen)}
+.bar{height:8px;border-radius:9px;background:var(--rule);overflow:hidden}.bar>i{display:block;height:100%;background:var(--blue)}
+.sec{display:grid;gap:18px}
+@media(min-width:820px){.sec.withtext{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}.sec.withtext .text{position:sticky;top:12px;max-height:92vh;overflow:auto}}
+.text{white-space:pre-line;background:var(--chip);border-radius:8px;padding:16px 18px;font-size:16.5px;line-height:1.7}
+.q{padding:14px 0;border-bottom:1px dashed var(--rule)}
+.q p{margin:0 0 10px;font-weight:500}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:2px solid var(--rule);background:var(--paper);font-weight:400}
+.opt.sel{border-color:var(--blue);background:var(--chip)}
+.opt.right{border-color:var(--ok)}.opt.wrong{border-color:var(--pen);text-decoration:line-through}
+input[type=text],textarea{font:inherit;font-size:16px;width:100%;padding:10px 12px;border-radius:8px;border:2px solid var(--rule);background:var(--paper);color:var(--ink)}
+input[type=text]{max-width:260px}
+textarea{min-height:110px;resize:vertical}
+.unit{margin-left:8px;color:var(--soft)}
+.fb{margin-top:10px;padding:10px 12px;border-left:3px solid var(--pen);background:light-dark(#fff5f3,#2a1d1d);border-radius:0 8px 8px 0;font-size:15px}
+.fb.ok{border-color:var(--ok);background:light-dark(#f1faf5,#16271f)}
+.fb b{font-family:Caveat,cursive;font-size:24px;font-weight:600}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.big{font-size:clamp(44px,9vw,72px);font-family:Caveat,cursive;color:var(--pen);line-height:1}
+label{display:block;font-weight:500;margin:12px 0 4px}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:8px 6px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+td.n{text-align:right;white-space:nowrap}
+.note{padding:12px 14px;border-radius:8px;background:var(--chip);font-size:15px}
+details summary{cursor:pointer;color:var(--blue);min-height:32px}
+@media(max-width:600px){.page{padding:18px 14px 18px 34px}.page::before{left:22px}}
+@media(prefers-reduced-motion:no-preference){.fb{animation:in .35s ease-out}@keyframes in{from{opacity:0;transform:translateY(-4px)}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div><h1>Тетрадката на Калина</h1><div class="muted">БЕЛ и математика · 6. клас · по 20 минути</div></div>
+ <div class="row"><button class="link" id="navHome">Начало</button><button class="link" id="navParent">Отчет</button></div>
+</header>
+<main id="app"><div class="page today"><p class="muted">Зареждам тетрадката…</p></div></main>
+</div>
+<script>
+{
+const app=document.getElementById('app');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>new Date().toLocaleDateString('sv-SE');
+const addDays=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toLocaleDateString('sv-SE')};
+const fmtDate=d=>{try{return new Date(d+'T12:00:00').toLocaleDateString('bg-BG',{weekday:'short',day:'numeric',month:'short'})}catch(e){return d}};
+const SKILL={'bel.mest':'Местоимения','bel.pravopis':'Правопис','bel.tekst':'Непознат текст','lit.razbirane':'Литература: разбиране','lit.tulkuvane':'Литература: тълкуване','lit.sredstva':'Худ. средства','lit.emocii':'Чувства в текста','lit.leksika':'Значение на думи','lit.sravnenie':'Сравнение на творби','lit.ideia':'Идея','mat.okr':'Окръжност','mat.krug':'Кръг','mat.nvo':'Преговор НВО','bel.izrechenie':'Изречение','bel.leksika':'Лексика','mat.rotacionni':'Ротационни тела','mat.racionalni':'Рационални числа','mat.uravnenia':'Уравнения','mat.procent':'Процент'};
+const skillName=k=>{const p=Object.keys(SKILL).filter(s=>k.startsWith(s)).sort((a,b)=>b.length-a.length)[0];return p?SKILL[p]:k};
+
+let sample=null,S={sessions:[],results:{},review:{}},loaded=false,loadErr=false,view='home',run=null;
+const LS='tetradka.v1';
+function loadStore(){try{const x=JSON.parse(localStorage.getItem(LS)||'{}');S.results=x.results||{};S.review=x.review||{}}catch(e){}}
+function persist(){try{localStorage.setItem(LS,JSON.stringify({results:S.results,review:S.review,savedAt:new Date().toISOString()}))}catch(e){}}
+const db={doc:p=>({set:async d=>{const[c,id]=p.split('/');if(c==='results'||c==='review'){S[c][id]=d;persist()}}})};
+
+function seededOrder(id,n){let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){h=(h*1103515245+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+const norm=s=>String(s||'').toLowerCase().replace(/[„“"'.!?;:]/g,'').replace(/\s+/g,' ').trim();
+function parseNum(s){s=String(s||'').replace(/\s/g,'').replace(',','.').replace(/[^0-9.\/-]/g,'');if(s.includes('/')){const[a,b]=s.split('/').map(Number);return b?a/b:NaN}return s===''?NaN:Number(s)}
+function maxPts(it){return it.type==='open'?2:1}
+
+function sessionsSorted(){return [...S.sessions].sort((a,b)=>(a.order??0)-(b.order??0)||String(a.date).localeCompare(String(b.date)))}
+function dueReview(){const t=today();return Object.values(S.review).filter(r=>!r.done&&r.due<=t)}
+function findItem(sid,iid){const s=S.sessions.find(x=>x.id===sid);if(!s)return null;for(const sec of s.sections||[])for(const it of sec.items||[])if(it.id===iid)return{it,sec,s};return null}
+
+/* ---------- views ---------- */
+function render(){
+ if(view==='parent')return renderParent();
+ if(view==='run'&&run)return renderRun();
+ renderHome();
+}
+function renderHome(){
+ if(loadErr){app.innerHTML=`<div class="page today"><h2>Упражненията не се заредиха</h2><p>Провери интернет връзката и опитай отново.</p><div><button class="go" onclick="location.reload()">Опитай пак</button></div></div>`;return}
+ const list=sessionsSorted(),next=list.find(s=>!S.results[s.id]?.done),due=dueReview();
+ const done=list.filter(s=>S.results[s.id]?.done).length;
+ const weekStart=addDays(today(),-((new Date().getDay()+6)%7));
+ const week=list.filter(s=>S.results[s.id]?.done&&(S.results[s.id].finishedAt||'').slice(0,10)>=weekStart).length;
+ let card;
+ if(!loaded)card=`<p class="muted">Зареждам…</p>`;
+ else if(!next&&!due.length)card=`<h2>Всичко е решено</h2><p>Новите упражнения се появяват тук автоматично. Междувременно — браво!</p>`;
+ else{
+  const subj=next?[...new Set(next.sections.map(x=>x.subject))]:[];
+  card=`<div class="pen">${next?'Днешното упражнение':'Преговор'}</div>
+  <h2>${next?esc(next.title):'Грешки от предишни сесии'}</h2>
+  <div class="chips">${subj.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}<span class="chip">~${esc(next?.minutes||10)} мин</span>${due.length?`<span class="chip">+ ${Math.min(due.length,4)} за преговор</span>`:''}</div>
+  <p class="muted">${next?'Работи спокойно. Отговаряй с пълни изречения там, където има поле за писане — точно така е и на контролното.':''}</p>
+  <div><button class="go" id="start">Започни</button></div>`;
+ }
+ app.innerHTML=`<section class="page today">${card}</section>
+ <section class="page"><div class="top"><h3>Тази седмица</h3><div class="dots">${[0,1,2,3,4].map(i=>`<span class="dot ${i<week?'on':''}"></span>`).join('')}</div></div>
+ <p class="muted">${done} решени сесии общо · целта е 4–5 на седмица</p></section>
+ <section class="page"><h3>Всички сесии</h3><ul class="list">${list.map(s=>{const r=S.results[s.id];return `<li><span><span class="muted">${esc(fmtDate(s.date))}</span> · ${esc(s.title)}</span>${r?.done?`<span class="row"><span class="pen">${esc(r.score)}/${esc(r.max)}</span><button data-rev="${esc(s.id)}">Виж</button></span>`:r?`<span class="muted">започната</span>`:`<span class="muted">предстои</span>`}</li>`}).join('')||'<li class="muted">Още няма сесии.</li>'}</ul></section>`;
+ document.getElementById('start')?.addEventListener('click',()=>startRun(next));
+ app.querySelectorAll('[data-rev]').forEach(b=>b.addEventListener('click',()=>showReviewOf(b.dataset.rev)));
+}
+
+/* ---------- running a session ---------- */
+function startRun(sess){
+ const secs=[];
+ const due=dueReview().slice(0,4).map(r=>({r,f:findItem(r.sid,r.iid)})).filter(x=>x.f);
+ if(due.length)secs.push({review:true,subject:'Преговор',title:'Преговор: задачи, в които имаше грешка',text:'',items:due.map(x=>({...x.f.it,_ref:x.r,_text:x.f.sec.text,_key:x.r.sid+'__'+x.r.iid}))});
+ if(sess)for(const sec of sess.sections)secs.push({...sec,items:sec.items.map(it=>({...it,_key:it.id}))});
+ const prev=sess?S.results[sess.id]:null;
+ run={sess,secs,si:0,ans:{},pts:{},fb:{},graded:false,busy:false,items:{...(prev?.items||{})}};
+ if(prev?.lastSection!=null&&!prev.done)run.si=Math.min(prev.lastSection+1+(due.length?1:0),secs.length-1);
+ view='run';render();scrollTo(0,0);
+}
+function qHTML(it,sec){
+ const k=it._key,a=run.ans[k],g=run.graded,p=run.pts[k];
+ let body='';
+ if(it.type==='mc'){
+  const ord=seededOrder(k,it.options.length);
+  body=`<div class="opts">${ord.map(i=>{let c='opt';if(a===i)c+=' sel';if(g&&i===it.answer)c+=' right';if(g&&a===i&&i!==it.answer)c+=' wrong';return `<button class="${c}" data-k="${esc(k)}" data-i="${i}" ${g?'disabled':''}>${esc(it.options[i])}</button>`}).join('')}</div>`;
+ }else if(it.type==='open'){
+  body=`<textarea data-k="${esc(k)}" ${g?'readonly':''} placeholder="Напиши отговора си с пълни изречения…">${esc(a||'')}</textarea>`;
+ }else{
+  body=`<div class="row"><input type="text" inputmode="${it.type==='num'?'decimal':'text'}" data-k="${esc(k)}" value="${esc(a||'')}" ${g?'readonly':''} autocomplete="off">${it.unit?`<span class="unit">${esc(it.unit)}</span>`:''}</div>`;
+ }
+ let fb='';
+ if(g){
+  const ok=p>=maxPts(it);
+  if(it.type==='open'){
+   const f=run.fb[k];
+   if(f?.self)fb=`<div class="fb"><b>Сравни отговора си с примерния</b><br>${esc(it.model)}<div class="row" style="margin-top:8px"><span>Колко точки си даваш по критериите отдолу? Бъди честна — така ще се върнат точно нещата за преговор.</span>${[0,1,2].map(n=>`<button data-self="${esc(k)}" data-n="${n}" ${p===n?'class="go"':''}>${n}</button>`).join('')}</div><div class="muted" style="margin-top:6px">${esc(it.rubric)}</div></div>`;
+   else fb=`<div class="fb ${ok?'ok':''}"><b>${esc(p)} от 2 т.</b> ${esc(f?.text||'')}<details><summary>Примерен отговор</summary>${esc(it.model)}</details></div>`;
+  }else fb=`<div class="fb ${ok?'ok':''}"><b>${ok?'Вярно':'Не съвсем'}</b> ${ok?'':`Верен отговор: ${esc(String(it.type==='mc'?it.options[it.answer]:it.type==='num'?String(it.answer).replace('.',','):it.accept[0]).replace(/[.]$/,''))}${it.unit?' '+esc(it.unit):''}. `}${esc(it.explain)}</div>`;
+ }
+ const passage=sec.review&&it._text?`<details><summary>Текстът към задачата</summary><div class="text">${esc(it._text)}</div></details>`:'';
+ return `<div class="q"><p>${esc(it.q)}</p>${passage}${body}${fb}</div>`;
+}
+function renderRun(){
+ const sec=run.secs[run.si],n=run.secs.length;
+ const last=run.si===n-1;
+ app.innerHTML=`<div class="top"><button class="link" id="back">← Към началото</button><span class="muted">Част ${run.si+1} от ${n}</span></div>
+ <div class="bar" style="margin-bottom:14px"><i style="width:${Math.round(100*(run.si+(run.graded?1:0))/n)}%"></i></div>
+ <section class="page"><div class="pen">${esc(sec.subject)}</div><h2>${esc(sec.title)}</h2>
+ <div class="sec ${sec.text?'withtext':''}">${sec.text?`<div class="text">${esc(sec.text)}</div>`:''}<div>${sec.items.map(it=>qHTML(it,sec)).join('')}</div></div>
+ <div class="row" style="margin-top:16px">${run.graded?`<button class="go" id="next" ${sec.items.some(it=>run.pts[it._key]===undefined)?'disabled title="Първо си постави точки на писмените отговори"':''}>${last?'Към резултата':'Напред'}</button>`:`<button class="go" id="check" ${run.busy?'disabled':''}>${run.busy?'Проверявам…':'Провери'}</button>`}</div></section>`;
+ document.getElementById('back').onclick=()=>{view='home';run=null;render()};
+ app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{run.ans[b.dataset.k]=Number(b.dataset.i);renderRun()});
+ app.querySelectorAll('input[data-k],textarea[data-k]').forEach(el=>el.oninput=()=>{run.ans[el.dataset.k]=el.value});
+ app.querySelectorAll('[data-self]').forEach(b=>b.onclick=()=>{run.pts[b.dataset.self]=Number(b.dataset.n);renderRun()});
+ document.getElementById('check')?.addEventListener('click',checkSection);
+ document.getElementById('next')?.addEventListener('click',nextSection);
+}
+async function gradeOpen(it,ans,text){
+ if(!norm(ans))return{p:0,text:'Няма отговор.'};
+ if(!sample)return{self:true};
+ const prompt=`Ти си внимателен учител в 6. клас (България). Оцени писмения отговор на ученичка по дадените критерии. Бъди точен и насърчителен. Обръщай се към нея на „ти“.
+${text?`ТЕКСТ:\n${text}\n`:''}ВЪПРОС: ${it.q}
+ПРИМЕРЕН ОТГОВОР: ${it.model}
+КРИТЕРИИ: ${it.rubric}
+ОТГОВОР НА УЧЕНИЧКАТА: ${ans}
+Върни само JSON: {"points": 0, 1 или 2, "feedback": "1–2 изречения на български: какво е добре и какво точно липсва"}`;
+ try{const r=await sample.json(prompt,{modelTier:'default'});const p=Math.max(0,Math.min(2,Math.round(Number(r?.points))));if(Number.isNaN(p))throw 0;return{p,text:String(r.feedback||'')}}
+ catch(e){if(e&&e.code==='not_granted')sample=null;return{self:true}}
+}
+async function checkSection(){
+ const sec=run.secs[run.si];run.busy=true;renderRun();
+ for(const it of sec.items){
+  const k=it._key,a=run.ans[k];let p=0;
+  if(it.type==='mc')p=a===it.answer?1:0;
+  else if(it.type==='num'){const v=parseNum(a);p=Math.abs(v-it.answer)<=(it.tol??0.01)?1:0}
+  else if(it.type==='short')p=it.accept.some(x=>norm(x)===norm(a))?1:0;
+  else{const g=await gradeOpen(it,a,it._text||sec.text);if(g.self){run.fb[k]={self:true};p=undefined}else{run.fb[k]={text:g.text};p=g.p}}
+  run.pts[k]=p;
+ }
+ run.busy=false;run.graded=true;renderRun();
+}
+async function nextSection(){
+ const sec=run.secs[run.si];
+ try{await saveSection(sec)}catch(e){console.log('save',e)}
+ if(run.si<run.secs.length-1){run.si++;run.graded=false;renderRun();scrollTo(0,0)}else finishRun();
+}
+async function saveSection(sec){
+ const t=today();
+ for(const it of sec.items){
+  const k=it._key,p=run.pts[k]??0,full=p>=maxPts(it);
+  if(sec.review){const r=it._ref,box=full?(r.box||0)+1:0;
+   await db.doc('review/'+k).set({...r,box,due:addDays(t,full?3:1),done:full&&box>=2,last:t});
+  }else{
+   run.items[it.id]={pts:p,max:maxPts(it),skill:it.skill,type:it.type,given:it.type==='mc'?(it.options[run.ans[k]]??''):String(run.ans[k]??'').slice(0,1500),fb:run.fb[k]?.text||''};
+   if(!full)await db.doc('review/'+run.sess.id+'__'+it.id).set({sid:run.sess.id,iid:it.id,box:0,due:addDays(t,1),done:false,last:t});
+  }
+ }
+ if(run.sess&&!sec.review){
+  const items=run.items,score=Object.values(items).reduce((a,x)=>a+x.pts,0),max=Object.values(items).reduce((a,x)=>a+x.max,0);
+  const total=run.sess.sections.reduce((a,s)=>a+s.items.length,0),done=Object.keys(items).length>=total;
+  await db.doc('results/'+run.sess.id).set({sid:run.sess.id,title:run.sess.title,items,score,max,done,lastSection:run.sess.sections.indexOf(run.sess.sections.find(s=>s.title===sec.title)),finishedAt:new Date().toISOString()});
+ }
+}
+function finishRun(){
+ const r=run.sess?S.results[run.sess.id]:null;
+ const items=run.items,score=Object.values(items).reduce((a,x)=>a+x.pts,0),max=Object.values(items).reduce((a,x)=>a+x.max,0);
+ app.innerHTML=`<section class="page today"><div class="pen">Готово за днес</div><div class="big">${run.sess?`${score}/${max}`:'✓'}</div>
+ <p>${max&&score/max>=.85?'Много добре! Задачите с грешки ще се появят отново след ден-два, за да ги затвърдиш.':'Добра работа. Задачите, в които сгреши, ще се върнат в следващите дни като преговор — така се запомня трайно.'}</p>
+ <div><button class="go" id="home">Към началото</button></div></section>`;
+ document.getElementById('home').onclick=()=>{view='home';run=null;render()};
+}
+function showReviewOf(sid){
+ const s=S.sessions.find(x=>x.id===sid),r=S.results[sid];if(!s||!r)return;
+ app.innerHTML=`<div class="top"><button class="link" id="back">← Към началото</button></div><section class="page"><div class="pen">${esc(r.score)}/${esc(r.max)}</div><h2>${esc(s.title)}</h2>${s.sections.map(sec=>`<h3 style="margin-top:14px">${esc(sec.title)}</h3>${sec.items.map(it=>{const x=r.items?.[it.id];const ok=x&&x.pts>=x.max;return `<div class="q"><p>${esc(it.q)}</p><div>Твоят отговор: ${esc(x?.given||'—')}</div><div class="fb ${ok?'ok':''}"><b>${x?esc(x.pts)+'/'+esc(x.max):'—'}</b> ${esc(x?.fb||'')} ${it.type==='open'?esc('Примерно: '+it.model):esc(it.explain)}</div></div>`}).join('')}`).join('')}</section>`;
+ document.getElementById('back').onclick=()=>{view='home';render()};
+}
+
+/* ---------- parent view ---------- */
+function stats(){const agg={};for(const r of Object.values(S.results))for(const x of Object.values(r.items||{})){const n=skillName(x.skill||'');(agg[n]??={p:0,m:0,c:0});agg[n].p+=x.pts;agg[n].m+=x.max;agg[n].c++}return Object.entries(agg).sort((a,b)=>a[1].p/a[1].m-b[1].p/b[1].m)}
+function opensList(){return Object.values(S.results).flatMap(r=>Object.entries(r.items||{}).filter(([,x])=>x.type==='open').map(([iid,x])=>({r,iid,x,f:findItem(r.sid,iid)}))).filter(o=>o.f)}
+function reportText(){
+ const done=Object.values(S.results).filter(r=>r.done);
+ let t=`ТЕТРАДКАТА НА КАЛИНА — отчет към ${today()}\nРешени сесии: ${done.length}\n`;
+ t+=done.map(r=>`- ${r.title}: ${r.score}/${r.max} (${String(r.finishedAt||'').slice(0,10)})`).join('\n')+'\n\nПО УМЕНИЯ (най-слабите първо):\n';
+ t+=stats().map(([n,a])=>`- ${n}: ${Math.round(100*a.p/a.m)}% (${a.c} задачи)`).join('\n');
+ t+=`\nЗадачи за преговор, които чакат: ${Object.values(S.review).filter(r=>!r.done).length}\n\nПИСМЕНИ ОТГОВОРИ (самооценка):\n`;
+ t+=opensList().slice(-10).map(o=>`Въпрос: ${o.f.it.q}\nОтговор: ${o.x.given}\nСамооценка: ${o.x.pts}/2`).join('\n\n');
+ const wrong=Object.values(S.results).flatMap(r=>Object.entries(r.items||{}).filter(([,x])=>x.type!=='open'&&x.pts<x.max).map(([iid])=>findItem(r.sid,iid))).filter(Boolean).slice(-12);
+ t+=`\n\nГРЕШКИ В ТЕСТОВИ ЗАДАЧИ:\n`+wrong.map(f=>`- ${f.it.q}`).join('\n');
+ return t;
+}
+function renderParent(){
+ const rows=stats(),opens=opensList().slice(-8).reverse();
+ app.innerHTML=`<section class="page"><div class="pen">Отчет за мама</div><h2>Как върви</h2>
+ <p class="muted">Резултатите се пазят само на това устройство. Изпрати отчета на мама веднъж седмично — тя ще го даде на Claude, за да се съобразят следващите упражнения с трудните места.</p>
+ <div class="row"><button class="go" id="share">Изпрати отчета</button><button id="copy">Копирай</button><span class="muted" id="msg"></span></div>
+ <h3 style="margin-top:22px">Успеваемост по умения (най-слабите горе)</h3>${rows.length?`<table><thead><tr><th>Умение</th><th>Задачи</th><th>Точки</th><th style="width:35%"></th></tr></thead><tbody>${rows.map(([n,a])=>`<tr><td>${esc(n)}</td><td class="n">${a.c}</td><td class="n">${Math.round(100*a.p/a.m)}%</td><td><div class="bar"><i style="width:${Math.round(100*a.p/a.m)}%"></i></div></td></tr>`).join('')}</tbody></table>`:'<p class="muted">Ще се появи след първата решена сесия.</p>'}
+ <p class="muted">Задачи за преговор чакат: ${Object.values(S.review).filter(r=>!r.done).length}</p></section>
+ <section class="page"><h3>Последни писмени отговори</h3>${opens.length?opens.map(o=>`<div class="q"><p>${esc(o.f.it.q)}</p><div>„${esc(o.x.given)}“</div><div class="fb ${o.x.pts>=2?'ok':''}"><b>${esc(o.x.pts)}/2</b> самооценка</div></div>`).join(''):'<p class="muted">Още няма.</p>'}</section>
+ <section class="page"><h3>Резервно копие</h3><p class="muted">Ако смениш устройството или браузъра, запази копие тук и го зареди на новото.</p>
+ <div class="row"><button id="backup">Изтегли копие</button><label class="link" style="margin:0;display:inline-flex;align-items:center;cursor:pointer">Зареди копие<input type="file" id="restore" accept=".json,application/json" hidden></label><span class="muted" id="bmsg"></span></div></section>`;
+ const msg=document.getElementById('msg');
+ document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(reportText());msg.textContent='Копирано — постави го в съобщение до мама.'}catch(e){msg.textContent='Не успях да копирам.'}};
+ document.getElementById('share').onclick=async()=>{const text=reportText();if(navigator.share){try{await navigator.share({title:'Тетрадката — отчет',text});return}catch(e){if(e&&e.name==='AbortError')return}}try{await navigator.clipboard.writeText(text);msg.textContent='Копирано — постави го в съобщение до мама.'}catch(e){msg.textContent='Не успях — използвай „Копирай“.'}};
+ document.getElementById('backup').onclick=()=>{const b=new Blob([JSON.stringify({results:S.results,review:S.review,savedAt:new Date().toISOString()},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tetradka-kopie-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+ document.getElementById('restore').onchange=async e=>{const f=e.target.files[0];if(!f)return;const bm=document.getElementById('bmsg');try{const x=JSON.parse(await f.text());if(typeof x!=='object'||!x.results)throw 0;S.results={...S.results,...x.results};S.review={...S.review,...(x.review||{})};persist();bm.textContent='Копието е заредено.';renderParent()}catch(err){bm.textContent='Този файл не е копие от тетрадката.'}};
+}
+
+document.getElementById('navHome').onclick=()=>{view='home';run=null;render()};
+document.getElementById('navParent').onclick=()=>{view='parent';run=null;render()};
+
+/* ---------- data ---------- */
+loadStore();
+fetch('sessions.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(a=>{S.sessions=(Array.isArray(a)?a:[]).filter(s=>s&&Array.isArray(s.sections));loaded=true;if(view!=='run')render()}).catch(()=>{loadErr=true;loaded=true;if(view!=='run')render()});
+render();
+}
+</script>
+</body>
+</html>
