@@ -60,6 +60,7 @@ nav.tabs{align-items:center;overflow:visible;flex-wrap:nowrap}
 .task .act button,.task .act .btn{min-height:40px;padding:6px 14px}
 .task .sub{grid-column:2/4}
 @media(max-width:520px){.task{grid-template-columns:28px 1fr}.task .act{grid-column:2/3;justify-content:flex-start}}
+.ro .act button,.ro #start,.ro [data-prep],.ro #bigrev,.ro #fix{pointer-events:none;opacity:.45}
 .formfield{display:block;margin:0 0 12px}.formfield select{display:block;width:100%;margin-top:4px;font:inherit;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chip{background:var(--chip);border-radius:99px;padding:3px 11px;font-size:14px;white-space:nowrap}
@@ -272,12 +273,12 @@ function newStamps(){const got=stampList().filter(s=>s.ok).map(s=>s.id),fresh=go
 const stampHTML=(s,isNew)=>`<div class="stamp ${s.ok?'':'off'} ${isNew?'new':''}" title="${esc(s.d)}">${esc(s.t)}<small>${esc(s.d)}</small></div>`;
 
 /* ---------- shell ---------- */
-function nav(cur){const main=RO?[['#home','Обзор'],['#subjects','Предмети'],['#journal','Дневник'],['#report','Отчет']]:[['#home','Днес'],['#subjects','Предмети'],['#review','Преговор'],['#discover','Откривам'],['#studio','Студио']];
+function nav(cur){const main=RO?[['#home','Обзор'],['#kid','Като '+(S.P?.student||'детето')],['#discover','Откривам'],['#subjects','Предмети'],['#journal','Дневник'],['#report','Отчет']]:[['#home','Днес'],['#subjects','Предмети'],['#review','Преговор'],['#discover','Откривам'],['#studio','Студио']];
  const more=RO?[]:[['#journal','Дневник'],['#stamps','Печати'],['#report','Отчет'],['#cover','Корица и настройки'],['#parent','Изглед за родител']];const md=S.settings.mode||'auto';
  return `<nav class="tabs"><div class="tabsc">${main.map(([h,t])=>`<a href="${h}" class="${cur===h?'on':''}">${t}</a>`).join('')}</div><details class="more ${more.some(([h])=>h===cur)?'on':''}"><summary aria-label="Още">⋯<span class="wide"> Още</span></summary><div class="menu">${more.map(([h,t])=>`<a href="${h}" class="${cur===h?'on':''}">${t}</a>`).join('')}<div class="modes">${[['light','☀ Светла'],['dark','☾ Тъмна'],['auto','Авто']].map(([k,n])=>`<button data-mode="${k}" class="${md===k?'on':''}">${n}</button>`).join('')}</div></div></details></nav>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(b){S.settings.mode=b.dataset.mode;persist();applyTheme();route();return}const d=document.querySelector('details.more[open]');if(d&&!d.contains(e.target))d.open=false});
 function coverHTML(){const c=cover();const d=new Date();return `<header class="cover"><div class="art" style="background-image:url('${c||'assets/jonathan.jpg'}');opacity:${c?'.55':'.9'};background-position:center 42%"></div><div class="in"><div class="label"><div class="muted">${esc(S.P?.grade||'')} · ${esc(DAYS[d.getDay()])}, ${esc(d.toLocaleDateString('bg-BG',{day:'numeric',month:'long'}))}</div><h1>${S.P?.student?'Тетрадката на '+esc(S.P.student):'Тетрадката'}</h1></div><a class="btn" href="#cover" style="background:color-mix(in srgb,var(--paper) 92%,transparent);border-color:transparent">Корица</a></div></header>`}
-function frame(cur,body){root.innerHTML=coverHTML()+nav(cur)+(RO?`<div class="banner">Изглед за родител · данни от ${esc(SYNC_AT?new Date(SYNC_AT).toLocaleString('bg-BG'):'—')} · само за четене</div>`:'')+body;const a=root.querySelector('.tabsc a.on');if(a){const c=a.parentElement;c.scrollLeft=Math.max(0,a.offsetLeft+a.offsetWidth-c.clientWidth+8)}}
+function frame(cur,body){document.body.classList.toggle('ro',RO);root.innerHTML=coverHTML()+nav(cur)+(RO?`<div class="banner">Изглед за родител · данни от ${esc(SYNC_AT?new Date(SYNC_AT).toLocaleString('bg-BG'):'—')} · само за четене</div>`:'')+body;const a=root.querySelector('.tabsc a.on');if(a){const c=a.parentElement;c.scrollLeft=Math.max(0,a.offsetLeft+a.offsetWidth-c.clientWidth+8)}}
 function route(){if(/^#k=/.test(location.hash)){takeKeyFromHash().then(async ok=>{if(ok&&loaded)applyPrivate(await loadPrivate());route()});return}const h=location.hash||'#home';if(run&&h!=='#run'){run=null}
  if(loadErr)return root.innerHTML=`<div class="page" style="margin-top:24px"><h2>Тетрадката не се зареди</h2><p>Провери интернет връзката.</p><button class="go" onclick="location.reload()">Опитай пак</button></div>`;
  if(!loaded)return;
@@ -286,6 +287,7 @@ function route(){if(/^#k=/.test(location.hash)){takeKeyFromHash().then(async ok=
  if(h.startsWith('#lesson-'))return renderLesson(h.slice(8));
  if(h.startsWith('#view-'))return renderView(h.slice(6));
  if(h==='#parent')return renderParent();
+ if(h==='#kid')return RO?renderHome():go('#home');
  if(h==='#review')return renderReview();
  if(h==='#discover')return renderDiscover();
  if(h==='#studio')return renderStudio();
@@ -314,7 +316,7 @@ function renderParentHome(){
  ${foc.length?`<section class="page"><h3>Нужда от внимание</h3>${foc.map(([n,a])=>`<p><b>${esc(n)}</b> – ${Math.round(100*a.p/a.m)}% от ${a.c} задачи</p>`).join('')}<p class="muted">Добра тема за 5 минути разговор – без натиск, с въпроса „кое ти беше трудно тук?“</p></section>`:''}
  <section class="page"><h3>Писмени отговори (самооценка)</h3>${opens.length?opens.map(o=>{const f=findItem(o.sid,o.iid);return `<div class="q"><p>${esc(f?.it.q||'')}</p><div>„${esc(o.given||'—')}“</div><div class="fb ${o.pts>=2?'ok':''}"><b>${esc(o.pts)}/2</b> сама си е дала. ${f?.it.model?'Примерен отговор: '+esc(f.it.model):''}</div></div>`}).join(''):'<p class="muted">Още няма. Тук ще виждате как формулира отговори – най-важното умение за контролните.</p>'}</section>
  <section class="page"><h3>Последна активност</h3>${R.length?`<ul class="list">${R.sort((a,b)=>String(b.finishedAt).localeCompare(String(a.finishedAt))).slice(0,8).map(r=>`<li><span><span class="muted">${esc(fmtDate(r.finishedAt))}</span> · ${esc(r.title)}</span><span class="row"><span class="pen">${esc(r.score)}/${esc(r.max)}</span><a class="btn" href="#view-${esc(r.sid)}">Виж</a></span></li>`).join('')}</ul>`:'<p class="muted">Още няма.</p>'}</section>`)}
-function renderHome(){if(RO)return renderParentHome();
+function renderHome(){const kidView=RO&&location.hash==='#kid';if(RO&&!kidView)return renderParentHome();
  const list=sessionsSorted(),next=list.find(s=>!S.results[s.id]?.done),due=dueReview();
  const hr=new Date().getHours(),beforeSchool=hr<13,school=beforeSchool?todaySchool():tomorrowSchool(),when=beforeSchool?'Днес в училище':'Утре в училище';
  const schoolSubj=[...new Set(school.map(matchSubj).filter(Boolean))];
@@ -334,8 +336,8 @@ function renderHome(){if(RO)return renderParentHome();
  const main=`${buddy(mood,say)}<div class="pen" style="margin-top:6px">План за днес</div>${tasks.join('')}<p class="muted" style="margin-top:8px">Това са предложения – избираш сама по колко време имаш.</p>`;
  const fb=(S.feedback||[]).slice(-2).reverse(),foc=focusList(),wc=weekCount(),streak=weekStreak();
  const nDone=Object.values(S.results).filter(r=>r.done).length,lastB=S.backupAt?Math.floor((Date.now()-Date.parse(S.backupAt))/864e5):999;
- frame('#home',`
- <section class="page">${main}</section>
+ frame(kidView?'#kid':'#home',`
+ ${kidView?`<div class="banner">Така ${esc(S.P.student||'детето')} вижда своя „Днес“ – със същите данни. Бутоните не работят в този изглед.</div>`:''}<section class="page">${main}</section>
  <div class="grid two">
   <section class="page"><h3>${when}</h3>${school.length?`<div class="chips">${school.map(l=>{const s=matchSubj(l);return `<span class="chip ${s?'hot':''}">${esc(l)}</span>`}).join('')}</div>`:'<p class="muted">Почивен ден.</p>'}
   ${sugg.length?`<p class="muted" style="margin-top:12px">Подготви се за часа:</p>${sugg.map(({s,t})=>`<p><a href="#lesson-${esc(t.id)}">${esc(s.short)}: урок „${esc(t.title)}“</a></p>`).join('')}`:''}</section>
