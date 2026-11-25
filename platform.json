@@ -64,6 +64,17 @@
    "textbook": "БЕЛ – БГ Учебник; Литература – Булвест 2000",
    "topics": [
     {
+     "id": "bel-ya",
+     "title": "Правопис: променливо я",
+     "skills": [
+      "bel.pravopis.ya"
+     ],
+     "lesson": "lessons/bel-ya.json",
+     "sessions": [
+      "b01"
+     ]
+    },
+    {
      "id": "lit-darel",
      "title": "Джералд Даръл – живот и творчество",
      "skills": [
@@ -163,6 +174,22 @@
    "textbook": "Просвета",
    "topics": [
     {
+     "id": "ist-balkani",
+     "title": "Българската държава на Балканите",
+     "skills": [
+      "ist.balkani"
+     ],
+     "lesson": "lessons/ist-balkani.json"
+    },
+    {
+     "id": "ist-vazhod",
+     "title": "Възходът на България до средата на IX век",
+     "skills": [
+      "ist.vazhod"
+     ],
+     "lesson": "lessons/ist-vazhod.json"
+    },
+    {
      "id": "ist-krum",
      "title": "Хан Крум",
      "skills": [
@@ -180,14 +207,6 @@
       "ist.hrist"
      ],
      "lesson": "lessons/ist-hristianizacia.json"
-    },
-    {
-     "id": "ist-durzhava",
-     "title": "Урок 9 (уточнява се)",
-     "skills": [
-      "ist.durzhava"
-     ],
-     "soon": true
     }
    ]
   },
@@ -210,6 +229,14 @@
       "chp.plut"
      ],
      "lesson": "lessons/chp-plutnost.json"
+    },
+    {
+     "id": "chp-atom",
+     "title": "Електрични заряди и строеж на атома",
+     "skills": [
+      "chp.atom"
+     ],
+     "lesson": "lessons/chp-atom.json"
     }
    ]
   },
@@ -226,12 +253,34 @@
    "textbook": "Просвета Плюс",
    "topics": [
     {
+     "id": "geo-yam-priroda",
+     "title": "Южна Америка – положение и природа",
+     "skills": [
+      "geo.yam.relef",
+      "geo.yam.vodi",
+      "geo.yam.klimat",
+      "geo.yam.zoni"
+     ],
+     "lesson": "lessons/geo-yam-priroda.json"
+    },
+    {
      "id": "geo-yuzhna-amerika",
      "title": "Южна Америка – население и политическа карта",
      "skills": [
-      "geo.yam"
+      "geo.yam.naselenie",
+      "geo.yam.karta",
+      "geo.yam.razpredelenie",
+      "geo.yam.tulkuvane"
      ],
      "lesson": "lessons/geo-yuzhna-amerika.json"
+    },
+    {
+     "id": "geo-yam-stopanstvo",
+     "title": "Южна Америка – стопанство",
+     "skills": [
+      "geo.yam.stopanstvo"
+     ],
+     "lesson": "lessons/geo-yam-stopanstvo.json"
     }
    ]
   },
@@ -245,28 +294,38 @@
    "skills": [
     "eng."
    ],
-   "textbook": "",
-   "topics": []
+   "textbook": "Live Beat (Pearson); граматика – My English Practical Grammar (Klett)",
+   "topics": [
+    {
+     "id": "eng-poss",
+     "title": "Possessive 's",
+     "skills": [
+      "eng.poss"
+     ],
+     "lesson": "lessons/eng-poss.json"
+    }
+   ]
   }
  ],
  "tests": [
   {
    "subject": "bel",
-   "title": "Контролна работа по БЕЛ (тема: уточнява се)",
+   "title": "Контролна работа по БЕЛ: променливо я и местоимения",
    "date": "2026-11-26",
    "topics": [
-    "bel-mest",
-    "bel-tekst"
+    "bel-ya",
+    "bel-mest"
    ]
   },
   {
    "subject": "ist",
-   "title": "Изпитване: последните 3 урока",
+   "title": "Изпитване по история",
    "date": "",
    "topics": [
+    "ist-balkani",
+    "ist-vazhod",
     "ist-krum",
-    "ist-hristianizacia",
-    "ist-durzhava"
+    "ist-hristianizacia"
    ]
   },
   {

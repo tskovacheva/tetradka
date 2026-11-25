@@ -1,0 +1,196 @@
+{
+ "id": "eng-poss",
+ "subject": "eng",
+ "title": "Possessive 's",
+ "subtitle": "Kalina's notebook, my parents' car",
+ "minutes": 12,
+ "blocks": [
+  {
+   "type": "hook",
+   "text": "В английския не казваш „тетрадката на Калина“ – казваш „Kalina's notebook“. Две букви вършат работата на цял израз. Но внимание: апострофът си има правила."
+  },
+  {
+   "type": "cards",
+   "title": "Правилата – докосни",
+   "cards": [
+    {
+     "f": "Едно лице / нещо",
+     "b": "+ 's: my sister's room, the cat's toy, Kalina's notebook."
+    },
+    {
+     "f": "Множествено число, завършващо на -s",
+     "b": "само ': my parents' car, the girls' bags."
+    },
+    {
+     "f": "Неправилно множествено число (без -s)",
+     "b": "+ 's: the children's books, men's shoes, people's ideas."
+    },
+    {
+     "f": "Двама общи притежатели",
+     "b": "'s само на последния: Tom and Anna's house (една обща къща)."
+    }
+   ]
+  },
+  {
+   "type": "check",
+   "q": "„Колата на родителите ми“ е:",
+   "options": [
+    "my parents' car",
+    "my parent's car",
+    "my parents's car",
+    "my parents car"
+   ],
+   "answer": 0,
+   "explain": "parents вече завършва на -s → само апостроф."
+  },
+  {
+   "type": "check",
+   "q": "„Играчките на децата“ е:",
+   "options": [
+    "the children's toys",
+    "the childrens' toys",
+    "the childs' toys",
+    "the children toys"
+   ],
+   "answer": 0,
+   "explain": "children е неправилно множествено число → 's."
+  },
+  {
+   "type": "text",
+   "title": "Внимание: 's не винаги е притежание",
+   "text": "„Kalina's tired“ = Kalina is tired (съкращение). „Kalina's bag“ = чантата на Калина (притежание). Питай се: следва ли съществително? Тогава е притежание. Също: its (неин/негов – за предмет) е без апостроф; it's = it is."
+  },
+  {
+   "type": "check",
+   "q": "Кое 's е притежание?",
+   "options": [
+    "Jonathan's antennae are long.",
+    "Jonathan's green.",
+    "She's late.",
+    "It's raining."
+   ],
+   "answer": 0,
+   "explain": "След Jonathan's идва съществително (antennae) – притежание."
+  },
+  {
+   "type": "buddy",
+   "mood": "happy",
+   "text": "Jonathan's antennae are very long! (Антенките на Джонатан са много дълги.)"
+  },
+  {
+   "type": "links",
+   "title": "Връзки",
+   "items": [
+    {
+     "s": "БЕЛ",
+     "t": "На български притежанието се изразява с „на“ или с притежателно местоимение (неговият, нейният) – точно учихте местоимения! Сравни: Kalina's book = книгата на Калина = нейната книга."
+    },
+    {
+     "s": "Английски с Даръл",
+     "t": "„My Family and Other Animals“ – как би казала „животните на семейството ми“?",
+     "answer": "my family's animals"
+    }
+   ]
+  },
+  {
+   "type": "read",
+   "title": "Прочети още",
+   "items": [],
+   "search": [
+    "possessive s exercises British Council",
+    "its vs it's exercises",
+    "plural possessive apostrophe"
+   ],
+   "check": "Сравни правилата там с тези в твоята тетрадка My English Practical Grammar.",
+   "intro": "Потърси упражнения онлайн – има много безплатни. Пробвай търсенията отдолу."
+  },
+  {
+   "type": "summary",
+   "points": [
+    "Едно лице: + 's (Kalina's).",
+    "Множествено на -s: само ' (my parents').",
+    "Неправилно множествено: + 's (children's, men's, people's).",
+    "Двама общи притежатели: 's на последния.",
+    "'s може да е и съкращение на is; its ≠ it's."
+   ]
+  }
+ ],
+ "quiz": [
+  {
+   "id": "q1",
+   "type": "short",
+   "q": "Напиши на английски: стаята на сестра ми",
+   "accept": [
+    "my sister's room"
+   ],
+   "explain": "sister – единствено число → 's.",
+   "skill": "eng.poss"
+  },
+  {
+   "id": "q2",
+   "type": "short",
+   "q": "Напиши на английски: кучето на съседите (neighbours)",
+   "accept": [
+    "the neighbours' dog",
+    "neighbours' dog",
+    "the neighbors' dog",
+    "neighbors' dog"
+   ],
+   "explain": "neighbours завършва на -s → само '.",
+   "skill": "eng.poss"
+  },
+  {
+   "id": "q3",
+   "type": "mc",
+   "q": "Изберете правилното: ___ shoes are on the left.",
+   "options": [
+    "The men's",
+    "The mens'",
+    "The man's's",
+    "The mens"
+   ],
+   "answer": 0,
+   "explain": "men – неправилно множествено → 's.",
+   "skill": "eng.poss"
+  },
+  {
+   "id": "q4",
+   "type": "mc",
+   "q": "Изберете правилното: The cat is licking ___ paw.",
+   "options": [
+    "its",
+    "it's",
+    "its'",
+    "it is"
+   ],
+   "answer": 0,
+   "explain": "its – притежание; it's = it is.",
+   "skill": "eng.poss"
+  },
+  {
+   "id": "q5",
+   "type": "mc",
+   "q": "„Tom and Anna's house“ означава:",
+   "options": [
+    "една обща къща на Том и Анна",
+    "две отделни къщи",
+    "къщата на Анна, не на Том",
+    "къщата е Том"
+   ],
+   "answer": 0,
+   "explain": "'s на последния = общо притежание.",
+   "skill": "eng.poss"
+  },
+  {
+   "id": "q6",
+   "type": "short",
+   "q": "Напиши на английски: книгите на децата",
+   "accept": [
+    "the children's books",
+    "children's books"
+   ],
+   "explain": "children – неправилно множествено → 's.",
+   "skill": "eng.poss"
+  }
+ ]
+}
