@@ -1,54 +1,22 @@
 {
- "student": "Калина",
  "grade": "6. клас",
- "schedule": {
-  "1": [
-   "Математика",
-   "БЕЛ",
-   "ИИ",
-   "ГО",
-   "Английски (ИУЧ)",
-   "История",
-   "Човек и природа"
-  ],
-  "2": [
-   "ФВС",
-   "Човек и природа",
-   "История",
-   "БЕЛ",
-   "БЕЛ",
-   "Английски",
-   "Математика"
-  ],
-  "3": [
-   "Математика",
-   "БЕЛ",
-   "География",
-   "ФВС",
-   "Човек и природа",
-   "Технологии",
-   "Технологии"
-  ],
-  "4": [
-   "БЕЛ",
-   "ФВС",
-   "Математика",
-   "Математика",
-   "Музика",
-   "Английски",
-   "КМИТ"
-  ],
-  "5": [
-   "Математика (ИУЧ)",
-   "Музика",
-   "География",
-   "Футбол",
-   "Английски",
-   "КМИТ",
-   "ЧК"
+ "focus": {
+  "note": "Теми, които сесиите да упражняват с предимство (без лични данни). Обновява се ръчно.",
+  "topics": [
+   "bel-mest",
+   "bel-tekst",
+   "lit-gora",
+   "lit-otechestvo",
+   "ist-balkani",
+   "ist-vazhod",
+   "ist-krum",
+   "ist-hristianizacia",
+   "mat-racionalni",
+   "mat-koord",
+   "mat-stepeni",
+   "mat-paralelepiped"
   ]
  },
- "schoolStarts": "13:10",
  "subjects": [
   {
    "id": "bel",
@@ -74,6 +42,13 @@
       "b01"
      ],
      "n": 8
+    },
+    {
+     "id": "bel-pravopis",
+     "title": "Правопис: пълен и кратък член (преговор от 5. клас)",
+     "skills": [
+      "bel.pravopis.chlen"
+     ]
     },
     {
      "id": "lit-darel",
@@ -104,7 +79,7 @@
      "id": "lit-gora",
      "title": "„Хубава си, моя горо“ – Л. Каравелов",
      "skills": [
-      "lit."
+      "lit.gora"
      ],
      "sessions": [
       "s02"
@@ -116,7 +91,7 @@
      "id": "lit-otechestvo",
      "title": "„Отечество любезно“ – Ив. Вазов",
      "skills": [
-      "lit.sravnenie"
+      "lit.otech"
      ],
      "sessions": [
       "s03"
@@ -2487,50 +2462,5 @@
     ]
    }
   }
- ],
- "tests": [
-  {
-   "subject": "bel",
-   "title": "Контролна работа по БЕЛ: променливо я и местоимения",
-   "date": "2026-11-26",
-   "topics": [
-    "bel-ya",
-    "bel-mest"
-   ]
-  },
-  {
-   "subject": "ist",
-   "title": "Изпитване по история",
-   "date": "",
-   "topics": [
-    "ist-balkani",
-    "ist-vazhod",
-    "ist-krum",
-    "ist-hristianizacia"
-   ]
-  },
-  {
-   "subject": "bel",
-   "title": "Класна работа по БЕЛ",
-   "date": "2026-12-21",
-   "topics": [
-    "bel-mest",
-    "bel-tekst",
-    "lit-gora",
-    "lit-otechestvo"
-   ]
-  },
-  {
-   "subject": "mat",
-   "title": "Класна работа по математика",
-   "date": "2027-01-15",
-   "topics": [
-    "mat-racionalni",
-    "mat-koord",
-    "mat-stepeni",
-    "mat-paralelepiped"
-   ]
-  }
- ],
- "syncUrl": "https://script.google.com/macros/s/AKfycbx6PKcXwZuJdgPlUSWu7F7BHqWiTe9DkFe9lc2BlD25rQZtbFMBaR14cAvNQXgmMfrT/exec"
+ ]
 }
