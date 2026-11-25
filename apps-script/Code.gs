@@ -17,7 +17,13 @@ function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    stateFile_().setContent(JSON.stringify({ savedAt: new Date().toISOString(), state: body.state }));
+    // защита: не презаписвай по-ново състояние с по-старо (напр. от друго устройство)
+    const f = stateFile_();
+    let cur = {};
+    try { cur = JSON.parse(f.getBlob().getDataAsString() || '{}'); } catch (err) {}
+    const n = s => (s && Array.isArray(s.attempts)) ? s.attempts.length : -1;
+    if (n(cur.state) > 0 && n(body.state) >= 0 && n(body.state) < n(cur.state)) return out_({ ok: false, error: 'older' });
+    f.setContent(JSON.stringify({ savedAt: new Date().toISOString(), state: body.state }));
     if (body.event) logSheet_().appendRow([new Date(), body.event.title || '', body.event.score, body.event.max, body.event.kind || '']);
   } finally { lock.releaseLock(); }
   return out_({ ok: true });
