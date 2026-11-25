@@ -291,7 +291,7 @@ const stampHTML=(s,isNew)=>`<div class="stamp ${s.ok?'':'off'} ${isNew?'new':''}
 
 /* ---------- shell ---------- */
 function nav(cur){const main=RO?[['#home','Обзор'],['#kid','Като '+(S.P?.student||'детето')],['#discover','Откривам'],['#subjects','Предмети'],['#journal','Дневник'],['#report','Отчет']]:[['#home','Днес'],['#subjects','Предмети'],['#review','Преговор'],['#discover','Откривам'],['#studio','Студио']];
- const more=RO?[]:[['#journal','Дневник'],['#stamps','Печати'],['#report','Отчет'],['#cover','Корица и настройки'],['#parent','Изглед за родител']];const md=S.settings.mode||'auto';
+ const more=RO?[]:[['#note','Бележка до мама'],['#journal','Дневник'],['#stamps','Печати'],['#report','Отчет'],['#cover','Корица и настройки'],['#parent','Изглед за родител']];const md=S.settings.mode||'auto';
  return `<nav class="tabs"><div class="tabsc">${main.map(([h,t])=>`<a href="${h}" class="${cur===h?'on':''}">${t}</a>`).join('')}</div><details class="more ${more.some(([h])=>h===cur)?'on':''}"><summary aria-label="Още">⋯<span class="wide"> Още</span></summary><div class="menu">${more.map(([h,t])=>`<a href="${h}" class="${cur===h?'on':''}">${t}</a>`).join('')}<div class="modes">${[['light','☀ Светла'],['dark','☾ Тъмна'],['auto','Авто']].map(([k,n])=>`<button data-mode="${k}" class="${md===k?'on':''}">${n}</button>`).join('')}</div></div></details></nav>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(b){S.settings.mode=b.dataset.mode;persist();applyTheme();route();return}const d=document.querySelector('details.more[open]');if(d&&!d.contains(e.target))d.open=false});
 function coverHTML(){const c=cover();const d=new Date();return `<header class="cover"><div class="art" style="background-image:url('${c||'assets/jonathan.jpg'}');opacity:${c?'.55':'.9'};background-position:center 42%"></div><div class="in"><div class="label"><div class="muted">${esc(S.P?.grade||'')} · ${esc(DAYS[d.getDay()])}, ${esc(d.toLocaleDateString('bg-BG',{day:'numeric',month:'long'}))}</div><h1>${S.P?.student?'Тетрадката на '+esc(S.P.student):'Тетрадката'}</h1></div><a class="btn" href="#cover" style="background:color-mix(in srgb,var(--paper) 92%,transparent);border-color:transparent">Корица</a></div></header>`}
@@ -306,6 +306,7 @@ function route(){if(/^#k=/.test(location.hash)){takeKeyFromHash().then(async ok=
  if(h==='#parent')return renderParent();
  if(h==='#kid')return RO?renderHome():go('#home');
  if(h==='#review')return renderReview();
+ if(h==='#note')return renderNote();
  if(h==='#discover')return renderDiscover();
  if(h==='#studio')return renderStudio();
  if(h.startsWith('#mission-'))return renderMission(h.slice(9));
@@ -325,7 +326,7 @@ function renderParentHome(){
  const tests=(S.P?.tests||[]).map(t=>{const s=subjects().find(x=>x.id===t.subject),ts=testTopics(t).filter(x=>!x.soon),ready=ts.length?Math.round(100*ts.reduce((a,x)=>a+topicLevel(x),0)/(ts.length*4)):0,days=t.date?Math.round((new Date(t.date+'T12:00:00')-new Date(today()+'T12:00:00'))/864e5):null;return{t,s,ready,days}}).filter(x=>x.days===null||x.days>=0);
  const opens=recs.filter(x=>x.type==='open').slice(-6).reverse(),foc=focusList(),pend=Object.values(S.review).filter(r=>!r.done).length;
  const tile=(v,l)=>`<section class="page plain" style="margin:0"><div class="big" style="font-size:clamp(34px,6vw,48px)">${v}</div><p class="muted" style="margin:0">${l}</p></section>`;
- frame('#home',`<section class="page"><h2>Седмицата накратко</h2><p class="muted">${last?`Последно е учила: ${esc(new Date(last).toLocaleString('bg-BG',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}))}`:'Още няма решени упражнения или уроци.'}</p></section>
+ frame('#home',`${parentNotesHTML()}<section class="page"><h2>Седмицата накратко</h2><p class="muted">${last?`Последно е учила: ${esc(new Date(last).toLocaleString('bg-BG',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}))}`:'Още няма решени упражнения или уроци.'}</p></section>
  <div class="grid three">${tile(`${wkDays}/5`,'дни с учене тази седмица (цел: 4)')}${tile(wk.length,'решени сесии и уроци тази седмица')}${tile(mins?mins+' мин':'—','време за учене тази седмица')}</div><div style="height:18px"></div>
  <div class="grid two">${tile(wkRecs.length?acc(wkRecs)+'%':'—','точност тази седмица ('+wkRecs.length+' задачи)')}${tile(pend,'задачи с грешки чакат преговор')}</div><div style="height:18px"></div>
  ${tests.length?`<section class="page"><h3>Предстоящи контролни – готовност</h3>${tests.map(({t,s,ready,days})=>`<div class="q"><div class="top"><p style="margin:0"><b>${esc(s?.short||'')}</b> · ${esc(t.title)}</p><span class="muted">${t.date?esc(fmtLong(t.date))+' · ':''}${days===null?'без дата':days===0?'днес':'след '+days+' дни'}</span></div><div class="bar"><i style="width:${ready}%"></i></div><p class="muted" style="margin-top:6px">${readinessLabel(t,ready)} – по нивото на темите, които влизат.</p>${(()=>{const th=thinTopics(t);return th.length?`<p class="muted">⚠ Малко задачи в Тетрадката по: ${th.map(x=>esc(x.title)).join(', ')} – подготовката още не покрива темата добре.</p>`:''})()}<p style="margin:4px 0 0">${coverageHTML(t)}</p></div>`).join('')}</section>`:''}
@@ -334,7 +335,7 @@ function renderParentHome(){
  <section class="page"><h3>Писмени отговори (самооценка)</h3>${opens.length?opens.map(o=>{const f=findItem(o.sid,o.iid);return `<div class="q"><p>${esc(f?.it.q||'')}</p><div>„${esc(o.given||'—')}“</div><div class="fb ${o.pts>=2?'ok':''}"><b>${esc(o.pts)}/2</b> сама си е дала. ${f?.it.model?'Примерен отговор: '+esc(f.it.model):''}</div></div>`}).join(''):'<p class="muted">Още няма. Тук ще виждате как формулира отговори – най-важното умение за контролните.</p>'}</section>
  <section class="page"><h3>Последна активност</h3>${R.length?`<ul class="list">${R.sort((a,b)=>String(b.finishedAt).localeCompare(String(a.finishedAt))).slice(0,8).map(r=>`<li><span><span class="muted">${esc(fmtDate(r.finishedAt))}</span> · ${esc(r.title)}</span><span class="row"><span class="pen">${esc(r.score)}/${esc(r.max)}</span><a class="btn" href="#view-${esc(r.sid)}">Виж</a></span></li>`).join('')}</ul>`:'<p class="muted">Още няма.</p>'}</section>
  <section class="page"><h3>Архив</h3><p class="muted">Всеки път, когато ${esc(S.P.student||'детето')} завърши упражнение, всичко се записва във вашия Google Drive: текущото състояние в <code>tetradka-state.json</code>, седмичен архив в папка „Тетрадката – архив“ (по един файл на седмица) и ред в таблицата „Тетрадката – дневник“. Тук можете да изтеглите и копие на тези данни.</p><div class="row"><button id="parch">Изтегли копие на данните</button></div></section>`);
- document.getElementById('parch')?.addEventListener('click',downloadBackup)}
+ document.getElementById('parch')?.addEventListener('click',downloadBackup);wireParentNotes()}
 function renderHome(){const kidView=RO&&location.hash==='#kid';if(RO&&!kidView)return renderParentHome();
  const list=sessionsSorted(),next=list.find(s=>!S.results[s.id]?.done),due=dueReview();
  const hr=new Date().getHours(),beforeSchool=hr<13,school=beforeSchool?todaySchool():tomorrowSchool(),when=beforeSchool?'Днес в училище':'Утре в училище';
@@ -442,6 +443,37 @@ function studioEdit(id){const n=STUDIO.find(x=>x.id===id)||{id:'',cat:'Рису�
  $('sdel')?.addEventListener('click',async e=>{if(e.target.dataset.sure!=='1'){e.target.dataset.sure='1';e.target.textContent='Сигурна ли си? Натисни пак';return}STUDIO=STUDIO.filter(x=>x.id!==n.id);await studioSave();go('#studio')})}
 function featuredHTML(){const f=STUDIO.find(n=>n.featured);if(!f)return '';return `<section class="page"><div class="top"><h3>От моето студио</h3><a href="#studio">студио</a></div><div class="row" style="align-items:flex-start;flex-wrap:nowrap;gap:14px">${f.pic?`<img src="${esc(f.pic)}" alt="" style="width:110px;height:110px;object-fit:contain;flex:none;border-radius:10px;background:var(--chip)">`:''}<div><b>${esc(f.title)}</b><p class="muted" style="white-space:pre-line">${esc((f.body||'').slice(0,220))}</p></div></div></section>`}
 
+/* ---------- notes to parent (no AI chat: parent forwards, answers come as content changes) ---------- */
+const NOTE_T={test:'Ново контролно',project:'Проект',review:'Искам още преговор',other:'Друго'};
+function notes(){return (S.prog.notes||[]).slice().sort((a,b)=>a.t<b.t?1:-1)}
+function noteStatus(n){const x=(PRIV?.notesStatus||{})[n.id];return x?.status||'sent'}
+const NOTE_ST={sent:['Изпратена на мама','muted'],approved:['Мама я одобри – подготвя се',''],done:['Готово ✓',''],declined:['Мама реши друго','muted']};
+function noteLine(n){const sj=subjects().find(x=>x.id===n.subject);const tp=(n.topics||[]).map(id=>subjects().flatMap(s=>s.topics||[]).find(t=>t.id===id)?.title).filter(Boolean);return `${esc(NOTE_T[n.type]||'')}${sj?' · '+esc(sj.short||sj.name):''}${n.date?' · '+esc(fmtLong(n.date)):''}${tp.length?' · '+tp.map(esc).join(', '):''}${n.text?` – „${esc(n.text)}“`:''}`}
+function openNotes(){return notes().filter(n=>['sent','approved'].includes(noteStatus(n)))}
+function notesHTML(){const L=notes().slice(0,6);return `<section class="page"><div class="top"><h3>Бележки до мама</h3>${RO?'':`<a class="btn" href="#note">+ Нова бележка</a>`}</div><p class="muted">Ново контролно, проект или нужда от още преговор – пиши на мама, а тя ще погрижи Тетрадката да се подготви.</p>${L.length?L.map(n=>{const st=NOTE_ST[noteStatus(n)]||NOTE_ST.sent,r=(PRIV?.notesStatus||{})[n.id]?.reply;return `<div class="task"><span class="num" style="font-size:18px">${noteStatus(n)==='done'?'✓':'✎'}</span><div><b>${noteLine(n)}</b><span class="muted">${esc(fmtDate(n.t.slice(0,10)))} · ${st[0]}${r?' · '+esc(r):''}</span></div>${!RO&&noteStatus(n)==='sent'?`<div class="act"><button data-delnote="${esc(n.id)}">Изтрий</button></div>`:''}</div>`}).join(''):'<p class="muted">Още няма бележки.</p>'}</section>`}
+function wireNotes(){root.querySelectorAll('[data-delnote]').forEach(b=>b.onclick=()=>{if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Сигурна ли си?';return}S.prog.notes=(S.prog.notes||[]).filter(n=>n.id!==b.dataset.delnote);persist();syncPush(null);route()})}
+function renderNote(){if(RO)return go('#home');const open=openNotes().length;
+ if(open>=3)return frame('#review',`<div class="top"><a href="#review">← Преговор</a></div><section class="page">${buddy('think','Вече имаш 3 бележки, които чакат. Щом мама ги погледне, ще можеш да пишеш нова.')}</section>`);
+ const subs=subjects();
+ frame('#review',`<div class="top"><a href="#review">← Преговор</a></div><section class="page"><h2>Бележка до мама</h2>${buddy('happy','Кажи какво предстои – мама ще го види и Тетрадката ще се подготви.')}
+ <label class="formfield">Какво е<select id="nt">${Object.entries(NOTE_T).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>
+ <label class="formfield">Предмет<select id="ns">${subs.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('')}</select></label>
+ <label class="formfield" id="ndw">Дата (на контролното или срок на проекта)<input type="date" id="nd" min="${today()}" style="display:block;width:100%;margin-top:4px;font:inherit;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)"></label>
+ <div class="formfield" id="ntw">Теми (избери)<div id="ntp" class="chips" style="margin-top:6px"></div></div>
+ <label class="formfield">Кратко (по желание, до 200 знака)<textarea id="nx" rows="3" maxlength="200" style="display:block;width:100%;margin-top:4px;font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)"></textarea></label>
+ <div class="row"><button class="go" id="nsave">Изпрати на мама</button><span class="muted" id="nmsg"></span></div><p class="muted" style="margin-top:10px">Можеш да имаш до 3 чакащи бележки (сега: ${open}).</p></section>`);
+ const $=x=>document.getElementById(x);
+ const fill=()=>{const t=$('nt').value,sj=subs.find(s=>s.id===$('ns').value);$('ndw').style.display=t==='test'||t==='project'?'':'none';$('ntw').style.display=t==='test'||t==='review'?'':'none';$('ntp').innerHTML=(sj?.topics||[]).map(tp=>`<label class="chip" style="cursor:pointer"><input type="checkbox" value="${esc(tp.id)}" style="margin-right:6px">${esc(tp.title)}</label>`).join('')||'<span class="muted">Няма теми още – опиши ги отдолу.</span>'};
+ $('nt').onchange=fill;$('ns').onchange=fill;fill();
+ $('nsave').onclick=()=>{const type=$('nt').value,date=$('nd').value,topics=[...root.querySelectorAll('#ntp input:checked')].map(x=>x.value),text=$('nx').value.trim().slice(0,200);
+  if((type==='test'||type==='project')&&!date){$('nmsg').textContent='Избери дата.';return}
+  if(type==='review'&&!topics.length&&!text){$('nmsg').textContent='Избери тема или напиши какво не ти е ясно.';return}
+  if(type==='other'&&!text){$('nmsg').textContent='Напиши бележката.';return}
+  const n={id:'n'+Date.now().toString(36),t:new Date().toISOString(),type,subject:$('ns').value,date:(type==='test'||type==='project')?date:'',topics:(type==='test'||type==='review')?topics:[],text};
+  (S.prog.notes??=[]).push(n);persist();syncPush({title:'Бележка до мама: '+(NOTE_T[type]||''),score:'',max:'',kind:'note'});go('#review')}}
+function noteForClaude(n){const sj=subjects().find(x=>x.id===n.subject);const tp=(n.topics||[]).map(id=>subjects().flatMap(s=>s.topics||[]).find(t=>t.id===id)?.title||id);return `Бележка от Калина [${n.id}, ${n.t.slice(0,10)}]: ${NOTE_T[n.type]||n.type}${sj?' – '+(sj.name):''}${n.date?', дата '+n.date:''}${tp.length?', теми: '+tp.join(', '):''}${n.text?'. Текст: „'+n.text+'“':''}. Одобрявам – подготви Тетрадката.`}
+function parentNotesHTML(){const L=notes();if(!L.length)return '';return `<section class="page"><h3>Бележки от ${esc(S.P.student||'детето')}</h3><p class="muted">Нищо не стига до Claude автоматично. „Копирай“ слага готов текст – постави го в разговора с Claude, ако го одобряваш. Ако не го одобряваш, просто не го изпращай (или кажи на Claude „отхвърли ${'<'}номер${'>'}“, за да види тя, че си решила друго).</p>${L.slice(0,10).map(n=>{const st=NOTE_ST[noteStatus(n)]||NOTE_ST.sent;return `<div class="task"><span class="num" style="font-size:18px">${noteStatus(n)==='done'?'✓':'✎'}</span><div><b>${noteLine(n)}</b><span class="muted">${esc(fmtDate(n.t.slice(0,10)))} · ${st[0]} · ${esc(n.id)}</span></div>${noteStatus(n)==='sent'?`<div class="act"><button data-copynote="${esc(n.id)}" style="pointer-events:auto;opacity:1">Копирай за Claude</button></div>`:''}</div>`}).join('')}</section>`}
+function wireParentNotes(){root.querySelectorAll('[data-copynote]').forEach(b=>b.onclick=async()=>{const n=notes().find(x=>x.id===b.dataset.copynote);const txt=noteForClaude(n);try{await navigator.clipboard.writeText(txt);b.textContent='Копирано ✓'}catch(e){prompt('Копирай този текст:',txt)}})}
 /* ---------- review hub ---------- */
 function renderReview(){if(RO)return go('#home');
  const due=dueReview(),br=bigReviewStatus(),tests=testInfo(),studied=subjects().filter(s=>(s.topics||[]).some(t=>!t.soon));
@@ -449,6 +481,7 @@ function renderReview(){if(RO)return go('#home');
  <div class="pen" style="margin-top:6px">Припомни си</div>
  <div class="task"><span class="num">1</span><div><b>Грешки от предишни дни</b><span class="muted">${due.length?`${due.length} задачи чакат`:'Няма чакащи грешки – браво!'}</span></div><div class="act"><button id="fix" ${due.length?'':'disabled'}>Поправи</button></div></div>
  <div class="task"><span class="num">2</span><div><b>Голям преговор</b><span class="muted">${br.due?'Време е! ':'По желание · '}смесени задачи от решеното досега, повече от грешните</span></div><div class="act"><button id="bigrev" ${itemPool(null,true).length?'':'disabled'}>${br.due?'Започни':'Опитай'}</button></div></div></section>
+ ${notesHTML()}
  <section class="page"><h3>Преговор по избор</h3>
  <label class="formfield">Предмет<select id="rs"><option value="">Всички предмети</option>${studied.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('')}</select></label>
  <label class="formfield">Тема<select id="rt"><option value="">Всички теми</option></select></label>
@@ -466,7 +499,7 @@ function renderReview(){if(RO)return go('#home');
   const flt=mode==='all'?null:(p,la)=>{const k=p.src+'__'+p.it.id;if(mode==='seen')return !!la;if(mode==='wrong')return wrongEver.has(k);const d=+mode;return !!la&&(now-Date.parse(la.d))/864e5<=d};
   const title='Преговор: '+(tp?tp.title:sj?sj.name:'смесено');const sess=buildReview('customreview',title,skills,n,tp||!sj?null:(sj.topics||[]).filter(t=>!t.soon).map(t=>t.skills),1,flt);
   if(sess&&sess.sections[0].items.length)startRun(sess);else $('rm').textContent='Няма задачи с този избор – пробвай друг.'};
- $('fix').onclick=()=>startRun(null);$('bigrev').onclick=startBigReview;
+ $('fix').onclick=()=>startRun(null);$('bigrev').onclick=startBigReview;wireNotes();
  root.querySelectorAll('[data-prep]').forEach(b=>b.onclick=()=>startTestPrep(+b.dataset.prep));
  root.querySelectorAll('[data-quiz]').forEach(b=>b.onclick=()=>startRun(lessonAsSession(S.lessons[b.dataset.quiz])));
 }
