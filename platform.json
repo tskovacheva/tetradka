@@ -1,7 +1,7 @@
 {
  "grade": "6. клас",
  "focus": {
-  "note": "Теми, които сесиите да упражняват с предимство (без лични данни). Обновява се ръчно.",
+  "note": "Теми с предимство и обхват за преговор назад преди класни (без лични данни). Обновява се ръчно.",
   "topics": [
    "bel-mest",
    "bel-tekst",
@@ -15,6 +15,29 @@
    "mat-koord",
    "mat-stepeni",
    "mat-paralelepiped"
+  ],
+  "backfill": [
+   {
+    "toc": "mat1",
+    "from": 1,
+    "to": 68,
+    "before": "2027-01-10",
+    "why": "класна работа"
+   },
+   {
+    "toc": "bel",
+    "from": 1,
+    "to": 16,
+    "before": "2026-12-16",
+    "why": "класна работа"
+   },
+   {
+    "toc": "lit",
+    "from": 1,
+    "to": 15,
+    "before": "2026-12-16",
+    "why": "класна работа"
+   }
   ]
  },
  "subjects": [
@@ -58,7 +81,8 @@
      ],
      "lesson": "lessons/lit-darel.json",
      "book": "lit",
-     "n": 10
+     "n": 10,
+     "to": 13
     },
     {
      "id": "bel-mest",
@@ -66,14 +90,17 @@
      "skills": [
       "bel.mest"
      ],
-     "n": 4
+     "n": 4,
+     "to": 7
     },
     {
      "id": "bel-tekst",
      "title": "Работа с непознат текст",
      "skills": [
       "bel.tekst"
-     ]
+     ],
+     "n": 1,
+     "to": 3
     },
     {
      "id": "lit-gora",
@@ -85,7 +112,8 @@
       "s02"
      ],
      "book": "lit",
-     "n": 4
+     "n": 4,
+     "to": 6
     },
     {
      "id": "lit-otechestvo",
@@ -97,7 +125,8 @@
       "s03"
      ],
      "book": "lit",
-     "n": 7
+     "n": 7,
+     "to": 9
     },
     {
      "id": "bel-prichastia",
@@ -106,7 +135,8 @@
       "bel.prich"
      ],
      "lesson": "lessons/bel-prichastia.json",
-     "n": 9
+     "n": 9,
+     "to": 11
     }
    ],
    "toc": [
@@ -667,7 +697,8 @@
      "skills": [
       "mat.racionalni"
      ],
-     "n": 8
+     "n": 8,
+     "to": 34
     },
     {
      "id": "mat-koord",
@@ -675,7 +706,8 @@
      "skills": [
       "mat.koord"
      ],
-     "n": 35
+     "n": 35,
+     "to": 43
     },
     {
      "id": "mat-stepeni",
@@ -684,7 +716,8 @@
       "mat.stepeni"
      ],
      "lesson": "lessons/mat-stepeni.json",
-     "n": 44
+     "n": 44,
+     "to": 48
     },
     {
      "id": "mat-paralelepiped",
@@ -692,7 +725,8 @@
      "skills": [
       "mat.paralelepiped"
      ],
-     "n": 6
+     "n": 5,
+     "to": 7
     },
     {
      "id": "mat-stepeni-ravni",
@@ -701,7 +735,8 @@
       "mat.ravniosnovi"
      ],
      "lesson": "lessons/mat-stepeni-ravni.json",
-     "n": 49
+     "n": 49,
+     "to": 52
     }
    ],
    "toc": {

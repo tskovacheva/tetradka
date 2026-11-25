@@ -81,6 +81,35 @@ for a, pa in pref:
         if a != b and pb != pa and pb.startswith(pa + '.'):
             warn.append(f'темите {a} и {b}: префиксът {pb} е част от {pa} – задачите се броят и в двете')
 
+# --- обхват за преговор назад (focus.backfill): кои уроци още нямат задачи
+SKIP = ('тест', 'контрол', 'обобщение', 'преговор', 'проверка', 'дейности', 'проект', 'приложение', 'упражнение')
+def tocs_of(s):
+    T = s.get('toc'); T = [T] if isinstance(T, dict) else (T or [])
+    return [(c.get('id') or s['id'], c) for c in T]
+for bf in (P.get('focus') or {}).get('backfill', []):
+    hit = [(s, c) for s in P.get('subjects', []) for tid, c in tocs_of(s) if tid == bf['toc']]
+    if not hit:
+        err.append(f'focus.backfill: няма съдържание {bf["toc"]}'); continue
+    s, c = hit[0]
+    first = tocs_of(s)[0][0]
+    def span(t):
+        return sum(1 for part in c['parts'] for l in part['lessons'] if not l.get('x') and t['n'] <= l['n'] <= t.get('to', t['n'])
+                   and not any(k in (l.get('k') or '') for k in SKIP))
+    def nitems(t):
+        return sum(1 for _, it in items if any(it.get('skill', '').startswith(p) for p in t['skills']))
+    # тема „покрива“ урок, ако има поне по 1 задача на урок от обхвата си (и минимум 4)
+    tps = [t for t in s['topics'] if (t.get('book') or first) == bf['toc'] and t.get('n') and nitems(t) >= max(4, span(t))]
+    miss = []
+    for part in c['parts']:
+        for l in part['lessons']:
+            if l.get('x') or not (bf['from'] <= l['n'] <= bf['to']) or any(k in (l.get('k') or '') for k in SKIP):
+                continue
+            e = l.get('to', l['n'])
+            if not any(t['n'] <= e and t.get('to', t['n']) >= l['n'] for t in tps):
+                miss.append(l['t'][:40] if l.get('lbl') == '·' else str(l.get('lbl') or l['n']))
+    if miss:
+        print(f'  ℹ преговор назад {bf["toc"]} {bf["from"]}–{bf["to"]} (до {bf["before"]}): без задачи уроци {", ".join(miss)}')
+
 # --- контролни (в личния файл)
 for t in priv.get('tests', []):
     for x in t.get('topics', []):
