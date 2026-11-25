@@ -74,6 +74,13 @@ for x in (P.get('focus') or {}).get('topics', []):
     if x not in topics:
         err.append(f'focus: няма тема {x}')
 
+# --- припокриващи се префикси между различни теми (двойно броене)
+pref = [(sid, p) for sid, (s, t) in topics.items() for p in t.get('skills', [])]
+for a, pa in pref:
+    for b, pb in pref:
+        if a != b and pb != pa and pb.startswith(pa + '.'):
+            warn.append(f'темите {a} и {b}: префиксът {pb} е част от {pa} – задачите се броят и в двете')
+
 # --- контролни (в личния файл)
 for t in priv.get('tests', []):
     for x in t.get('topics', []):

@@ -1,0 +1,212 @@
+{
+ "id": "eng-pastcont",
+ "subject": "eng",
+ "title": "Past continuous и Past simple (5c)",
+ "subtitle": "I was cycling when…",
+ "minutes": 20,
+ "blocks": [
+  {
+   "type": "hook",
+   "text": "Представи си филм: героинята кара колело (дълго действие на заден план)… и изведнъж – БУМ! – започва да вали (кратко действие). На английски заднят план е Past continuous, а изненадата – Past simple."
+  },
+  {
+   "type": "goals",
+   "items": [
+    "Как се образува Past continuous",
+    "Кога го използваме",
+    "when + Past simple, while + Past continuous"
+   ]
+  },
+  {
+   "type": "text",
+   "title": "1. Образуване",
+   "text": "was / were + глагол с -ing. I / he / she / it was cycling. You / we / they were cycling. Отрицание: wasn't / weren't + -ing (She wasn't sleeping). Въпрос: Was she sleeping? – Yes, she was. / No, she wasn't."
+  },
+  {
+   "type": "check",
+   "q": "They ___ playing football at 5 o'clock.",
+   "options": [
+    "were",
+    "was",
+    "are",
+    "did"
+   ],
+   "answer": 0,
+   "explain": "they → were."
+  },
+  {
+   "type": "text",
+   "title": "2. Действие в процес в миналото",
+   "text": "Past continuous показва действие, което е ТЕКЛО в определен момент в миналото: At 8 p.m. yesterday I was doing my homework. (В 8 часа бях по средата на домашното.)"
+  },
+  {
+   "type": "text",
+   "title": "3. when и while",
+   "text": "Дълго действие + кратко действие, което го прекъсва: I was cycling WHEN it started to rain. (when + Past simple за краткото действие). Две действия, които текат едновременно: WHILE Mum was cooking, Dad was reading. (while + Past continuous). Можеш да започнеш и с while: While I was walking home, I saw a fox."
+  },
+  {
+   "type": "cards",
+   "title": "Запомни – докосни",
+   "cards": [
+    {
+     "f": "дълго действие, фон",
+     "b": "Past continuous: was/were + -ing"
+    },
+    {
+     "f": "кратко действие, което прекъсва",
+     "b": "Past simple: started, saw, rang"
+    },
+    {
+     "f": "when",
+     "b": "обикновено пред краткото действие (Past simple)"
+    },
+    {
+     "f": "while",
+     "b": "обикновено пред дългото действие (Past continuous)"
+    }
+   ]
+  },
+  {
+   "type": "check",
+   "q": "I ___ a shower when the phone rang.",
+   "options": [
+    "was having",
+    "had",
+    "am having",
+    "were having"
+   ],
+   "answer": 0,
+   "explain": "Дълго действие (душът), прекъснато от телефона → was having."
+  },
+  {
+   "type": "check",
+   "q": "While we ___ TV, the lights went out.",
+   "options": [
+    "were watching",
+    "watched",
+    "was watching",
+    "watch"
+   ],
+   "answer": 0,
+   "explain": "while + Past continuous; we → were."
+  },
+  {
+   "type": "order",
+   "q": "Подреди думите в изречение.",
+   "items": [
+    "Maya",
+    "was reading",
+    "when",
+    "her friend",
+    "called"
+   ]
+  },
+  {
+   "type": "buddy",
+   "mood": "think",
+   "text": "Внимание: глаголи като know, like, want почти не се използват с -ing. Казваме I knew the answer, не I was knowing."
+  },
+  {
+   "type": "links",
+   "title": "Връзки",
+   "items": [
+    {
+     "s": "БЕЛ",
+     "t": "„Четейки книга, тя чу звънеца“ – деепричастието пак описва фоново действие."
+    },
+    {
+     "s": "Литература",
+     "t": "Разказите често започват с фон: It was raining. Everybody was sleeping…"
+    }
+   ]
+  },
+  {
+   "type": "summary",
+   "points": [
+    "Past continuous: was/were + -ing.",
+    "Показва действие в процес в момент от миналото.",
+    "when + Past simple – краткото действие, което прекъсва.",
+    "while + Past continuous – дългото действие или две едновременни.",
+    "Отрицание: wasn't/weren't; въпрос: Was/Were …?"
+   ]
+  }
+ ],
+ "quiz": [
+  {
+   "id": "q1",
+   "type": "mc",
+   "q": "She ___ when I arrived.",
+   "options": [
+    "was sleeping",
+    "were sleeping",
+    "is sleeping",
+    "sleeps"
+   ],
+   "answer": 0,
+   "explain": "she → was + -ing.",
+   "skill": "eng.pastcont.form"
+  },
+  {
+   "id": "q2",
+   "type": "mc",
+   "q": "I was walking home when I ___ my teacher.",
+   "options": [
+    "saw",
+    "was seeing",
+    "see",
+    "seen"
+   ],
+   "answer": 0,
+   "explain": "Краткото действие след when → Past simple.",
+   "skill": "eng.pastcont.when"
+  },
+  {
+   "id": "q3",
+   "type": "mc",
+   "q": "___ Tom was cooking, Anna was setting the table.",
+   "options": [
+    "While",
+    "When",
+    "Because",
+    "So"
+   ],
+   "answer": 0,
+   "explain": "Две едновременни дълги действия → while.",
+   "skill": "eng.pastcont.when"
+  },
+  {
+   "id": "q4",
+   "type": "short",
+   "q": "Отрицание: They were playing. → They ___ playing. (едно съкратено слово)",
+   "accept": [
+    "weren't",
+    "werent",
+    "were not"
+   ],
+   "explain": "weren't = were not.",
+   "skill": "eng.pastcont.form"
+  },
+  {
+   "id": "q5",
+   "type": "mc",
+   "q": "Кой въпрос е правилен?",
+   "options": [
+    "Was he watching TV?",
+    "Did he watching TV?",
+    "Were he watching TV?",
+    "Was he watch TV?"
+   ],
+   "answer": 0,
+   "explain": "Was + he + -ing?",
+   "skill": "eng.pastcont.form"
+  },
+  {
+   "id": "q6",
+   "type": "open",
+   "q": "Напиши две изречения за вчера: едно с when и едно с while.",
+   "model": "I was doing my homework when my friend called. While my brother was playing, I was reading.",
+   "rubric": "2 т.: и двете изречения правилни (was/were + -ing и правилно време след when/while). 1 т.: едно правилно. 0 т.: нито едно.",
+   "skill": "eng.pastcont.upotreba"
+  }
+ ]
+}

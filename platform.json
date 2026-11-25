@@ -98,6 +98,15 @@
      ],
      "book": "lit",
      "n": 7
+    },
+    {
+     "id": "bel-prichastia",
+     "title": "Причастия и деепричастие",
+     "skills": [
+      "bel.prich"
+     ],
+     "lesson": "lessons/bel-prichastia.json",
+     "n": 9
     }
    ],
    "toc": [
@@ -684,6 +693,15 @@
       "mat.paralelepiped"
      ],
      "n": 6
+    },
+    {
+     "id": "mat-stepeni-ravni",
+     "title": "Умножение и деление на степени с равни основи",
+     "skills": [
+      "mat.ravniosnovi"
+     ],
+     "lesson": "lessons/mat-stepeni-ravni.json",
+     "n": 49
     }
    ],
    "toc": {
@@ -1066,6 +1084,24 @@
      ],
      "lesson": "lessons/ist-hristianizacia.json",
      "n": 10
+    },
+    {
+     "id": "ist-bratya",
+     "title": "Делото на светите братя",
+     "skills": [
+      "ist.bratya"
+     ],
+     "lesson": "lessons/ist-bratya.json",
+     "n": 11
+    },
+    {
+     "id": "ist-simeon",
+     "title": "България при цар Симеон Велики",
+     "skills": [
+      "ist.simeon"
+     ],
+     "lesson": "lessons/ist-simeon.json",
+     "n": 12
     }
    ],
    "toc": {
@@ -1379,6 +1415,15 @@
      ],
      "lesson": "lessons/chp-atom.json",
      "n": 16
+    },
+    {
+     "id": "chp-tok",
+     "title": "Електричен ток и електрическа верига",
+     "skills": [
+      "chp.tok"
+     ],
+     "lesson": "lessons/chp-tok.json",
+     "n": 17
     }
    ],
    "toc": {
@@ -1777,6 +1822,15 @@
      ],
      "lesson": "lessons/geo-yam-stopanstvo.json",
      "n": 9
+    },
+    {
+     "id": "geo-yam-strani",
+     "title": "Страни в Южна Америка",
+     "skills": [
+      "geo.yam.strani"
+     ],
+     "lesson": "lessons/geo-yam-strani.json",
+     "n": 13
     }
    ],
    "toc": {
@@ -2093,6 +2147,15 @@
      ],
      "lesson": "lessons/eng-poss.json",
      "n": 21
+    },
+    {
+     "id": "eng-pastcont",
+     "title": "Past continuous и Past simple (5c)",
+     "skills": [
+      "eng.pastcont"
+     ],
+     "lesson": "lessons/eng-pastcont.json",
+     "n": 22
     }
    ],
    "toc": {

@@ -23,7 +23,9 @@ function doPost(e) {
     try { cur = JSON.parse(f.getBlob().getDataAsString() || '{}'); } catch (err) {}
     const n = s => (s && Array.isArray(s.attempts)) ? s.attempts.length : -1;
     if (n(cur.state) > 0 && n(body.state) >= 0 && n(body.state) < n(cur.state)) return out_({ ok: false, error: 'older' });
-    f.setContent(JSON.stringify({ savedAt: new Date().toISOString(), state: body.state }));
+    const payload = JSON.stringify({ savedAt: new Date().toISOString(), state: body.state });
+    f.setContent(payload);
+    weeklySnapshot_(payload);
     if (body.event) logSheet_().appendRow([new Date(), body.event.title || '', body.event.score, body.event.max, body.event.kind || '']);
   } finally { lock.releaseLock(); }
   return out_({ ok: true });
@@ -34,6 +36,18 @@ function doGet(e) {
   if (!e.parameter || e.parameter.key !== props.getProperty('PARENT_KEY')) return out_({ ok: false, error: 'key' });
   const txt = stateFile_().getBlob().getDataAsString() || '{}';
   return ContentService.createTextOutput(txt).setMimeType(ContentService.MimeType.JSON);
+}
+
+// Седмичен архив: tetradka-2026-W48.json в папка „Тетрадката – архив“ (презаписва се до края на седмицата).
+function weeklySnapshot_(payload) {
+  const d = new Date(), t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
+  const week = Math.ceil(((t - new Date(Date.UTC(t.getUTCFullYear(), 0, 1))) / 864e5 + 1) / 7);
+  const name = 'tetradka-' + t.getUTCFullYear() + '-W' + ('0' + week).slice(-2) + '.json';
+  const it = DriveApp.getFoldersByName('Тетрадката – архив');
+  const folder = it.hasNext() ? it.next() : DriveApp.createFolder('Тетрадката – архив');
+  const fs = folder.getFilesByName(name);
+  if (fs.hasNext()) fs.next().setContent(payload); else folder.createFile(name, payload, 'application/json');
 }
 
 function stateFile_() {
