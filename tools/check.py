@@ -87,6 +87,20 @@ for s in P.get('subjects', []):
         if c.get('at') and c['at'] not in ns and not any(l.get('to', 0) >= c['at'] >= l['n'] for p in c['parts'] for l in p['lessons']):
             warn.append(f'{s["id"]}: "at"={c["at"]} не е урок от съдържанието')
 
+# --- Откривам: мисии и линкове
+D = load('discover.json') if os.path.exists('discover.json') else {}
+for sec in (D or {}).get('sections', []):
+    for c in sec.get('cards', []):
+        if c.get('mission') and not c.get('soon'):
+            M = load(f'missions/{c["mission"]}.json')
+            if M:
+                for b in M.get('blocks', []):
+                    if b.get('type') == 'check' and not (0 <= b.get('answer', -1) < len(b.get('options', []))):
+                        err.append(f'мисия {c["mission"]}: невалиден отговор в проверка')
+        h = c.get('href', '')
+        if h.startswith('#lesson-') and h[8:] not in topics:
+            err.append(f'discover.json: линк към несъществуващ урок {h}')
+
 # --- синтаксис на JavaScript
 import re, subprocess, tempfile, shutil
 if shutil.which('node'):

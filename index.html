@@ -44,8 +44,9 @@ nav.tabs{display:flex;gap:4px;overflow-x:auto;margin:-6px 0 16px;padding-bottom:
 nav.tabs a{flex:none;padding:8px 14px;border-radius:99px;color:var(--ink);text-decoration:none;font-size:15px;min-height:40px;display:inline-flex;align-items:center}
 nav.tabs a.on{background:var(--ink);color:var(--paper)}
 nav.tabs{align-items:center;overflow:visible;flex-wrap:nowrap}
-@media(max-width:520px){nav.tabs{gap:0}nav.tabs a{padding:8px 9px}.more summary{padding:8px 12px}.wide{display:none}}
+@media(max-width:520px){nav.tabs{gap:0}.tabsc{gap:0}nav.tabs a{padding:8px 6px;font-size:14px}.more summary{padding:8px 8px}.more summary{padding:8px 12px}.wide{display:none}}
 .more{margin-left:auto}
+.tabsc{position:relative;display:flex;gap:4px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none}.tabsc::-webkit-scrollbar{display:none}
 .more{position:relative;flex:none}.more summary{list-style:none;padding:8px 14px;border-radius:99px;min-height:40px;display:inline-flex;align-items:center;cursor:pointer;color:var(--ink)}.more summary::-webkit-details-marker{display:none}
 .more[open] summary,.more.on summary{background:var(--chip)}
 .more .menu{position:absolute;right:0;top:44px;z-index:20;background:var(--paper);border:1px solid var(--rule);border-radius:12px;box-shadow:0 12px 30px -12px #0006;padding:6px;min-width:210px;display:flex;flex-direction:column}
@@ -82,6 +83,17 @@ button:disabled{opacity:.5;cursor:default}
 /* manga */
 .buddy{display:flex;gap:12px;align-items:flex-end;margin:6px 0 4px}
 .buddy svg{flex:none;width:76px;height:76px}
+.buddy img.pal{flex:none;width:76px;height:76px;object-fit:contain}
+.cards4{display:grid;gap:14px}@media(min-width:620px){.cards4{grid-template-columns:1fr 1fr}}
+.dcard{border:1px solid var(--rule);border-radius:14px;padding:14px 16px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.dcard .tag{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);font-weight:600}
+.dcard h3{margin:0}.dcard .row{margin-top:auto}
+.dcard.soon{opacity:.7}
+.studio{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.scard{border:1px solid var(--rule);border-radius:14px;background:var(--paper);overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;cursor:pointer;text-align:left;padding:0;min-height:0}
+.scard .pic{aspect-ratio:1;background:var(--chip);display:grid;place-items:center;overflow:hidden}.scard .pic img{width:100%;height:100%;object-fit:contain}
+.scard .tx{padding:8px 10px}.scard .tx b{display:block}.scard .tx span{font-size:12px;color:var(--soft)}
+.field{display:block;margin:0 0 12px}.field input[type=text],.field textarea,.field select{display:block;width:100%;margin-top:4px;font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
 .bubble{position:relative;background:#fff;color:#1b2233;border:2.5px solid #1b2233;border-radius:18px;padding:8px 14px;font-weight:500;font-size:15.5px;max-width:420px;margin-bottom:22px}
 .bubble::after{content:"";position:absolute;left:-12px;bottom:10px;border:8px solid transparent;border-right:12px solid #1b2233}
 .bubble::before{content:"";position:absolute;left:-7px;bottom:12px;border:6px solid transparent;border-right:9px solid #fff;z-index:1}
@@ -165,12 +177,14 @@ function mascot(mood){const O='#c9875f',G='#bcee65',P='#d2f494',B='#79f3e5',Dt='
  <path d="M20,40 Q60,30 100,40 Q96,52 86,62 L64,86 Q60,90 56,86 L34,62 Q24,52 20,40 Z" fill="${G}" stroke="${O}" stroke-width="3" stroke-linejoin="round"/>
  <path d="M21,41 Q30,36 42,37 Q46,50 42,60 Q34,62 28,56 Q21,48 21,41 Z M99,41 Q90,36 78,37 Q74,50 78,60 Q86,62 92,56 Q99,48 99,41 Z" fill="${P}" stroke="${O}" stroke-width="2.5" stroke-linejoin="round"/>
  ${eyes}${mouth}</svg>`}
+const PALS={josh:{n:'Джош',src:'assets/josh.png'},greg:{n:'Грег Роджър',src:'assets/greg.png'}};
+const pal=(who,text)=>{const p=PALS[who];if(!p)return buddy('happy',text);return `<div class="buddy"><div style="text-align:center;flex:none"><img class="pal" src="${p.src}" alt="${esc(p.n)}"><div class="pen" style="font-size:19px;margin-top:-2px">${esc(p.n)}</div></div><div class="bubble">${esc(text)}</div></div>`};
 const buddy=(mood,text)=>`<div class="buddy"><div style="text-align:center;flex:none">${mascot(mood)}<div class="pen" style="font-size:19px;margin-top:-4px">Джонатан</div></div><div class="bubble">${esc(text)}</div></div>`;
 const fmtLong=d=>{try{return new Date(d+'T12:00:00').toLocaleDateString('bg-BG',{weekday:'short',day:'numeric',month:'long'})}catch(e){return d}};
 const icon=id=>`<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">${ICON[id]||''}</svg>`;
 
 let RO=false,SYNC_AT='';
-let S={P:null,sessions:[],lessons:{},results:{},review:{},prog:{lessons:{}},settings:{theme:'ink'},feedback:[],backupAt:'',seen:[],attempts:[]},loaded=false,loadErr=false,run=null;
+let S={P:null,sessions:[],lessons:{},results:{},review:{},prog:{lessons:{}},settings:{theme:'ink'},feedback:[],backupAt:'',seen:[],attempts:[],discover:null,missions:{}},loaded=false,loadErr=false,run=null;
 const LS='tetradka.v1',LSC='tetradka.cover',LSK='tetradka.sync',LSP='tetradka.parent';
 const LKEY='tetradka.key';let PRIV=null,PRIV_BAD=false;
 const lget=k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}},lset=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
@@ -251,18 +265,19 @@ function stampList(){const R=Object.values(S.results).filter(r=>r.done),recs=all
   {id:'sharp',t:'Точна',d:'Над 85% точност след 50 задачи',ok:recs.length>=50&&acc>=.85},
   {id:'both',t:'Учи и упражнява',d:'И урок, и сесия упражнения',ok:subjDone>=2},
   {id:'bigrev',t:'Голям преговор',d:'Завършен голям преговор',ok:Object.values(S.results).some(r=>r.done&&r.kind==='bigreview')},
+  {id:'explorer',t:'Откривател',d:'Изпълнена мисия от „Откривам“',ok:Object.keys(S.prog.missions||{}).length>=1},
   {id:'ahead',t:'Напред!',d:'Решено упражнение преди датата му',ok:S.sessions.some(s=>S.results[s.id]?.done&&String(S.results[s.id].finishedAt).slice(0,10)<s.date)}
  ]}
 function newStamps(){const got=stampList().filter(s=>s.ok).map(s=>s.id),fresh=got.filter(id=>!S.seen.includes(id));if(fresh.length){S.seen=[...S.seen,...fresh];persist()}return fresh}
 const stampHTML=(s,isNew)=>`<div class="stamp ${s.ok?'':'off'} ${isNew?'new':''}" title="${esc(s.d)}">${esc(s.t)}<small>${esc(s.d)}</small></div>`;
 
 /* ---------- shell ---------- */
-function nav(cur){const main=RO?[['#home','Обзор'],['#subjects','Предмети'],['#journal','Дневник'],['#report','Отчет']]:[['#home','Днес'],['#subjects','Предмети'],['#review','Преговор'],['#journal','Дневник']];
- const more=RO?[]:[['#stamps','Печати'],['#report','Отчет'],['#cover','Корица и настройки'],['#parent','Изглед за родител']];const md=S.settings.mode||'auto';
- return `<nav class="tabs">${main.map(([h,t])=>`<a href="${h}" class="${cur===h?'on':''}">${t}</a>`).join('')}<details class="more ${more.some(([h])=>h===cur)?'on':''}"><summary aria-label="Още">⋯<span class="wide"> Още</span></summary><div class="menu">${more.map(([h,t])=>`<a href="${h}" class="${cur===h?'on':''}">${t}</a>`).join('')}<div class="modes">${[['light','☀ Светла'],['dark','☾ Тъмна'],['auto','Авто']].map(([k,n])=>`<button data-mode="${k}" class="${md===k?'on':''}">${n}</button>`).join('')}</div></div></details></nav>`}
+function nav(cur){const main=RO?[['#home','Обзор'],['#subjects','Предмети'],['#journal','Дневник'],['#report','Отчет']]:[['#home','Днес'],['#subjects','Предмети'],['#review','Преговор'],['#discover','Откривам'],['#studio','Студио']];
+ const more=RO?[]:[['#journal','Дневник'],['#stamps','Печати'],['#report','Отчет'],['#cover','Корица и настройки'],['#parent','Изглед за родител']];const md=S.settings.mode||'auto';
+ return `<nav class="tabs"><div class="tabsc">${main.map(([h,t])=>`<a href="${h}" class="${cur===h?'on':''}">${t}</a>`).join('')}</div><details class="more ${more.some(([h])=>h===cur)?'on':''}"><summary aria-label="Още">⋯<span class="wide"> Още</span></summary><div class="menu">${more.map(([h,t])=>`<a href="${h}" class="${cur===h?'on':''}">${t}</a>`).join('')}<div class="modes">${[['light','☀ Светла'],['dark','☾ Тъмна'],['auto','Авто']].map(([k,n])=>`<button data-mode="${k}" class="${md===k?'on':''}">${n}</button>`).join('')}</div></div></details></nav>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(b){S.settings.mode=b.dataset.mode;persist();applyTheme();route();return}const d=document.querySelector('details.more[open]');if(d&&!d.contains(e.target))d.open=false});
 function coverHTML(){const c=cover();const d=new Date();return `<header class="cover"><div class="art" style="background-image:url('${c||'assets/jonathan.jpg'}');opacity:${c?'.55':'.9'};background-position:center 42%"></div><div class="in"><div class="label"><div class="muted">${esc(S.P?.grade||'')} · ${esc(DAYS[d.getDay()])}, ${esc(d.toLocaleDateString('bg-BG',{day:'numeric',month:'long'}))}</div><h1>${S.P?.student?'Тетрадката на '+esc(S.P.student):'Тетрадката'}</h1></div><a class="btn" href="#cover" style="background:color-mix(in srgb,var(--paper) 92%,transparent);border-color:transparent">Корица</a></div></header>`}
-function frame(cur,body){root.innerHTML=coverHTML()+nav(cur)+(RO?`<div class="banner">Изглед за родител · данни от ${esc(SYNC_AT?new Date(SYNC_AT).toLocaleString('bg-BG'):'—')} · само за четене</div>`:'')+body}
+function frame(cur,body){root.innerHTML=coverHTML()+nav(cur)+(RO?`<div class="banner">Изглед за родител · данни от ${esc(SYNC_AT?new Date(SYNC_AT).toLocaleString('bg-BG'):'—')} · само за четене</div>`:'')+body;const a=root.querySelector('.tabsc a.on');if(a){const c=a.parentElement;c.scrollLeft=Math.max(0,a.offsetLeft+a.offsetWidth-c.clientWidth+8)}}
 function route(){if(/^#k=/.test(location.hash)){takeKeyFromHash().then(async ok=>{if(ok&&loaded)applyPrivate(await loadPrivate());route()});return}const h=location.hash||'#home';if(run&&h!=='#run'){run=null}
  if(loadErr)return root.innerHTML=`<div class="page" style="margin-top:24px"><h2>Тетрадката не се зареди</h2><p>Провери интернет връзката.</p><button class="go" onclick="location.reload()">Опитай пак</button></div>`;
  if(!loaded)return;
@@ -272,6 +287,9 @@ function route(){if(/^#k=/.test(location.hash)){takeKeyFromHash().then(async ok=
  if(h.startsWith('#view-'))return renderView(h.slice(6));
  if(h==='#parent')return renderParent();
  if(h==='#review')return renderReview();
+ if(h==='#discover')return renderDiscover();
+ if(h==='#studio')return renderStudio();
+ if(h.startsWith('#mission-'))return renderMission(h.slice(9));
  ({'#subjects':renderSubjects,'#journal':renderJournal,'#stamps':renderStamps,'#report':renderReport,'#cover':renderCover}[h]||renderHome)();
  scrollTo(0,0);
 }
@@ -309,6 +327,7 @@ function renderHome(){if(RO)return renderParentHome();
  if(soon[0])tasks.push(`<div class="task"><span class="num">${tasks.length+1}</span><div><b>${esc(soon[0].t.title)}</b><span class="muted">${esc(daysTxt(soon[0].days))} · готова си на ${soon[0].ready}%</span></div><div class="act"><button data-prep="${soon[0].i}">Подготви се</button></div></div>`);
  if(br.due)tasks.push(`<div class="task"><span class="num">${tasks.length+1}</span><div><b>Голям преговор</b><span class="muted">Смесени задачи от последните теми · ~15 мин</span></div><div class="act"><button id="bigrev">Започни</button></div></div>`);
  else if(due.length&&!next)tasks.push(`<div class="task"><span class="num">${tasks.length+1}</span><div><b>Грешки от предишни дни</b><span class="muted">${due.length} задачи чакат</span></div><div class="act"><button id="fix">Поправи</button></div></div>`);
+ {const rd=riddleOfDay();if(rd)tasks.push(`<div class="task"><span class="num">${tasks.length+1}</span><div><b>Загадка на деня</b><span class="muted">${esc(rd.subj)} · за 1 минута, с Джош</span></div><div class="act"><a class="btn" href="#discover">Виж</a></div></div>`)}
  tasks.push(`<div class="task"><span class="num">${tasks.length+1}</span><div><b>Преговор по избор</b><span class="muted">Ти избираш предмет, тема и колко задачи</span></div><div class="act"><a class="btn" href="#review">Към преговора</a></div></div>`);
  const mood=!next&&!due.length?'wow':ahead?'wow':soon[0]&&soon[0].days<=2?'think':'happy';
  const say=!next&&!due.length?'Всичко е решено. Сугой! Можеш да преговориш нещо по избор или да отвориш урок напред.':ahead?'Уау, напред си! Ако ти се учи още – давай.':soon[0]&&soon[0].days<=2?`${soon[0].s?.short||''} е ${daysTxt(soon[0].days)}. Една подготовка сега ще помогне.`:'Хайде! Около 20 минути и си свободна. Избери откъде да започнеш.';
@@ -324,6 +343,7 @@ function renderHome(){if(RO)return renderParentHome();
   <p>${wc>=4?'Целта за седмицата е изпълнена!':`Още ${4-wc} ${4-wc===1?'ден':'дни'} до целта (4 на седмица).`}</p>
   <p class="muted">${streak?`Серия: ${streak} ${streak===1?'седмица':'седмици'} подред с изпълнена цел`:'Изпълни целта 4 седмици подред за серия.'}</p></section>
  </div>
+ ${featuredHTML()}
  ${tests.length?`<section class="page" style="margin-top:18px"><div class="top"><h3>Предстои</h3><a href="#review">подготовка</a></div>${tests.map(({t,s:sj,ready,days})=>`<div class="task"><span class="num" style="font-size:20px">${days===null?'?':days}</span><div><b>${esc(sj?.short||'')} · ${esc(t.title)}</b><span class="muted">${t.date?esc(fmtLong(t.date))+' · ':''}${esc(daysTxt(days))} · готова на ${ready}%</span></div></div>`).join('')}</section>`:'<div style="height:18px"></div>'}
  <section class="page"><div class="top"><h3>Моите предмети</h3><a href="#subjects">всички</a></div><div class="grid three">${subjects().map(subjCard).join('')}</div></section>
  ${fb.length?`<section class="page"><h3>Бележки от проверката</h3>${fb.map(f=>`<div class="q"><p><span class="muted">${esc(f.date||'')}</span> ${esc(f.title||'')}</p><div style="white-space:pre-line">${esc(f.text||'')}</div></div>`).join('')}</section>`:''}
@@ -341,6 +361,55 @@ function subjCard(s){const p=subjProgress(s),ts=(s.topics||[]).filter(t=>!t.soon
 const lvHTML=l=>`<span class="lv" title="${LEVELS[l]}">${[1,2,3,4].map(i=>`<i class="${i<=l?'on':''}"></i>`).join('')}</span>`;
 
 /* ---------- subjects ---------- */
+/* ---------- discover ---------- */
+function riddleOfDay(){const R=S.discover?.riddles||[];if(!R.length)return null;const d=new Date(),n=Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,0,1))/864e5);return R[((n%R.length)+R.length)%R.length]}
+function renderDiscover(){const D=S.discover||{},M=S.prog.missions||{},rd=riddleOfDay();
+ const card=c=>{const done=c.mission&&M[c.mission];const href=c.mission?`#mission-${esc(c.mission)}`:c.href||'';return `<div class="dcard ${c.soon?'soon':''}"><div class="tag">${esc(c.tag)}${c.minutes?` · ~${esc(c.minutes)} мин`:''}${done?' · ✓ изпълнена':''}</div><h3>${esc(c.title)}</h3><p style="margin:0">${esc(c.text)}</p>${c.subjects?`<div class="chips">${c.subjects.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div>`:''}<div class="row">${c.soon?'<span class="muted">Скоро</span>':`<a class="btn ${c.mission?'go':''}" href="${href}">${esc(c.cta||'Отвори')}</a>`}</div></div>`};
+ frame('#discover',`<section class="page">${pal('josh','Тук няма оценки и няма „трябва“. Само неща, които са интересни. Избери си нещо!')}</section>
+ ${rd?`<section class="page"><div class="pen">Загадка на деня</div><h3 style="margin-top:4px">${esc(rd.q)}</h3><span class="chip">${esc(rd.subj)}</span><details style="margin-top:10px"><summary>Виж отговора</summary><p style="margin-top:6px"><b>${esc(rd.a)}</b></p><p class="muted">${esc(rd.why)}</p></details></section>`:''}
+ ${(D.sections||[]).map(sec=>`<section class="page"><h3>${esc(sec.title)}</h3>${sec.text?`<p class="muted">${esc(sec.text)}</p>`:''}<div class="cards4">${sec.cards.map(card).join('')}</div></section>`).join('')}`)}
+async function renderMission(id){let L=S.missions[id];if(!L){try{L=S.missions[id]=await fetch('missions/'+id+'.json',{cache:'no-cache'}).then(r=>r.json())}catch(e){return frame('#discover','<section class="page"><h2>Мисията не се зареди</h2><a href="#discover">Към „Откривам“</a></section>')}}
+ const done=(S.prog.missions||{})[id];
+ frame('#discover',`<div class="top"><a href="#discover">← Откривам</a><span class="muted">~${esc(L.minutes||15)} мин · без оценка</span></div>
+ <article class="page lesson"><div class="pen">Мисия</div><h1 style="font-size:clamp(28px,5vw,40px)">${esc(L.title)}</h1><p class="muted">${esc(L.subtitle||'')}</p>${L.subjects?`<div class="chips">${L.subjects.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div>`:''}<div style="height:10px"></div>${L.blocks.map((b,i)=>blockHTML(b,i)).join('')}
+ <div class="blk callout"><h3>${done?'Мисията е изпълнена ✓':'Готова ли си?'}</h3><p>${done?`На ${esc(fmtDate(done))}. Можеш да я минеш пак, когато искаш.`:'Когато минеш всички стъпки, отбележи мисията. Без точки – само печат „Откривател“.'}</p>${RO||done?'':'<button class="go" id="mdone">Мисията е изпълнена</button>'}</div></article>`);
+ wireLesson(L);document.getElementById('mdone')?.addEventListener('click',()=>{S.prog.missions??={};S.prog.missions[id]=today();persist();const fresh=newStamps();renderMission(id);if(fresh.length)setTimeout(()=>alert('Нов печат: Откривател!'),50)})}
+
+/* ---------- studio (local, IndexedDB) ---------- */
+const IDB={p:null,open(){return this.p||(this.p=new Promise((res,rej)=>{const r=indexedDB.open('tetradka',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}))},
+ async get(k){const db=await this.open();return new Promise((res,rej)=>{const q=db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})},
+ async set(k,v){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}};
+const SEED_STUDIO=[{id:'jonathan',cat:'Персонажи',title:'Джонатан',body:'Богомолка. Води ме през уроците и упражненията.',pic:'assets/jonathan.jpg'},{id:'josh',cat:'Персонажи',title:'Джош',body:'Води ме в „Откривам“.',pic:'assets/josh.png'},{id:'greg',cat:'Персонажи',title:'Грег Роджър',body:'Пази студиото.',pic:'assets/greg.png'}];
+let STUDIO=[];
+async function studioLoad(){try{const x=await IDB.get('studio');STUDIO=Array.isArray(x)?x:SEED_STUDIO.map(a=>({...a}))}catch(e){STUDIO=SEED_STUDIO.map(a=>({...a}))}}
+async function studioSave(){try{await IDB.set('studio',STUDIO);return true}catch(e){return false}}
+const SCATS=['Персонажи','Рисунки','Истории','Проекти','Идеи'];
+function renderStudio(){if(RO)return go('#home');
+ frame('#studio',`<section class="page">${pal('greg','Това е твоето студио. Тук няма оценки – само твои рисунки, герои, истории и идеи.')}<div class="row" style="margin-top:6px"><button class="go" id="snew">+ Нова страница</button></div></section>
+ ${SCATS.filter(c=>STUDIO.some(n=>n.cat===c)).map(c=>`<section class="page"><h3>${esc(c)}</h3><div class="studio">${STUDIO.filter(n=>n.cat===c).map(n=>`<button class="scard" data-sid="${esc(n.id)}"><div class="pic">${n.pic?`<img src="${esc(n.pic)}" alt="">`:'<span class="pen" style="font-size:40px">✎</span>'}</div><div class="tx"><b>${esc(n.title||'Без заглавие')}</b><span>${n.featured?'★ в „Днес“':esc((n.body||'').slice(0,40))}</span></div></button>`).join('')}</div></section>`).join('')}
+ <section class="page"><h3>Резервно копие на студиото</h3><p class="muted">Студиото се пази само на това устройство (не отива при мама и татко). Изтегли копие от време на време.</p><div class="row"><button id="sexp">Изтегли копие</button><label class="btn">Зареди копие<input type="file" id="simp" accept=".json,application/json" hidden></label><span class="muted" id="smsg"></span></div></section>`);
+ document.getElementById('snew').onclick=()=>studioEdit(null);
+ root.querySelectorAll('[data-sid]').forEach(b=>b.onclick=()=>studioEdit(b.dataset.sid));
+ document.getElementById('sexp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({studio:STUDIO,savedAt:new Date().toISOString()})],{type:'application/json'}));a.download='tetradka-studio-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+ document.getElementById('simp').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!Array.isArray(x.studio))throw 0;const have=new Set(STUDIO.map(n=>n.id));STUDIO=STUDIO.concat(x.studio.filter(n=>!have.has(n.id)));await studioSave();renderStudio()}catch(err){document.getElementById('smsg').textContent='Този файл не е копие на студиото.'}}}
+function studioEdit(id){const n=STUDIO.find(x=>x.id===id)||{id:'',cat:'Рисунки',title:'',body:'',pic:''};let pic=n.pic||'';
+ frame('#studio',`<div class="top"><a href="#studio">← Студио</a></div><section class="page"><h2>${n.id?'Страница':'Нова страница'}</h2>
+ <label class="field">Вид<select id="scat">${SCATS.map(c=>`<option ${c===n.cat?'selected':''}>${c}</option>`).join('')}</select></label>
+ <label class="field">Заглавие или име<input type="text" id="stit" value="${esc(n.title)}" maxlength="80"></label>
+ <label class="field">История, характер, идеи<textarea id="sbody" rows="7">${esc(n.body||'')}</textarea></label>
+ <div class="field">Рисунка<div class="row" style="margin-top:4px"><label class="btn">Избери картинка<input type="file" id="spic" accept="image/*" hidden></label>${'<button id="spicx" type="button">Махни картинката</button>'}</div><img id="sprev" src="${esc(pic)}" alt="" style="max-width:260px;max-height:260px;margin-top:10px;border-radius:10px;display:${pic?'block':'none'}"></div>
+ <label class="row" style="margin-bottom:14px"><input type="checkbox" id="sfeat" ${n.featured?'checked':''} style="width:22px;height:22px"> Покажи я в „Днес“</label>
+ <div class="row"><button class="go" id="ssave">Запази</button>${n.id?'<button id="sdel">Изтрий</button>':''}<span class="muted" id="smsg"></span></div></section>`);
+ const $=x=>document.getElementById(x);
+ $('spic').onchange=()=>{const f=$('spic').files[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const sc=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext('2d').drawImage(im,0,0,c.width,c.height);const png=f.type==='image/png'&&c.width*c.height<500000;pic=png?c.toDataURL('image/png'):c.toDataURL('image/jpeg',.85);$('sprev').src=pic;$('sprev').style.display='block';URL.revokeObjectURL(u)};im.onerror=()=>{$('smsg').textContent='Тази картинка не се отваря.'};im.src=u};
+ $('spicx').onclick=()=>{pic='';$('sprev').style.display='none'};
+ $('ssave').onclick=async()=>{const t=$('stit').value.trim();if(!t&&!pic){$('smsg').textContent='Добави заглавие или картинка.';return}
+  const rec={...n,id:n.id||'n'+Date.now().toString(36),cat:$('scat').value,title:t,body:$('sbody').value,pic,featured:$('sfeat').checked,updated:new Date().toISOString()};
+  if(rec.featured)STUDIO.forEach(x=>x.featured=false);const i=STUDIO.findIndex(x=>x.id===rec.id);if(i>=0)STUDIO[i]=rec;else STUDIO.push(rec);
+  if(await studioSave())go('#studio');else $('smsg').textContent='Не успях да запазя – може би картинката е твърде голяма.'};
+ $('sdel')?.addEventListener('click',async e=>{if(e.target.dataset.sure!=='1'){e.target.dataset.sure='1';e.target.textContent='Сигурна ли си? Натисни пак';return}STUDIO=STUDIO.filter(x=>x.id!==n.id);await studioSave();go('#studio')})}
+function featuredHTML(){const f=STUDIO.find(n=>n.featured);if(!f)return '';return `<section class="page"><div class="top"><h3>От моето студио</h3><a href="#studio">студио</a></div><div class="row" style="align-items:flex-start;flex-wrap:nowrap;gap:14px">${f.pic?`<img src="${esc(f.pic)}" alt="" style="width:110px;height:110px;object-fit:contain;flex:none;border-radius:10px;background:var(--chip)">`:''}<div><b>${esc(f.title)}</b><p class="muted" style="white-space:pre-line">${esc((f.body||'').slice(0,220))}</p></div></div></section>`}
+
 /* ---------- review hub ---------- */
 function renderReview(){if(RO)return go('#home');
  const due=dueReview(),br=bigReviewStatus(),tests=testInfo(),studied=subjects().filter(s=>(s.topics||[]).some(t=>!t.soon));
@@ -418,7 +487,7 @@ function blockHTML(b,i){
   case 'debate':return `<div class="blk callout" style="border-left:4px solid var(--pen)"><h3>${esc(b.title)}</h3><p>${esc(b.text)}</p><p><b>А ти?</b> ${esc(b.q)}</p><details><summary>Една възможна мисъл</summary>${esc(b.hint||'Византийците са врагове на Крум и са загубили – описвайки го като жесток, те обясняват поражението си и показват себе си като жертви.')}</details></div>`;
   case 'charges':return `<div class="blk callout" data-charges="${i}">${T}<p class="muted">${esc(b.note||'')}</p><div class="row"><button class="go cA">+</button><span class="muted">и</span><button class="go cB">−</button></div><svg viewBox="0 0 300 90" width="300" height="90" style="max-width:100%"><circle class="bA" cx="110" cy="45" r="22" fill="var(--pen)"/><text class="tA" x="110" y="52" text-anchor="middle" font-size="22" fill="#fff" font-family="Rubik">+</text><circle class="bB" cx="190" cy="45" r="22" fill="var(--acc)"/><text class="tB" x="190" y="52" text-anchor="middle" font-size="22" fill="#fff" font-family="Rubik">−</text></svg><div class="out" style="font-size:18px"></div></div>`;
   case 'atom':return `<div class="blk callout" data-atom="${i}">${T}<p class="muted">${esc(b.note||'')}</p><div class="row">${[['p','Протони (+)'],['n','Неутрони'],['e','Електрони (−)']].map(([k,l])=>`<span class="row" style="gap:4px"><span style="min-width:110px">${l}</span><button data-d="${k}-">−</button><b class="v${k}" style="min-width:24px;text-align:center"></b><button data-d="${k}+">+</button></span>`).join('')}</div><div class="row" style="align-items:center;margin-top:10px"><svg class="asvg" viewBox="0 0 200 200" width="200" height="200" aria-hidden="true"></svg><div class="out" style="font-size:18px"></div></div></div>`;
-  case 'buddy':return `<div class="blk">${buddy(b.mood||'happy',b.text)}</div>`;
+  case 'buddy':return `<div class="blk">${b.who&&PALS[b.who]?pal(b.who,b.text):buddy(b.mood||'happy',b.text)}</div>`;
   case 'bars':{const mx=Math.max(...b.items.map(x=>x.v));return `<div class="blk">${T}<div class="callout">${b.items.map(x=>`<div style="display:grid;grid-template-columns:110px 1fr 64px;gap:10px;align-items:center;margin:6px 0"><span>${esc(x.l)}</span><div class="bar" style="height:14px"><i style="width:${(100*x.v/mx).toFixed(1)}%"></i></div><span style="text-align:right;white-space:nowrap">${esc(String(x.v).replace('.',','))}</span></div>`).join('')}<p class="muted" style="margin:8px 0 0">${esc(b.unit||'')} · ${esc(b.note||'')}</p></div></div>`}
   case 'power':return `<div class="blk callout" data-power="${i}">${T}<p class="muted">${esc(b.note||'')}</p><div class="row"><label>Основа <input type="text" inputmode="numeric" class="pb" value="-2" style="width:80px"></label><label>Показател <input type="text" inputmode="numeric" class="pe" value="3" style="width:80px"></label></div><div class="out" style="margin-top:12px;font-size:20px"></div></div>`;
   case 'density':return `<div class="blk callout" data-density="${i}">${T}<p class="muted">${esc(b.note||'')}</p><div class="row"><label style="flex:1;min-width:200px">Маса: <b class="mv"></b> g<br><input type="range" class="dm" min="1" max="400" value="60" style="width:100%"></label><label style="flex:1;min-width:200px">Обем: <b class="vv"></b> cm³<br><input type="range" class="dv" min="1" max="200" value="20" style="width:100%"></label></div><div class="row" style="align-items:center;margin-top:10px"><svg viewBox="0 0 160 120" width="160" height="120" aria-hidden="true"><rect x="10" y="20" width="140" height="95" rx="6" fill="none" stroke="var(--soft)" stroke-width="2"/><rect x="12" y="45" width="136" height="68" fill="light-dark(#cfe0f2,#1d3247)"/><rect class="blk3" x="62" y="30" width="36" height="36" rx="3" fill="#b07a3a" stroke="var(--ink)" stroke-width="2"/></svg><div class="out" style="font-size:18px"></div></div></div>`;
@@ -567,7 +636,7 @@ if(/^#k=/.test(location.hash))takeKeyFromHash();
 window.tetradka={get S(){return S},buildReview,testTopics,thinTopics};
 loadStore();applyTheme();
 const J=u=>fetch(u,{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()});
-Promise.all([J('platform.json'),J('sessions.json'),loadPrivate()]).then(async([P,sess,pv])=>{
+Promise.all([J('platform.json'),J('sessions.json'),loadPrivate(),J('discover.json').catch(()=>null),studioLoad()]).then(async([P,sess,pv,disc])=>{S.discover=disc;
  S.P=P;S.P.tests=[];S.feedback=[];S.sessions=(Array.isArray(sess)?sess:[]).filter(s=>s&&Array.isArray(s.sections));applyPrivate(pv);
  const ls=P.subjects.flatMap(s=>(s.topics||[]).filter(t=>t.lesson));
  await Promise.all(ls.map(t=>J(t.lesson).then(L=>{S.lessons[t.id]=L}).catch(()=>{})));
