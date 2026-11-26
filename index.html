@@ -62,6 +62,8 @@ nav.tabs{align-items:center;overflow:visible;flex-wrap:nowrap}
 .task .sub{grid-column:2/4}
 @media(max-width:520px){.task{grid-template-columns:28px 1fr}.task .act{grid-column:2/3;justify-content:flex-start}}
 .ro .act button,.ro #start,.ro [data-prep],.ro #bigrev,.ro #fix{pointer-events:none;opacity:.45}
+.task.ev b{display:inline}.task.ev{grid-template-columns:48px 1fr}
+.stat{width:100%;border-collapse:collapse;font-size:15px}.stat th,.stat td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);white-space:nowrap}.stat th{font-weight:600;color:var(--soft);font-size:13px}
 .formfield{display:block;margin:0 0 12px}.formfield select{display:block;width:100%;margin-top:4px;font:inherit;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chip{background:var(--chip);border-radius:99px;padding:3px 11px;font-size:14px;white-space:nowrap}
@@ -296,7 +298,15 @@ function nav(cur){const main=RO?[['#home','Обзор'],['#kid','Като '+(S.P
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(b){S.settings.mode=b.dataset.mode;persist();applyTheme();route();return}const d=document.querySelector('details.more[open]');if(d&&!d.contains(e.target))d.open=false});
 function coverHTML(){const c=cover();const d=new Date();return `<header class="cover"><div class="art" style="background-image:url('${c||'assets/jonathan.jpg'}');opacity:${c?'.55':'.9'};background-position:center 42%"></div><div class="in"><div class="label"><div class="muted">${esc(S.P?.grade||'')} · ${esc(DAYS[d.getDay()])}, ${esc(d.toLocaleDateString('bg-BG',{day:'numeric',month:'long'}))}</div><h1>${S.P?.student?'Тетрадката на '+esc(S.P.student):'Тетрадката'}</h1></div><a class="btn" href="#cover" style="background:color-mix(in srgb,var(--paper) 92%,transparent);border-color:transparent">Корица</a></div></header>`}
 function frame(cur,body){root.dataset.view=cur.slice(1);document.body.classList.toggle('ro',RO);root.innerHTML=coverHTML()+nav(cur)+(RO?`<div class="banner">Изглед за родител · данни от ${esc(SYNC_AT?new Date(SYNC_AT).toLocaleString('bg-BG'):'—')} · само за четене</div>`:'')+body;const a=root.querySelector('.tabsc a.on');if(a){const c=a.parentElement;c.scrollLeft=Math.max(0,a.offsetLeft+a.offsetWidth-c.clientWidth+8)}}
-function route(){if(/^#k=/.test(location.hash)){takeKeyFromHash().then(async ok=>{if(ok&&loaded)applyPrivate(await loadPrivate());route()});return}const h=location.hash||'#home';if(run&&h!=='#run'){run=null}
+/* ---------- activity log (what she did, for parents) ---------- */
+function logAct(e){if(RO)return;(S.prog.act??=[]).push({t:new Date().toISOString(),...e});if(S.prog.act.length>3000)S.prog.act=S.prog.act.slice(-3000);persist()}
+let CUR=null;
+function setCur(k,id){leaveView();CUR={k,id,t0:Date.now(),start:new Date().toISOString(),acc:0,labs:new Set()}}
+function leaveView(){if(!CUR)return;const d=Math.round((CUR.acc+(CUR.t0?Date.now()-CUR.t0:0))/1000);if(d>=10)logAct({k:CUR.k,id:CUR.id,dur:Math.min(d,3600),t:CUR.start});CUR=null}
+document.addEventListener('visibilitychange',()=>{if(!CUR)return;if(document.hidden){if(CUR.t0){CUR.acc+=Date.now()-CUR.t0;CUR.t0=null}}else if(!CUR.t0)CUR.t0=Date.now()});
+window.addEventListener('pagehide',leaveView);
+['pointerdown','input'].forEach(ev=>document.addEventListener(ev,e=>{if(!CUR||RO)return;const el=e.target.closest?.('[data-density],[data-charges],[data-atom],[data-power]');if(!el)return;const b=el.hasAttribute('data-density')?'density':el.hasAttribute('data-charges')?'charges':el.hasAttribute('data-atom')?'atom':'power';if(CUR.labs.has(b))return;CUR.labs.add(b);logAct({k:'lab',id:CUR.id,b})},true));
+function route(){leaveView();if(/^#k=/.test(location.hash)){takeKeyFromHash().then(async ok=>{if(ok&&loaded)applyPrivate(await loadPrivate());route()});return}const h=location.hash||'#home';if(run&&h!=='#run'){run=null}
  if(loadErr)return root.innerHTML=`<div class="page" style="margin-top:24px"><h2>Тетрадката не се зареди</h2><p>Провери интернет връзката.</p><button class="go" onclick="location.reload()">Опитай пак</button></div>`;
  if(!loaded)return;
  if(h==='#run'&&run)return renderRun();
@@ -326,7 +336,7 @@ function renderParentHome(){
  const tests=(S.P?.tests||[]).map(t=>{const s=subjects().find(x=>x.id===t.subject),ts=testTopics(t).filter(x=>!x.soon),ready=ts.length?Math.round(100*ts.reduce((a,x)=>a+topicLevel(x),0)/(ts.length*4)):0,days=t.date?Math.round((new Date(t.date+'T12:00:00')-new Date(today()+'T12:00:00'))/864e5):null;return{t,s,ready,days}}).filter(x=>x.days===null||x.days>=0);
  const opens=recs.filter(x=>x.type==='open').slice(-6).reverse(),foc=focusList(),pend=Object.values(S.review).filter(r=>!r.done).length;
  const tile=(v,l)=>`<section class="page plain" style="margin:0"><div class="big" style="font-size:clamp(34px,6vw,48px)">${v}</div><p class="muted" style="margin:0">${l}</p></section>`;
- frame('#home',`${parentNotesHTML()}<section class="page"><h2>Седмицата накратко</h2><p class="muted">${last?`Последно е учила: ${esc(new Date(last).toLocaleString('bg-BG',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}))}`:'Още няма решени упражнения или уроци.'}</p></section>
+ frame('#home',`${parentNotesHTML()}${parentBoardHTML()}<section class="page"><h2>Седмицата накратко</h2><p class="muted">${last?`Последно е учила: ${esc(new Date(last).toLocaleString('bg-BG',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}))}`:'Още няма решени упражнения или уроци.'}</p></section>
  <div class="grid three">${tile(`${wkDays}/5`,'дни с учене тази седмица (цел: 4)')}${tile(wk.length,'решени сесии и уроци тази седмица')}${tile(mins?mins+' мин':'—','време за учене тази седмица')}</div><div style="height:18px"></div>
  <div class="grid two">${tile(wkRecs.length?acc(wkRecs)+'%':'—','точност тази седмица ('+wkRecs.length+' задачи)')}${tile(pend,'задачи с грешки чакат преговор')}</div><div style="height:18px"></div>
  ${tests.length?`<section class="page"><h3>Предстоящи контролни – готовност</h3>${tests.map(({t,s,ready,days})=>`<div class="q"><div class="top"><p style="margin:0"><b>${esc(s?.short||'')}</b> · ${esc(t.title)}</p><span class="muted">${t.date?esc(fmtLong(t.date))+' · ':''}${days===null?'без дата':days===0?'днес':'след '+days+' дни'}</span></div><div class="bar"><i style="width:${ready}%"></i></div><p class="muted" style="margin-top:6px">${readinessLabel(t,ready)} – по нивото на темите, които влизат.</p>${(()=>{const th=thinTopics(t);return th.length?`<p class="muted">⚠ Малко задачи в Тетрадката по: ${th.map(x=>esc(x.title)).join(', ')} – подготовката още не покрива темата добре.</p>`:''})()}<p style="margin:4px 0 0">${coverageHTML(t)}</p></div>`).join('')}</section>`:''}
@@ -335,7 +345,7 @@ function renderParentHome(){
  <section class="page"><h3>Писмени отговори (самооценка)</h3>${opens.length?opens.map(o=>{const f=findItem(o.sid,o.iid);return `<div class="q"><p>${esc(f?.it.q||'')}</p><div>„${esc(o.given||'—')}“</div><div class="fb ${o.pts>=2?'ok':''}"><b>${esc(o.pts)}/2</b> сама си е дала. ${f?.it.model?'Примерен отговор: '+esc(f.it.model):''}</div></div>`}).join(''):'<p class="muted">Още няма. Тук ще виждате как формулира отговори – най-важното умение за контролните.</p>'}</section>
  <section class="page"><h3>Последна активност</h3>${R.length?`<ul class="list">${R.sort((a,b)=>String(b.finishedAt).localeCompare(String(a.finishedAt))).slice(0,8).map(r=>`<li><span><span class="muted">${esc(fmtDate(r.finishedAt))}</span> · ${esc(r.title)}</span><span class="row"><span class="pen">${esc(r.score)}/${esc(r.max)}</span><a class="btn" href="#view-${esc(r.sid)}">Виж</a></span></li>`).join('')}</ul>`:'<p class="muted">Още няма.</p>'}</section>
  <section class="page"><h3>Архив</h3><p class="muted">Всеки път, когато ${esc(S.P.student||'детето')} завърши упражнение, всичко се записва във вашия Google Drive: текущото състояние в <code>tetradka-state.json</code>, седмичен архив в папка „Тетрадката – архив“ (по един файл на седмица) и ред в таблицата „Тетрадката – дневник“. Тук можете да изтеглите и копие на тези данни.</p><div class="row"><button id="parch">Изтегли копие на данните</button></div></section>`);
- document.getElementById('parch')?.addEventListener('click',downloadBackup);wireParentNotes()}
+ document.getElementById('parch')?.addEventListener('click',downloadBackup);wireParentNotes();wireParentBoard()}
 function renderHome(){const kidView=RO&&location.hash==='#kid';if(RO&&!kidView)return renderParentHome();
  const list=sessionsSorted(),next=list.find(s=>!S.results[s.id]?.done),due=dueReview();
  const hr=new Date().getHours(),beforeSchool=hr<13,school=beforeSchool?todaySchool():tomorrowSchool(),when=beforeSchool?'Днес в училище':'Утре в училище';
@@ -359,7 +369,7 @@ function renderHome(){const kidView=RO&&location.hash==='#kid';if(RO&&!kidView)r
  const fb=(S.feedback||[]).slice(-2).reverse(),foc=focusList(),wc=weekCount(),streak=weekStreak();
  const nDone=Object.values(S.results).filter(r=>r.done).length,lastB=S.backupAt?Math.floor((Date.now()-Date.parse(S.backupAt))/864e5):999;
  frame(kidView?'#kid':'#home',`
- ${kidView?`<div class="banner">Така ${esc(S.P.student||'детето')} вижда своя „Днес“ – със същите данни. Бутоните не работят в този изглед.</div>`:''}<section class="page plan-page">${main}</section>
+ ${kidView?`<div class="banner">Така ${esc(S.P.student||'детето')} вижда своя „Днес“ – със същите данни. Бутоните не работят в този изглед.</div>`:''}<section class="page plan-page">${main}</section>${reflectHTML()}
  <div class="grid two">
   <section class="page schedule-page"><h3>В училище</h3><div class="schedule-switch"><button data-school="today" aria-pressed="${beforeSchool}">Днес</button><button data-school="tomorrow" aria-pressed="${!beforeSchool}">Утре</button></div><div id="school-list">${school.length?`<div class="chips">${school.map(l=>{const s=matchSubj(l);return `<span class="chip ${s?'hot':''}">${esc(l)}</span>`}).join('')}</div>`:'<p class="muted">Почивен ден.</p>'}</div>
   ${sugg.length?`<p class="muted" style="margin-top:12px">Подготовка за ${beforeSchool?'днешните':'утрешните'} часове:</p>${sugg.map(({s,t})=>`<p><a href="#lesson-${esc(t.id)}">${esc(s.short)}: урок „${esc(t.title)}“</a></p>`).join('')}`:''}</section>
@@ -387,6 +397,7 @@ function renderHome(){const kidView=RO&&location.hash==='#kid';if(RO&&!kidView)r
  document.getElementById('bk')?.addEventListener('click',()=>{downloadBackup();renderHome()});
  document.getElementById('bigrev')?.addEventListener('click',startBigReview);
  document.getElementById('fix')?.addEventListener('click',()=>startRun(null));
+ wireReflect();
  root.querySelectorAll('[data-prep]').forEach(b=>b.onclick=()=>startTestPrep(+b.dataset.prep));
 }
 function ringSVG(p){const r=24,c=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 58 58"><circle cx="29" cy="29" r="${r}" fill="none" stroke="var(--rule)" stroke-width="6"/><circle cx="29" cy="29" r="${r}" fill="none" stroke="var(--acc)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(c*(p||0)).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 29 29)"/></svg>`}
@@ -396,12 +407,15 @@ const lvHTML=l=>`<span class="lv" title="${LEVELS[l]}">${[1,2,3,4].map(i=>`<i cl
 /* ---------- subjects ---------- */
 /* ---------- discover ---------- */
 function riddleOfDay(){const R=S.discover?.riddles||[];if(!R.length)return null;const d=new Date(),n=Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,0,1))/864e5);return R[((n%R.length)+R.length)%R.length]}
-function renderDiscover(){const D=S.discover||{},M=S.prog.missions||{},rd=riddleOfDay();
+function renderDiscover(){setCur('discover','');const D=S.discover||{},M=S.prog.missions||{},rd=riddleOfDay();
  const card=c=>{const done=c.mission&&M[c.mission];const href=c.mission?`#mission-${esc(c.mission)}`:c.href||'';return `<div class="dcard ${c.soon?'soon':''}"><div class="tag">${esc(c.tag)}${c.minutes?` · ~${esc(c.minutes)} мин`:''}${done?' · ✓ изпълнена':''}</div><h3>${esc(c.title)}</h3><p style="margin:0">${esc(c.text)}</p>${c.subjects?`<div class="chips">${c.subjects.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div>`:''}<div class="row">${c.soon?'<span class="muted">Скоро</span>':`<a class="btn ${c.mission?'go':''}" href="${href}">${esc(c.cta||'Отвори')}</a>`}</div></div>`};
  frame('#discover',`<section class="page">${pal('josh','Тук няма оценки и няма „трябва“. Само неща, които са интересни. Избери си нещо!')}</section>
- ${rd?`<section class="page"><div class="pen">Загадка на деня</div><h3 style="margin-top:4px">${esc(rd.q)}</h3><span class="chip">${esc(rd.subj)}</span><details style="margin-top:10px"><summary>Виж отговора</summary><p style="margin-top:6px"><b>${esc(rd.a)}</b></p><p class="muted">${esc(rd.why)}</p></details></section>`:''}
- ${(D.sections||[]).map(sec=>`<section class="page"><h3>${esc(sec.title)}</h3>${sec.text?`<p class="muted">${esc(sec.text)}</p>`:''}<div class="cards4">${sec.cards.map(card).join('')}</div></section>`).join('')}`)}
-async function renderMission(id){let L=S.missions[id];if(!L){try{L=S.missions[id]=await J('missions/'+id+'.json')}catch(e){return frame('#discover','<section class="page"><h2>Мисията не се зареди</h2><a href="#discover">Към „Откривам“</a></section>')}}
+ ${rd?`<section class="page"><div class="pen">Загадка на деня</div><h3 style="margin-top:4px">${esc(rd.q)}</h3><span class="chip">${esc(rd.subj)}</span><details id="rdd" style="margin-top:10px"><summary>Виж отговора</summary><p style="margin-top:6px"><b>${esc(rd.a)}</b></p><p class="muted">${esc(rd.why)}</p></details></section>`:''}
+ ${(D.sections||[]).map(sec=>`<section class="page"><h3>${esc(sec.title)}</h3>${sec.text?`<p class="muted">${esc(sec.text)}</p>`:''}<div class="cards4">${sec.cards.map(card).join('')}</div></section>`).join('')}`)
+ document.getElementById('rdd')?.addEventListener('toggle',e=>{if(e.target.open)logAct({k:'riddle',id:rd?.q?.slice(0,60)||''})},{once:true});
+ root.querySelectorAll('.dcard a').forEach(a=>a.addEventListener('click',()=>logAct({k:'discover-open',id:a.getAttribute('href')})))}
+
+async function renderMission(id){setCur('mission',id);let L=S.missions[id];if(!L){try{L=S.missions[id]=await J('missions/'+id+'.json')}catch(e){return frame('#discover','<section class="page"><h2>Мисията не се зареди</h2><a href="#discover">Към „Откривам“</a></section>')}}
  const done=(S.prog.missions||{})[id];
  frame('#discover',`<div class="top"><a href="#discover">← Откривам</a><span class="muted">~${esc(L.minutes||15)} мин · без оценка</span></div>
  <article class="page lesson"><div class="pen">Мисия</div><h1 style="font-size:clamp(28px,5vw,40px)">${esc(L.title)}</h1><p class="muted">${esc(L.subtitle||'')}</p>${L.subjects?`<div class="chips">${L.subjects.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div>`:''}<div style="height:10px"></div>${L.blocks.map((b,i)=>blockHTML(b,i)).join('')}
@@ -417,7 +431,7 @@ let STUDIO=[];
 async function studioLoad(){try{const x=await IDB.get('studio');STUDIO=Array.isArray(x)?x:SEED_STUDIO.map(a=>({...a}))}catch(e){STUDIO=SEED_STUDIO.map(a=>({...a}))}}
 async function studioSave(){try{await IDB.set('studio',STUDIO);return true}catch(e){return false}}
 const SCATS=['Персонажи','Рисунки','Истории','Проекти','Идеи'];
-function renderStudio(){if(RO)return go('#home');
+function renderStudio(){if(RO)return go('#home');setCur('studio','');
  frame('#studio',`<section class="page">${pal('greg','Това е твоето студио. Тук няма оценки – само твои рисунки, герои, истории и идеи.')}<div class="row" style="margin-top:6px"><button class="go" id="snew">+ Нова страница</button></div></section>
  ${SCATS.filter(c=>STUDIO.some(n=>n.cat===c)).map(c=>`<section class="page"><h3>${esc(c)}</h3><div class="studio">${STUDIO.filter(n=>n.cat===c).map(n=>`<button class="scard" data-sid="${esc(n.id)}"><div class="pic">${n.pic?`<img src="${esc(n.pic)}" alt="">`:'<span class="pen" style="font-size:40px">✎</span>'}</div><div class="tx"><b>${esc(n.title||'Без заглавие')}</b><span>${n.featured?'★ в „Днес“':esc((n.body||'').slice(0,40))}</span></div></button>`).join('')}</div></section>`).join('')}
  <section class="page"><h3>Резервно копие на студиото</h3><p class="muted">Студиото се пази само на това устройство (не отива при мама и татко). Изтегли копие от време на време.</p><div class="row"><button id="sexp">Изтегли копие</button><label class="btn">Зареди копие<input type="file" id="simp" accept=".json,application/json" hidden></label><span class="muted" id="smsg"></span></div></section>`);
@@ -443,6 +457,63 @@ function studioEdit(id){const n=STUDIO.find(x=>x.id===id)||{id:'',cat:'Рису�
  $('sdel')?.addEventListener('click',async e=>{if(e.target.dataset.sure!=='1'){e.target.dataset.sure='1';e.target.textContent='Сигурна ли си? Натисни пак';return}STUDIO=STUDIO.filter(x=>x.id!==n.id);await studioSave();go('#studio')})}
 function featuredHTML(){const f=STUDIO.find(n=>n.featured);if(!f)return '';return `<section class="page"><div class="top"><h3>От моето студио</h3><a href="#studio">студио</a></div><div class="row" style="align-items:flex-start;flex-wrap:nowrap;gap:14px">${f.pic?`<img src="${esc(f.pic)}" alt="" style="width:110px;height:110px;object-fit:contain;flex:none;border-radius:10px;background:var(--chip)">`:''}<div><b>${esc(f.title)}</b><p class="muted" style="white-space:pre-line">${esc((f.body||'').slice(0,220))}</p></div></div></section>`}
 
+/* ---------- parent activity dashboard ---------- */
+const KIND_N={session:'Упражнение',lesson:'Тест към урок',bigreview:'Голям преговор',testprep:'Подготовка за контролно',customreview:'Преговор по избор'};
+const LAB_N={density:'плътност',charges:'заряди',atom:'атом',power:'степени'};
+function allTopics(){return subjects().flatMap(s=>(s.topics||[]).map(t=>({s,t})))}
+function subjOfSk(sk){let best=null,bl=0;for(const {s,t} of allTopics())for(const p of t.skills||[])if((sk||'').startsWith(p)&&p.length>bl){best=s;bl=p.length}return best}
+function topicOfSkill(sk){let best=null,bl=0;for(const x of allTopics())for(const p of x.t.skills||[])if((sk||'').startsWith(p)&&p.length>bl){best=x;bl=p.length}return best}
+function topicById(id){return allTopics().find(x=>x.t.id===id)}
+function subjOfResult(r){if(String(r.sid).startsWith('L-'))return topicById(r.sid.slice(2))?.s||null;const c={};for(const x of Object.values(r.items||{})){const s=subjOfSk(x.skill);if(s)c[s.id]=(c[s.id]||0)+1}const k=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];return k?subjects().find(s=>s.id===k[0]):null}
+function subjMix(r){const c={};for(const x of Object.values(r.items||{})){const s=subjOfSk(x.skill);if(s)c[s.short||s.name]=1}return Object.keys(c).join(' + ')}
+const dOf=t=>String(t||'').slice(0,10),hm=t=>{try{return new Date(t).toLocaleTimeString('bg-BG',{hour:'2-digit',minute:'2-digit'})}catch(e){return ''}};
+const pct=(p,m)=>m?Math.round(100*p/m)+'%':'—',mins=sec=>sec?Math.max(1,Math.round(sec/60))+' мин':'—';
+function dayEvents(day){const ev=[];
+ for(const r of Object.values(S.results))if(r.done&&dOf(r.finishedAt)===day){const sj=subjOfResult(r);ev.push({t:r.finishedAt,ic:'✎',txt:`<b>${esc(KIND_N[r.kind]||'Упражнение')}</b> · ${esc(r.title)}`,sub:`${esc(subjMix(r)||sj?.short||'')} · ${esc(r.score)}/${esc(r.max)} (${pct(r.score,r.max)})${r.dur?' · '+mins(r.dur):''}`})}
+ const rv=(S.attempts||[]).filter(a=>a.c==='review'&&dOf(a.t)===day);if(rv.length){const ok=rv.filter(a=>a.p>=a.m).length;const subs=[...new Set(rv.map(a=>subjOfSk(a.sk)?.short).filter(Boolean))];ev.push({t:rv[rv.length-1].t,ic:'↺',txt:`<b>Поправка на стари грешки</b> · ${rv.length} задачи`,sub:`${esc(subs.join(', '))} · вярно ${ok} от ${rv.length}`})}
+ for(const a of S.prog.act||[]){if(dOf(a.t)!==day)continue;
+  if(a.k==='lesson'){const x=topicById(a.id);const labs=(S.prog.act||[]).filter(b=>b.k==='lab'&&b.id===a.id&&dOf(b.t)===day).map(b=>LAB_N[b.b]||b.b);ev.push({t:a.t,ic:'📖',txt:`<b>Чете урок</b> · ${esc(x?.t.title||a.id)}`,sub:`${esc(x?.s.short||'')} · ${mins(a.dur)}${labs.length?' · лаборатория: '+esc([...new Set(labs)].join(', ')):''}`})}
+  else if(a.k==='mission')ev.push({t:a.t,ic:'🧭',txt:`<b>Мисия</b> · ${esc(S.missions?.[a.id]?.title||a.id)}`,sub:mins(a.dur)});
+  else if(a.k==='discover')ev.push({t:a.t,ic:'✦',txt:'<b>Разглежда „Откривам“</b>',sub:mins(a.dur)});
+  else if(a.k==='riddle')ev.push({t:a.t,ic:'?',txt:'<b>Загадка на деня</b> – отвори отговора',sub:esc(a.id)});
+  else if(a.k==='studio')ev.push({t:a.t,ic:'✿',txt:'<b>Моето студио</b>',sub:mins(a.dur)});}
+ for(const n of S.prog.notes||[])if(dOf(n.t)===day)ev.push({t:n.t,ic:'✉',txt:'<b>Бележка до мама</b>',sub:noteLine(n)});
+ return ev.sort((a,b)=>a.t<b.t?-1:1)}
+function activeDays(){const d=new Set();for(const r of Object.values(S.results))if(r.done)d.add(dOf(r.finishedAt));for(const a of S.attempts||[])d.add(dOf(a.t));for(const a of S.prog.act||[])d.add(dOf(a.t));d.delete('');return [...d].sort()}
+function subjTable(fromDay){const rows={};const add=(s,k,v)=>{if(!s)return;const r=rows[s.id]??={s,sec:0,n:0,p:0,m:0,les:new Set(),tests:0};r[k]+=v};
+ for(const a of S.attempts||[]){if(fromDay&&dOf(a.t)<fromDay)continue;const s=subjOfSk(a.sk);if(!s)continue;add(s,'n',1);add(s,'p',a.p);add(s,'m',a.m)}
+ for(const r of Object.values(S.results)){if(!r.done||(fromDay&&dOf(r.finishedAt)<fromDay))continue;const s=subjOfResult(r);if(s&&r.dur)add(s,'sec',r.dur);if(s&&String(r.sid).startsWith('L-'))add(s,'tests',1)}
+ for(const a of S.prog.act||[]){if(fromDay&&dOf(a.t)<fromDay)continue;if(a.k==='lesson'){const x=topicById(a.id);if(x){add(x.s,'sec',a.dur||0);(rows[x.s.id]??={s:x.s,sec:0,n:0,p:0,m:0,les:new Set(),tests:0}).les.add(a.id)}}}
+ const L=Object.values(rows).sort((a,b)=>b.sec-a.sec||b.n-a.n);if(!L.length)return '<p class="muted">Още няма данни за този период.</p>';
+ return `<div style="overflow-x:auto"><table class="stat"><thead><tr><th>Предмет</th><th>Време</th><th>Задачи</th><th>Точност</th><th>Уроци</th></tr></thead><tbody>${L.map(r=>`<tr><td><b>${esc(r.s.short||r.s.name)}</b></td><td>${mins(r.sec)}</td><td>${r.n}</td><td>${pct(r.p,r.m)}</td><td>${r.les.size}</td></tr>`).join('')}</tbody></table></div><p class="muted">Времето е от упражненията и от четенето на уроци. Точността е от всички отговори (и повторните).</p>`}
+function errorsHTML(){const by={};for(const a of S.attempts||[]){const x=topicOfSkill(a.sk);if(!x)continue;const r=by[x.t.id]??={x,w:0,n:0};r.n++;if(a.p<a.m)r.w++}
+ const L=Object.values(by).filter(r=>r.w).sort((a,b)=>b.w-a.w).slice(0,8);const subj={};for(const r of Object.values(by)){const k=r.x.s.short||r.x.s.name;(subj[k]??={w:0,n:0});subj[k].w+=r.w;subj[k].n+=r.n}
+ if(!L.length)return '<p class="muted">Още няма грешки – или още няма решени задачи.</p>';
+ return `<h4 style="margin:0 0 6px">Теми с най-много грешки</h4>${L.map(r=>{const st=topicStats(r.x.t);return `<div class="task"><span class="num" style="font-size:20px">${r.w}</span><div><b>${esc(r.x.s.short||'')} · ${esc(r.x.t.title)}</b><span class="muted">${r.w} грешни от ${r.n} отговора · сега: ${LEVELS[topicLevel(r.x.t)]} (${Math.round(st.acc*100)}% при последния опит)</span></div></div>`}).join('')}
+ <h4 style="margin:14px 0 6px">Грешки по предмети</h4><p>${Object.entries(subj).sort((a,b)=>b[1].w-a[1].w).map(([k,v])=>`<span class="chip">${esc(k)}: ${v.w} от ${v.n}</span>`).join(' ')}</p><p class="muted">„Сега“ показва дали след грешките темата е усвоена – по последния отговор на всяка задача.</p>`}
+function interestsHTML(){const A=S.prog.act||[];const labs={};for(const a of A.filter(a=>a.k==='lab')){const x=topicById(a.id);const k=(x?.t.title||a.id)+' – '+(LAB_N[a.b]||a.b);labs[k]=(labs[k]||0)+1}
+ const lessT={};for(const a of A.filter(a=>a.k==='lesson')){lessT[a.id]=(lessT[a.id]||0)+(a.dur||0)}const topL=Object.entries(lessT).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ const ms=Object.entries(S.prog.missions||{}),rid=A.filter(a=>a.k==='riddle').length,disc=A.filter(a=>a.k==='discover').length,dsec=A.filter(a=>a.k==='discover'||a.k==='mission').reduce((x,a)=>x+(a.dur||0),0),stud=A.filter(a=>a.k==='studio').reduce((x,a)=>x+(a.dur||0),0);
+ const ahead=allTopics().filter(({s,t})=>{const c=[].concat(s.toc||[]).find(c=>(c.id||s.id)===(t.book||[].concat(s.toc||[])[0]?.id||s.id))||[].concat(s.toc||[])[0];return c&&t.n&&t.n>(c.at||0)&&(lessT[t.id]||S.prog.lessons[t.id])});
+ const cust=Object.values(S.results).filter(r=>r.done&&r.kind==='customreview').length;
+ const refl=Object.entries(S.prog.reflect||{}).sort((a,b)=>a[0]<b[0]?1:-1).slice(0,4);
+ return `<h4 style="margin:0 0 6px">Какво казва самата тя</h4>${refl.length?refl.map(([w,r])=>`<div class="task"><span class="num" style="font-size:16px">${esc(fmtDate(w))}</span><div><span>★ Най-интересно: <b>${esc(r.best||'—')}</b></span><span class="muted">Помогна в училище: ${esc(r.help||'—')} · Скучно: ${esc(r.boring||'—')}${r.note?` · „${esc(r.note)}“`:''}</span></div></div>`).join(''):'<p class="muted">Още няма отговори на въпросите за седмицата (появяват се на „Днес“ от четвъртък).</p>'}
+ <h4 style="margin:14px 0 6px">По собствено желание</h4><ul class="list"><li>Лаборатории: ${Object.keys(labs).length?Object.entries(labs).map(([k,v])=>`${esc(k)} (${v}×)`).join(', '):'още не'}</li><li>Мисии: ${ms.length?ms.map(([id,d])=>`${esc(S.missions?.[id]?.title||id)} ✓ ${esc(fmtDate(d))}`).join(', '):'още не'}</li><li>„Откривам“: ${disc} посещения · ${mins(dsec)} · загадки: ${rid}</li><li>Уроци, четени преди класа: ${ahead.length?ahead.map(x=>esc(x.s.short+': '+x.t.title)).join(', '):'още не'}</li><li>Преговори по избор: ${cust}</li><li>Моето студио: ${mins(stud)}</li></ul>
+ <h4 style="margin:14px 0 6px">Уроци, на които е отделила най-много време</h4>${topL.length?`<ul class="list">${topL.map(([id,sec])=>{const x=topicById(id);return `<li>${esc(x?.s.short||'')} · ${esc(x?.t.title||id)} – ${mins(sec)}</li>`}).join('')}</ul>`:'<p class="muted">Още няма данни (записва се от днес нататък).</p>'}`}
+let PTAB='day',PDAY=null;
+function parentBoardHTML(){const days=activeDays(),t=today();const day=PDAY||(days.includes(t)?t:days[days.length-1]||t);const i=days.indexOf(day);
+ const tabs=[['day','Днес'],['week','Седмица'],['all','Всичко'],['err','Грешки'],['int','Интереси']];
+ let body='';if(PTAB==='day'){const ev=dayEvents(day);body=`<div class="row" style="justify-content:space-between;margin-bottom:6px"><button data-pday="${esc(days[i-1]||'')}" ${i>0?'':'disabled'}>←</button><b>${day===t?'Днес':esc(fmtLong(day))}</b><button data-pday="${esc(days[i+1]||'')}" ${i>=0&&i<days.length-1?'':'disabled'}>→</button></div>${ev.length?ev.map(e=>`<div class="task ev"><span class="num" style="font-size:15px">${esc(hm(e.t))}</span><div><span>${e.ic} ${e.txt}</span><span class="muted">${e.sub||''}</span></div></div>`).join(''):'<p class="muted">В този ден няма записана дейност.</p>'}`}
+ else if(PTAB==='week')body=`<p class="muted">От ${esc(fmtLong(weekStart()))} до днес</p>`+subjTable(weekStart());
+ else if(PTAB==='all')body=subjTable(null);else if(PTAB==='err')body=errorsHTML();else body=interestsHTML();
+ return `<section class="page" id="pboard"><h2>Какво прави ${esc(S.P.student||'детето')}</h2><div class="schedule-switch" style="flex-wrap:wrap">${tabs.map(([k,n])=>`<button data-ptab="${k}" aria-pressed="${PTAB===k}" style="pointer-events:auto;opacity:1">${n}</button>`).join('')}</div>${body}<p class="muted" style="margin-top:10px">Четенето на уроци, лабораториите и „Откривам“ се записват от 26.11. Резултатите от упражненията – от началото.</p></section>`}
+function wireParentBoard(){root.querySelectorAll('[data-ptab]').forEach(b=>b.onclick=()=>{PTAB=b.dataset.ptab;document.getElementById('pboard').outerHTML=parentBoardHTML();wireParentBoard()});root.querySelectorAll('[data-pday]').forEach(b=>{b.style.pointerEvents='auto';b.style.opacity=b.disabled?'.4':'1';b.onclick=()=>{if(!b.dataset.pday)return;PDAY=b.dataset.pday;document.getElementById('pboard').outerHTML=parentBoardHTML();wireParentBoard()}})}
+/* weekly reflection (kid) */
+function reflectHTML(){if(RO)return '';const ws=weekStart(),dow=(new Date().getDay()+6)%7;if(dow<3||(S.prog.reflect||{})[ws])return '';
+ const opts=[...new Set([...Object.values(S.results).filter(r=>r.done&&dOf(r.finishedAt)>=ws).map(r=>r.title),...(S.prog.act||[]).filter(a=>dOf(a.t)>=ws&&(a.k==='lesson'||a.k==='mission')).map(a=>a.k==='lesson'?'Урок: '+(topicById(a.id)?.t.title||a.id):'Мисия: '+(S.missions?.[a.id]?.title||a.id)),...((S.prog.act||[]).some(a=>dOf(a.t)>=ws&&a.k==='lab')?['Лабораториите']:[])])];if(!opts.length)return '';
+ const sel=id=>`<select id="${id}"><option value="">—</option>${opts.map(o=>`<option>${esc(o)}</option>`).join('')}<option>Нещо друго</option></select>`;
+ return `<section class="page" id="reflect"><h3>3 въпроса за седмицата</h3>${buddy('happy','Помогни ми да направя Тетрадката по-интересна! Отнема 30 секунди.')}<label class="formfield">Кое ти беше най-интересно?${sel('rf1')}</label><label class="formfield">Кое ти помогна най-много в училище?${sel('rf2')}</label><label class="formfield">Кое ти беше скучно или досадно?${sel('rf3')}</label><label class="formfield">Нещо, което искаш да кажеш (по желание)<input type="text" id="rf4" maxlength="150" style="display:block;width:100%;margin-top:4px;font:inherit;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink)"></label><div class="row"><button class="go" id="rfs">Изпрати</button></div></section>`}
+function wireReflect(){document.getElementById('rfs')?.addEventListener('click',()=>{const v=id=>document.getElementById(id).value;(S.prog.reflect??={})[weekStart()]={best:v('rf1'),help:v('rf2'),boring:v('rf3'),note:v('rf4').trim().slice(0,150),t:new Date().toISOString()};persist();syncPush({title:'Въпроси за седмицата',score:'',max:'',kind:'reflect'});route()})}
 /* ---------- notes to parent (no AI chat: parent forwards, answers come as content changes) ---------- */
 const NOTE_T={test:'Ново контролно',project:'Проект',review:'Искам още преговор',other:'Друго'};
 function notes(){return (S.prog.notes||[]).slice().sort((a,b)=>a.t<b.t?1:-1)}
@@ -519,7 +590,7 @@ function renderSubject(id){const s=subjects().find(x=>x.id===id);if(!s)return re
 }
 
 /* ---------- lesson player ---------- */
-function renderLesson(id){
+function renderLesson(id){setCur('lesson',id);
  const t=subjects().flatMap(s=>(s.topics||[]).map(x=>({...x,subj:s}))).find(x=>x.id===id);const L=S.lessons[id];
  if(!t||!L)return frame('#subjects',`<section class="page"><h2>Урокът още не е готов</h2><a href="#subjects">Към предметите</a></section>`);
  if(!S.prog.lessons[id]){S.prog.lessons[id]={opened:today()};persist()}
