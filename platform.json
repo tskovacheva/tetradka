@@ -137,6 +137,37 @@
      "lesson": "lessons/bel-prichastia.json",
      "n": 9,
      "to": 11
+    },
+    {
+     "id": "bel-vremena",
+     "title": "Преговор: минало неопределено, минало предварително и бъдеще в миналото (уроци 12–14)",
+     "skills": [
+      "bel.vremena"
+     ],
+     "lesson": "lessons/bel-vremena.json",
+     "n": 12,
+     "to": 14
+    },
+    {
+     "id": "bel-neizm",
+     "title": "Преговор: съюз, частица, междуметие (уроци 15–16)",
+     "skills": [
+      "bel.neizm"
+     ],
+     "lesson": "lessons/bel-neizmenyaemi.json",
+     "n": 15,
+     "to": 16
+    },
+    {
+     "id": "lit-priroda",
+     "title": "Преговор: Човекът и природата (литература, уроци 3–14)",
+     "skills": [
+      "lit.priroda"
+     ],
+     "lesson": "lessons/lit-priroda.json",
+     "book": "lit",
+     "n": 3,
+     "to": 14
     }
    ],
    "toc": [
